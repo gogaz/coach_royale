@@ -1,0 +1,10 @@
+# IDE configuration
+.idea
+# Trash files
+__pycache__
+*-lock.json
+# External libraries
+venv
+front/node_modules
+front/dist
+settings*.py
