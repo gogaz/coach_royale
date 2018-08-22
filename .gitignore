@@ -7,4 +7,8 @@ __pycache__
 venv
 front/node_modules
 front/dist
+bin
+lib
+pip-selfcheck.json
+# sensitive files
 settings*.py

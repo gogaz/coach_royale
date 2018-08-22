@@ -12,10 +12,14 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import codecs
 import os
 
+# Hack to handle emojis
 codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else None)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+ROYALE_API_KEY = "YOUR API KEY HERE"
+CLAN = "2GJU9Y2G"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -26,7 +30,7 @@ SECRET_KEY = 's3cr3t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition

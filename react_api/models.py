@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-# HELPERS
+# Helpers
 def compare_instances(obj1, obj2, excluded_keys):
     d1, d2 = obj1.__dict__, obj2.__dict__
     old, new = {}, {}
@@ -90,7 +90,7 @@ class PlayerClanHistory(models.Model):
     left_clan = models.DateTimeField(null=True)
 
     def __str__(self):
-        return "{} - {}".format(str(self.player), str(self.clan))
+        return "{0.player} joined clan {0.clan}".format(self)
 
 
 class PlayerClanStatsHistory(models.Model):
@@ -112,7 +112,7 @@ class PlayerClanStatsHistory(models.Model):
     arena = models.IntegerField(null=True)
 
     def __str__(self):
-        return "{} - {} - {}".format(str(self.player), str(self.clan), self.last_refresh)
+        return "{0.player}'s activity in clan {0.clan} ({0.last_refresh})".format(self)
 
 
 class PlayerStatsHistory(models.Model):
@@ -144,7 +144,7 @@ class PlayerStatsHistory(models.Model):
     war_day_wins = models.IntegerField(null=True)
 
     def __str__(self):
-        return "{} - {}".format(str(self.player), self.last_refresh)
+        return "Stats history for player {0.player} ({0.last_refresh})".format(self)
 
 
 class PlayerSeason(models.Model):
@@ -156,7 +156,7 @@ class PlayerSeason(models.Model):
     ending_rank = models.IntegerField(null=True)
 
     def __str__(self):
-        return "{} - {}".format(self.identifier, str(self.player))
+        return "Season {0.identifier} - {0.player}".format(self)
 
 
 class Player(models.Model):
@@ -191,7 +191,7 @@ class Clan(models.Model):
     refresh = models.BooleanField(default=False)
 
     def __str__(self):
-        return "{} (#{})".format(self.name, self.tag)
+        return "{0.name} (#{0.tag})".format(self)
 
 
 class ClanHistory(models.Model):
@@ -209,14 +209,13 @@ class ClanHistory(models.Model):
     region = models.CharField(max_length=64)
     badge = models.CharField(max_length=512)
     trophies = models.IntegerField(null=True)
-    badge_decoration = models.CharField(max_length=512, null=True)
     # Wars
     war_state = models.CharField(max_length=512, null=True)
     # Synchronization configuration
     last_refresh = models.DateTimeField(null=True)
 
     def __str__(self):
-        return "{} - {}".format(str(self.clan), self.last_refresh)
+        return "History for clan {0.clan} ({0.last_refresh})".format(self)
 
 
 class BattleMode(models.Model):
@@ -224,7 +223,7 @@ class BattleMode(models.Model):
     name = models.CharField(max_length=64)
     card_levels = models.CharField(max_length=64)
     overtime = models.IntegerField(null=True)
-    same_deck = models.BooleanField()
+    same_deck = models.BooleanField(default=False)
     war_day = models.BooleanField(default=False)
     collection_day = models.BooleanField(default=False)
 
@@ -250,7 +249,7 @@ class Battle(models.Model):
     opponent_deck_link = models.CharField(max_length=128, null=True)
     opponent_team_deck = models.ManyToManyField(Card, related_name='opponent_2_deck')
     opponent_team_deck_link = models.CharField(max_length=128, null=True)
-    war = models.ForeignKey('ClanWar', null=True, on_delete=models.DO_NOTHING)
+    war = models.ForeignKey('ClanWar', null=True, on_delete=models.SET_NULL)
     win = models.BooleanField(default=False)
 
 
@@ -271,7 +270,7 @@ class ClanWar(models.Model):
     season = models.IntegerField(null=True)
 
     def __str__(self):
-        return "{} Clan war {}".format(self.clan, self.date_start.strftime("%d/%m/%Y"))
+        return "Clan {} started war on {}".format(self.clan, self.date_start.strftime("%Y-%m-%d"))
 
 
 class PlayerClanWar(models.Model):

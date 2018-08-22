@@ -7,10 +7,11 @@ from django.core.management import BaseCommand
 from django.db.models import Q, ObjectDoesNotExist
 from django.utils import timezone
 
+from django.conf import settings
 from react_api.models import *
 from react_api.repository import ClanRepository, PlayerRepository
 
-APIClient = clashroyale.RoyaleAPI(os.environ.get("ROYALE_API_KEY"))
+APIClient = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=30)
 
 
 class Command(BaseCommand):
@@ -278,7 +279,7 @@ def refresh_clan_details(command, options, db_clan):
                                                                  member_count=clan.member_count,
                                                                  donations=clan.donations,
                                                                  region=clan.location.name,
-                                                                 badge=clan.badge.image,)
+                                                                 badge=clan.badge.image)
     db_clan_history.last_refresh = now
     if created:
         db_clan_history.timestamp = now
