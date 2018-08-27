@@ -64,6 +64,9 @@ def run_refresh_method(command, options, func, iterable, depth=3):
             else:
                 command.stderr.write("#ERROR: Request timed out while fetching data for #" + str(i))
             failed.append(i)
+        except clashroyale.ServerError:
+            pass
+
     run_refresh_method(command, options, func, failed, depth - 1)
 
 

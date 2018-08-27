@@ -18,9 +18,6 @@ codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else Non
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ROYALE_API_KEY = "YOUR API KEY HERE"
-CLAN = "2GJU9Y2G"
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -96,6 +93,9 @@ DATABASES = {
     }
 }
 
+# Royale API configuration
+ROYALE_API_KEY = "YOUR API KEY HERE"
+CLAN = "2GJU9Y2G"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -115,6 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%fZ%Z",
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
