@@ -1,15 +1,28 @@
 version: '3'
 
 services:
-  db:
-    image: postgres
-
-  web:
-    build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+  front:
+    build: ./front
+    working_dir: /code/front
     volumes:
       - .:/code
+    restart: 'no'
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - .:/code
+    restart: on-failure
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8000:80"
     depends_on:
-      - db
+      - front
+  web:
+    build: .
+    volumes:
+      - .:/code
+    expose:
+      - "8000"
+    depends_on:
+      - front
+      - nginx
