@@ -6,4 +6,4 @@ services:
   web:
     environment:
       - DJANGO_SETTINGS_MODULE=cycom_esport2.settings_prod
-    command: gunicorn3 cycom_esport2.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn3 cycom_esport2.wsgi:application --bind 0.0.0.0:8000 --error-logfile /code/logs/gunicorn-error.log

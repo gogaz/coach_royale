@@ -7,5 +7,6 @@ ENV PYTHONUNBUFFERED 1
 
 # Install python dependencies
 WORKDIR /code
+RUN mkdir -p logs
 ADD requirements.txt /code/
 RUN pip3 install -r requirements.txt
