@@ -1,8 +1,11 @@
+import clashroyale
+from django.conf import settings
 from django.core.management import BaseCommand
 from django.db.models import Q
 from django.utils import timezone
 
-from react_api.management.commands.royaleapi_pull import refresh_clan_details, update_war_status, run_refresh_method
+from react_api.helpers.api.clan import update_war_status, refresh_clan_details
+from react_api.helpers.api.helpers import run_refresh_method
 from react_api.models import Clan
 
 
@@ -15,6 +18,8 @@ class Command(BaseCommand):
         parser.add_argument('--war', action='store_true', help="updates previous wars status")
 
     def handle(self, *args, **options):
+        api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=30)
+
         db_clans = Clan.objects.filter(refresh=True)
         if not options['force']:
             db_clans = db_clans.filter(Q(last_refresh__lte=timezone.now() - timezone.timedelta(hours=2))
@@ -24,6 +29,7 @@ class Command(BaseCommand):
             for clan in db_clans:
                 update_war_status(self, options, clan)
         else:
-            run_refresh_method(self, options, refresh_clan_details, db_clans)
+            run_refresh_method(self, options, refresh_clan_details, db_clans, api_client=api_client)
         if options['clan']:
-            refresh_clan_details(self, options, None)
+            refresh_clan_details(self, options, None, api_client=api_client)
+
