@@ -1,4 +1,3 @@
-from box import BoxKeyError
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 

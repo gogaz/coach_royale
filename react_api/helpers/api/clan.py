@@ -207,7 +207,6 @@ def update_war_status(command, options, db_clan):
                     command.stdout.write("found war for orphan battle")
                 break
 
-
     # wars = ClanWar.objects.filter(clan=db_clan, date_end__isnull=True, date_start__lte=timezone.now() - timezone.timedelta(hours=48))
     # for war in wars:
     #     battles = Battle.objects.filter(war=war)
