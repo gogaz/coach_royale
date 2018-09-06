@@ -3,7 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const ENTRY_DIR = path.resolve(__dirname, './src');
 
-var config = {
+module.exports = {
     entry: ENTRY_DIR + '/index.js',
     output: {
         path: path.resolve(__dirname, './dist'),
@@ -16,13 +16,18 @@ var config = {
     },
     module: {
         rules: [
-            {test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000'},
+            {
+                test: /\.json$/,
+                type: 'javascript/auto',
+                loader: 'json-loader'
+            },
+            {test: /\.(png|woff|woff2|eot|ttf)$/, loader: 'url-loader?limit=100000'},
             {
                 test: /\.svg$/,
-                use: "react-svg-loader"
+                use: ["react-svg-loader"]
             },
             {
-                test: /\.js?/,
+                test: /\.js$/,
                 use: ['babel-loader'],
             },
             {
@@ -30,7 +35,7 @@ var config = {
                 use: ['style-loader', 'css-loader']
             },
             {
-                test: /\.(png|jpg|gif)$/,
+                test: /\.(jpg|gif)$/,
                 use: {
                     loader: 'file-loader',
                     options: {
@@ -41,5 +46,3 @@ var config = {
         ]
     }
 };
-
-module.exports = config;

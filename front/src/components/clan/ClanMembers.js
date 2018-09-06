@@ -1,0 +1,107 @@
+import React from 'react';
+import ReactTable from "react-table";
+import { images } from "../../style/assets"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+
+export default class ClanMembers extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            data: [],
+            loading: true,
+            endpoint: props.endpoint + '/members'
+        };
+    }
+
+    componentDidMount() {
+        fetch(this.state.endpoint)
+            .then((res) => res.json())
+            .then(
+                (result) => {
+                    this.setState({data: result});
+                    console.log(result)
+                })
+            .then(() => this.setState({loading: false}))
+            .catch((error) => {
+                console.log(error)
+            });
+    }
+
+    render() {
+        const { data, loading } = this.state;
+        return (
+            <ReactTable
+                data={data}
+                columns={[
+                    {
+                        Header: "Rank",
+                        id: "rank",
+                        accessor: "details.current_clan_rank",
+                        width: 45
+                    },
+                    {
+                        Header: "Name",
+                        accessor: "name"
+                    },
+                    {
+                        Header: "Trophies",
+                        id: "trophies",
+                        accessor: "details.trophies",
+                        minWidth: 70,
+                        Cell: ({ row, original }) => {
+                            return (<span className="trophy-td">
+                                <img src={images.arenaX(original.details.arena)} />{row.trophies}
+                            </span>)
+                        }
+                    },
+                    {
+                        Header: "Level",
+                        accessor: "details.level",
+                        minWidth: 50
+                    },
+                    {
+                        Header: "Role",
+                        id: "role",
+                        accessor: "details.clan_role",
+                        minWidth: 80
+                    },
+                    {
+                        Header: "Received",
+                        id: "received",
+                        accessor: "details.donations_received",
+                        width: 80,
+                        Cell: ({ row }) => {
+                            return (<span>
+                                {row.received}
+                                <i className="donations-icons">
+                                    <img src={images.cwCards} /><FontAwesomeIcon icon="arrow-down" />
+                                </i>
+                            </span>)
+                        }
+                    },
+                    {
+                        Header: "Donated",
+                        id: "given",
+                        accessor: "details.donations",
+                        width: 80,
+                        Cell: ({ row }) => {
+                            return (<span>
+                                {row.given}
+                                <i className="donations-icons">
+                                    <img src={images.cwCards} /><FontAwesomeIcon icon="arrow-up" />
+                                </i>
+                            </span>)
+                        }
+                    }
+                ]}
+                resizable={false}
+                defaultSorted={[{ id: "rank" }]}
+                loading={loading}
+                pageSize={data.length}
+                showPagination={false}
+            />
+        );
+    }
+}

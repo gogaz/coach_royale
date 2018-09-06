@@ -1,11 +1,6 @@
 @import "./responsive.css";
 @import "./style.css";
 
-@font-face {
-    font-family: 'Supercell-Magic';
-    src: url(../../fonts/Supercell-magic-webfont.ttf);
-}
-
 .img-valign {
   vertical-align: middle;
   margin-bottom: 0.75em;
@@ -13,10 +8,6 @@
 
 .display-deck {
     margin-top: 15px;
-}
-
-.supercell {
-    font-family: "Supercell-Magic";
 }
 
 .navbar-hidden .navbar-toggler
@@ -250,4 +241,48 @@ img.image-50
 .header-fixed .app-body
 {
     padding-top: 55px;
+}
+.card-header .list-group li.list-group-item {
+    background-color: #f0f3f5;
+}
+
+.clan_stats .content {
+    background: no-repeat center left;
+    background-size: 2.25rem;
+    padding-left: 3rem;
+}
+
+.card-body:not(:last-child) {
+    border-bottom: 1px solid #c2cfd6;
+}
+.clan_stats .title {
+  font-weight: bold;
+}
+
+i.donations-icons {
+    line-height: 1;
+    vertical-align: middle;
+    font-size: 2em;
+    display: inline-block;
+    position: relative;
+}
+i.donations-icons img {
+    width: auto;
+    height: 1.3rem;
+    vertical-align: middle;
+    margin-left: 0.2rem;
+}
+i.donations-icons svg {
+    top: auto;
+    left: auto;
+    right: 1px;
+    bottom: 1px;
+    -webkit-transform: none;
+    transform: none;
+    font-size: .4em;
+    position: absolute;
+    margin: 0;
+}
+.trophy-td img {
+    height: 1.5rem;
 }

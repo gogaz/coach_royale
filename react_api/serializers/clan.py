@@ -12,7 +12,7 @@ class ClanDetailsSerializer(HyperlinkedModelSerializer):
                   'member_count',
                   'donations',
                   'region',
-                  'badge')
+                  'badge', 'description')
 
 
 class ClanSerializer(HyperlinkedModelSerializer):

@@ -5,13 +5,14 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import App from "./components/App"
+import "react-table/react-table.css";
 
 library.add(fas);
 
 ReactDOM.render(
     <Router>
         <Switch>
-            <Route exact path="/" component={() => <Redirect to="/clan/2GJU92G" />}/>
+            <Route exact path="/" component={() => <Redirect to="/clan/2GJU9Y2G" />}/>
             <Route path='/' component={App} />;
         </Switch>
     </Router>,
