@@ -2,22 +2,51 @@ import React from "react";
 import ReactTooltip from 'react-tooltip'
 import moment from "moment";
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
-import { images } from "../../style/assets";
+import { images } from "../../helpers/assets";
+import { handleErrors } from "../../helpers/api";
+import Loading from "../ui/Loading";
 
 export default class ClanDetails extends React.Component {
-    render() {
-        let lookup = require('country-data').lookup;
+    constructor(props) {
+        super(props);
 
-        let country_icon = lookup.countries({name: this.props.clan.details.region})[0].alpha2.toLowerCase();
-        country_icon = "https://raw.githubusercontent.com/hjnilsson/country-flags/master/png100px/" + country_icon + '.png';
-        let last_refresh = moment(this.props.clan.last_refresh);
+        this.state = {
+            loading: true,
+            clan: {details:{}},
+            error: {}
+        }
+    }
+
+    componentDidMount() {
+        fetch(this.props.endpoint)
+            .then((res) => handleErrors(res))
+            .then(
+                (result) => {
+                    console.log(result);
+                    this.setState({ loading: false, clan: result });
+                    this.props.onDataLoaded(result)
+                })
+            .catch(error => console.log(error) );
+    }
+
+    render() {
+        let {clan, loading} = this.state;
+
+        if (loading) return <div className="card-header"><Loading/></div>;
+
+        let lookup = require('country-data').lookup;
+        let region = lookup.countries({name: clan.details.region})[0].alpha2.toLowerCase();
+        let country_icon = images.regionIcon(region);
+
+        let last_refresh = moment(clan.last_refresh);
+
         return (
             <div>
                 <div className="card-header">
                     <div className="row">
                         <div className="col-9">
-                            <h3>{ this.props.clan.name }</h3>
-                            <span className="d-block">{this.props.clan.details.description}</span>
+                            <h3>{ clan.name }</h3>
+                            <span className="d-block">{clan.details.description}</span>
                             <small>
                                 <span className="text-muted text-uppercase" data-tip="last refreshed">
                                     Last refresh { last_refresh.fromNow() }
@@ -28,7 +57,7 @@ export default class ClanDetails extends React.Component {
                             </small>
                         </div>
                         <div className="col-3">
-                            <img src={ this.props.clan.details.badge }
+                            <img src={ clan.details.badge }
                                  style={ { float: 'right', height: '5pc' } } />
                         </div>
                     </div>
@@ -38,13 +67,13 @@ export default class ClanDetails extends React.Component {
                         <div className="row mt-2">
                             <ClashRoyaleStat title="Score"
                                              image={images.trophyRibbon}
-                                             value={Number(this.props.clan.details.score).toLocaleString('en-us')}/>
+                                             value={Number(clan.details.score).toLocaleString('en-us')}/>
                             <ClashRoyaleStat title="Members"
                                              image={images.socialAlt}
-                                             value={this.props.clan.details.member_count}/>
+                                             value={clan.details.member_count}/>
                             <ClashRoyaleStat image={country_icon}
-                                title="Region" value={this.props.clan.details.region} />
-                            <ClashRoyaleStat image={images.donations} title="Donations" value={this.props.clan.details.donations}/>
+                                title="Region" value={clan.details.region} />
+                            <ClashRoyaleStat image={images.cards} title="Donations" value={clan.details.donations}/>
                         </div>
                     </li>
                 </ul>
@@ -52,3 +81,4 @@ export default class ClanDetails extends React.Component {
         );
     }
 }
+ClanDetails.defaultProps = {onDataLoaded: () => {}};

@@ -12,7 +12,6 @@ library.add(fas);
 ReactDOM.render(
     <Router>
         <Switch>
-            <Route exact path="/" component={() => <Redirect to="/clan/2GJU9Y2G" />}/>
             <Route path='/' component={App} />;
         </Switch>
     </Router>,

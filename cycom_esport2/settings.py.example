@@ -101,8 +101,8 @@ DATABASES = {
 }
 
 # Royale API configuration
-ROYALE_API_KEY = "YOUR API KEY HERE"
-CLAN = "2GJU9Y2G"
+ROYALE_API_KEY = "YOUR API KEY"
+MAIN_CLAN = "YOUR CLAN TAG"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -121,10 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
-REST_FRAMEWORK = {
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/

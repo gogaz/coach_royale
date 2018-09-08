@@ -10,3 +10,4 @@ export default class Loading extends React.Component {
         );
     }
 }
+Loading.defaultProps = {loading: true};

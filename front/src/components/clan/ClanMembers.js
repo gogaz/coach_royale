@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactTable from "react-table";
-import { images } from "../../style/assets"
+import { images } from "../../helpers/assets"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from "react-router-dom";
 
 
 export default class ClanMembers extends React.Component {
@@ -31,6 +32,7 @@ export default class ClanMembers extends React.Component {
 
     render() {
         const { data, loading } = this.state;
+        const roles = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
         return (
             <ReactTable
                 data={data}
@@ -43,7 +45,8 @@ export default class ClanMembers extends React.Component {
                     },
                     {
                         Header: "Name",
-                        accessor: "name"
+                        accessor: "name",
+                        Cell: ({row, original}) => {return <Link to={"/player/" + original.tag}>{row.name}</Link> }
                     },
                     {
                         Header: "Trophies",
@@ -65,7 +68,8 @@ export default class ClanMembers extends React.Component {
                         Header: "Role",
                         id: "role",
                         accessor: "details.clan_role",
-                        minWidth: 80
+                        minWidth: 80,
+                        Cell: ({row}) => {return roles[row.role]}
                     },
                     {
                         Header: "Received",
@@ -73,8 +77,7 @@ export default class ClanMembers extends React.Component {
                         accessor: "details.donations_received",
                         width: 80,
                         Cell: ({ row }) => {
-                            return (<span>
-                                {row.received}
+                            return (<span>{row.received}
                                 <i className="donations-icons">
                                     <img src={images.cwCards} /><FontAwesomeIcon icon="arrow-down" />
                                 </i>
@@ -87,8 +90,7 @@ export default class ClanMembers extends React.Component {
                         accessor: "details.donations",
                         width: 80,
                         Cell: ({ row }) => {
-                            return (<span>
-                                {row.given}
+                            return (<span>{row.given}
                                 <i className="donations-icons">
                                     <img src={images.cwCards} /><FontAwesomeIcon icon="arrow-up" />
                                 </i>

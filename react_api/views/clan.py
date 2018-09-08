@@ -37,7 +37,6 @@ def clan_members(request, tag):
     if request.method == 'GET':
         latest_stats_history_pks = PlayerClanStatsHistory.objects.values('player').annotate(
             max_id=models.Max('id')).values_list('max_id', flat=True)
-        print(latest_stats_history_pks)
         players = ClanRepository.get_players_in_clan_2(clan)\
             .prefetch_related(models.Prefetch('playerstatshistory_set',
                                               queryset=PlayerClanStatsHistory.objects.filter(pk__in=latest_stats_history_pks),
