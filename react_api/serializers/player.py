@@ -1,7 +1,8 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 from react_api.models import Player, PlayerCardLevel, PlayerClanHistory, PlayerStatsHistory
-from react_api.serializers.clan import ClanSerializer
+from react_api.repository import PlayerRepository
+from react_api.serializers.clan import ClanSerializer, ClanFullSerializer
 from react_api.serializers.misc import CardSerializer
 
 
@@ -21,13 +22,17 @@ class PlayerStatsSerializer(HyperlinkedModelSerializer):
 
 class PlayerSerializer(HyperlinkedModelSerializer):
     details = SerializerMethodField()
+    clan = SerializerMethodField()
 
     def get_details(self, obj):
         return PlayerStatsSerializer(PlayerStatsHistory.objects.filter(player=obj).order_by('-timestamp').first()).data
 
+    def get_clan(self, obj):
+        return ClanFullSerializer(PlayerRepository.get_clan_for_player(obj)).data
+
     class Meta:
         model = Player
-        fields = ('tag', 'name', 'details')
+        fields = ('tag', 'name', 'clan', 'details')
 
 
 class PlayerCardLevelSerializer(HyperlinkedModelSerializer):
