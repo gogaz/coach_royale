@@ -17,7 +17,7 @@ def clans_list(request):
 
 
 @api_view(['GET'])
-def clan_infos(request, tag):
+def clan_info(request, tag):
     try:
         clan = Clan.objects.get(tag=tag)
     except Clan.DoesNotExist:

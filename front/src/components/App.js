@@ -8,6 +8,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 
 import "../style/app.css"
 import { handleErrors } from "../helpers/api";
+import PlayerApp from "./player/PlayerApp";
 
 library.add(fas);
 
@@ -38,7 +39,7 @@ export default class App extends React.Component {
                             <Switch>
                                 {this.state.defaultUrl && <Route exact path="/" component={() => <Redirect to={this.state.defaultUrl} />}/>}
                                 <Route path='/clan' component={ ClanApp } />
-                                <Route path='/player' component={ null } />
+                                <Route path='/player' component={ PlayerApp } />
                             </Switch>
                         </div>
                     </main>

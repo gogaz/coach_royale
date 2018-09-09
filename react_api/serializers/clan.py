@@ -51,4 +51,4 @@ class ClanFullSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Clan
-        fields = ('tag', 'name', 'last_refresh', 'details')
+        fields = ('tag', 'name', 'details')

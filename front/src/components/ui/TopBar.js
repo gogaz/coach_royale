@@ -28,11 +28,12 @@ export default class TopBar extends React.Component {
                             </button>
                         </li>
                     </ul>) }
+                { !this.props.user &&
                 <ul className="nav navbar-nav ml-auto">
                     <li className="nav-item px-3">
                         <Link to={'/login'} className="nav-link"><FontAwesomeIcon icon={"sign-in-alt"}/> Login</Link>
                     </li>
-                </ul>
+                </ul>}
             </header>)
     }
 }

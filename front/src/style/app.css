@@ -286,3 +286,6 @@ i.donations-icons svg {
 .trophy-td img {
     height: 1.5rem;
 }
+.rt-td a {
+    text-decoration: none;
+}
