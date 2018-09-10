@@ -1,4 +1,5 @@
 import sys
+
 import clashroyale
 
 from react_api.models import Clan, Player, Card
@@ -12,8 +13,10 @@ def run_refresh_method(cmd, options, func, iterable, depth=3, **kwargs):
         if i is None:
             if options['clan']:
                 i = Clan(tag=options['clan'])
+                options.update(clan=None)
             elif options['player']:
                 i = Player(tag=options['player'])
+                options.update(player=None)
             else:
                 exit_with_failure(cmd)
             i.refresh = True

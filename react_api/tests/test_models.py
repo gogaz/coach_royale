@@ -1,5 +1,6 @@
-from django.test import TestCase
 from box import Box
+from django.test import TestCase
+
 from react_api.models import Card, int_difference_instances
 
 
