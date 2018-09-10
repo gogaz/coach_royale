@@ -35,7 +35,7 @@ jobs:
 
       - run:
           name: install codecov
-          command: pip install codecov
+          command: sudo pip install codecov
 
       - save_cache:
           paths:
@@ -73,7 +73,7 @@ jobs:
           command: 'sudo npm install -g npm@latest'
 
       - restore_cache:
-          key:
+          keys:
             - v1-dependencies-{{ checksum "front/package.json" }}
             - v1-dependencies-
 
