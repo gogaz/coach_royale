@@ -52,7 +52,7 @@ jobs:
           command: |
             . venv/bin/activate
             mv coach_royale/settings.example.py coach_royale/settings.py
-            python manage.py test
+            python manage.py test --noinput
 
       - store_artifacts:
           path: test-reports
