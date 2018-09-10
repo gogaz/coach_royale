@@ -81,8 +81,8 @@ jobs:
           paths:
             - node_modules
       - run:
-        name: Build Reactjs
-        command: npm run build
+          name: Build Reactjs
+          command: npm run build
 
 workflows:
   version: 2
