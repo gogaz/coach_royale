@@ -49,7 +49,7 @@ jobs:
       # https://nose.readthedocs.io
       - run:
           name: run tests
-          environment; DJANGO_SETTINGS_MODULE=coach_royale.settings.example
+          environment: DJANGO_SETTINGS_MODULE=coach_royale.settings.example
           command: |
             . venv/bin/activate
             python manage.py test
