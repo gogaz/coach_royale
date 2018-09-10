@@ -70,14 +70,14 @@ jobs:
           command: 'sudo npm install -g npm@latest'
 
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "front/package.json" }}
 
       - run:
           name: Install npm dependencies
           command: cd front && npm install
 
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "front/package.json" }}
           paths:
             - node_modules
       - run:
