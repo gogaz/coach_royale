@@ -60,7 +60,9 @@ jobs:
 
       - run:
           name: Code coverage
-          command: codecov
+          command: |
+          . venv/bin/activate
+          codecov
 
   # Build the front-end
   build-front:
