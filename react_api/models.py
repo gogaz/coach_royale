@@ -2,24 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-# Helpers
-def compare_instances(obj1, obj2, excluded_keys):
-    d1, d2 = obj1.__dict__, obj2.__dict__
-    old, new = {}, {}
-    for k, v in d1.items():
-        if k in excluded_keys:
-            continue
-        try:
-            if v != d2[k]:
-                new.update({k: v})
-                old.update({k: d2[k]})
-        except KeyError:
-            old.update({k: v})
-
-    return old, new
-
-
-def int_difference_instances(obj1, obj2, excluded_keys):
+def int_difference_instances(obj1, obj2, excluded_keys=()):
     d1, d2 = obj1.__dict__, obj2.__dict__
     res = {}
     for k, v in d1.items():
