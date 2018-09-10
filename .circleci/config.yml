@@ -62,7 +62,7 @@ jobs:
   build-front:
     docker:
       - image: circleci/node:8-jessie
-    working_directory: ~/repo/front
+    working_directory: ~/repo
     steps:
       - checkout
       - run:
@@ -74,7 +74,7 @@ jobs:
 
       - run:
           name: Install npm dependencies
-          command: ls -lah . && npm install
+          command: cd front && npm install
 
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
@@ -82,7 +82,7 @@ jobs:
             - node_modules
       - run:
           name: Build Reactjs
-          command: npm run build
+          command: cd front && npm run build
 
 workflows:
   version: 2
