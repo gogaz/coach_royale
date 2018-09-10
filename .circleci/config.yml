@@ -50,7 +50,7 @@ jobs:
       - run:
           name: run tests
           environment:
-            DJANGO_SETTINGS_MODULE=coach_royale.settings.example
+            DJANGO_SETTINGS_MODULE: coach_royale.settings.example
           command: |
             . venv/bin/activate
             python manage.py test
