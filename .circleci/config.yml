@@ -51,7 +51,8 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python manage.py test --noinput
+            coverage run manage.py test --noinput
+            coverage report
 
       - store_artifacts:
           path: test-reports
