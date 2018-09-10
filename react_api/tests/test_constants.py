@@ -36,11 +36,10 @@ class ModelsTestCase(TestCase):
 
     def test_instances_differences(self):
         card1 = Card(name="Card 1", key='card-1', arena=12, elixir=42, max_level=1)
-        card2 = Card(name="Card 2", key='card-2', arena=42, elixir=12, max_level=1)
-        diff = int_difference_instances(card1, card2)
+        card2 = Card(name="Card 2", key='card-2', elixir=12, max_level=12)
+        diff = int_difference_instances(card1, card2, ('max_level',))
         self.assertIn('elixir', diff)
-        self.assertIn('arena', diff)
+        self.assertNotIn('arena', diff)
         self.assertNotIn('key', diff)
         self.assertEqual(diff['elixir'], 30)
-        self.assertEqual(diff['arena'], -30)
         self.assertNotIn('max_level', diff)
