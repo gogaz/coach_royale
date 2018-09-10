@@ -61,7 +61,7 @@ jobs:
   # Build the front-end
   build-front:
     docker:
-      - image: circleci/node:4.8.2-jessie
+      - image: circleci/node:8-jessie
     working_directory: ~/repo/front
     steps:
       - checkout
