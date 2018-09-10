@@ -95,7 +95,7 @@ DATABASES = {
         'PORT': '5432',
         'OPTIONS': {
             # 'charset': 'utf8mb4',
-            'sslmode': 'require',
+            # 'sslmode': 'require',
         },
     }
 }
