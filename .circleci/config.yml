@@ -51,8 +51,8 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            ls -lah .
-            mv ~/repo/coach_royale/settings.example.py ~/repo/coach_royale/settings.py
+            ls -lah ./coach_royale
+            mv ./coach_royale/settings.example.py ./coach_royale/settings.py
             python manage.py test
 
       - store_artifacts:
