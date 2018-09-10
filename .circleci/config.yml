@@ -51,9 +51,35 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            mv coach_royale/settings.example.py coach_royale/settings.py
+            mv ~/repo/coach_royale/settings.example.py ~/repo/coach_royale/settings.py
             python manage.py test
 
       - store_artifacts:
           path: test-reports
           destination: test-reports
+
+  # Build the front-end
+  build-front:
+    docker:
+      - image: circleci/node:4.8.2-jessie
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
+
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+
+      - run:
+          name: Install npm dependencies
+          command: cd front && npm install
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+        name: Build Reactjs
+        command: cd front && npm run build
