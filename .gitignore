@@ -12,3 +12,4 @@ lib
 pip-selfcheck.json
 # sensitive files
 settings*.py
+!settings.example.py
