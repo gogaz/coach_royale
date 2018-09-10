@@ -284,8 +284,23 @@ i.donations-icons svg {
     margin: 0;
 }
 .trophy-td img {
-    height: 1.5rem;
+    height: 2rem;
 }
-.rt-td a {
+a:hover {
     text-decoration: none;
+}
+.player-clan-info span {
+    border-left: 1px solid #c2cfd6;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.player-clan-info .donations-icons img {
+    vertical-align: top;
+    margin-top: 5px;
+    height: 1rem;
+}
+.player-clan-info .donations-icons svg {
+    font-size: .5rem;
+    top: 0;
+    margin-top: .69rem;
 }

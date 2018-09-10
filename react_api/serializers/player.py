@@ -1,6 +1,6 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
-from react_api.models import Player, PlayerCardLevel, PlayerClanHistory, PlayerStatsHistory
+from react_api.models import Player, PlayerCardLevel, PlayerClanHistory, PlayerStatsHistory, PlayerClanStatsHistory
 from react_api.repository import PlayerRepository
 from react_api.serializers.clan import ClanSerializer, ClanFullSerializer
 from react_api.serializers.misc import CardSerializer
@@ -18,6 +18,14 @@ class PlayerStatsSerializer(HyperlinkedModelSerializer):
                   'total_games', 'tournament_games',
                   'wins', 'losses', 'draws', 'win_3_crowns',
                   'clan_cards_collected', 'war_day_wins')
+
+
+class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = PlayerClanStatsHistory
+        fields = ('timestamp', 'last_refresh',
+                  'clan_role', 'current_clan_rank',
+                  'donations', 'donations_received')
 
 
 class PlayerSerializer(HyperlinkedModelSerializer):
@@ -43,10 +51,9 @@ class PlayerCardLevelSerializer(HyperlinkedModelSerializer):
         fields = ('card', 'count', 'level')
 
 
-class PlayerClanHistorySerializer(HyperlinkedModelSerializer):
-    clan = ClanSerializer(required=False)
+class PlayerClanSerializer(HyperlinkedModelSerializer):
+    clan = ClanFullSerializer(required=False)
 
     class Meta:
         model = PlayerClanHistory
         fields = ('clan', 'joined_clan', 'left_clan')
-

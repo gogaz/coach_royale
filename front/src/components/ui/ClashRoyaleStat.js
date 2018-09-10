@@ -2,7 +2,10 @@ import React from 'react'
 
 export default class ClashRoyaleStat extends React.Component {
     render () {
-        let value = isNaN(this.props.value) ? this.props.value : Number(this.props.value).toLocaleString('en-us');
+        let value = this.props.value;
+        if (this.props.localeString)
+            value = isNaN(this.props.value) ? this.props.value : Number(this.props.value).toLocaleString(this.props.localeString);
+
         return (
             <div className="col-6 col-md-3 col-lg-2 clan_stats">
                 <div className="content" style={{backgroundImage: "url(" + this.props.image + ")"}}>
@@ -13,3 +16,4 @@ export default class ClashRoyaleStat extends React.Component {
         );
     }
 }
+ClashRoyaleStat.defaultProps = {localeString: 'en-us'};

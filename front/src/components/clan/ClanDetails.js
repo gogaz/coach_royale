@@ -70,7 +70,7 @@ export default class ClanDetails extends React.Component {
                                              value={Number(clan.details.score).toLocaleString('en-us')}/>
                             <ClashRoyaleStat title="Members"
                                              image={images.socialAlt}
-                                             value={clan.details.member_count}/>
+                                             value={clan.details.member_count + " / 50"}/>
                             <ClashRoyaleStat image={country_icon}
                                 title="Region" value={clan.details.region} />
                             <ClashRoyaleStat image={images.cards} title="Donations" value={clan.details.donations}/>

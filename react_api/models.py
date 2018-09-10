@@ -120,6 +120,7 @@ class PlayerStatsHistory(models.Model):
     player = models.ForeignKey('Player', null=True, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(null=True)
     last_refresh = models.DateTimeField(null=True)
+
     # Player stats
     level = models.IntegerField()
     total_donations = models.IntegerField(null=True)

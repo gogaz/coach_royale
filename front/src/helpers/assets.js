@@ -38,5 +38,6 @@ export const images = {
     legendaryTrophy: "https://raw.githubusercontent.com/smlbiobot/cr-ui/master/ui-trim/ui_sprite_0670.png",
     clanTrophy: "https://raw.githubusercontent.com/smlbiobot/cr-ui/master/ui-trim/ui_sprite_0676.png",
     arenaX: (i) => { return "https://raw.githubusercontent.com/RoyaleAPI/cr-api-assets/master/arenas/arena" + Number(i).toString() + '.png'},
+    leagueX: (i) => { return "https://raw.githubusercontent.com/RoyaleAPI/cr-api-assets/master/arenas/league" + Number(i).toString() + '.png'},
     regionIcon: (region) => { return "https://raw.githubusercontent.com/hjnilsson/country-flags/master/png100px/" + region + '.png' },
 };
