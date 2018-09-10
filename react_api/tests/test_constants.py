@@ -18,13 +18,13 @@ class CardTestCase(TestCase):
                 "arena": 0,
                 "description": "Spawns an army of Skeletons. Meet Larry and his friends Harry, Gerry, Terry, Mary, etc.",
                 "id": 26000012}
-        data = Box(data)
+        data = Box(data, camel_killer_box=True)
 
         card = Card.instance_from_data(data)
         # Test required fields
-        self.assertEqual(card.name, "Skeleton Army")
-        self.assertEqual(card.key, 'skeleton-army')
-        self.assertContains(card.icon, "http://")
-        # Test unicity
+        self.assertEqual(card.name, data.name)
+        self.assertEqual(card.key, data.key)
+        self.assertEqual(card.image, data.icon)
+        # Test uniqueness
         Card.instance_from_data(data)
         self.assertEqual(Card.objects.filter(key="skeleton-army").count(), 1)
