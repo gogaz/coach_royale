@@ -3,6 +3,7 @@ clashroyale==3.5.14
 Django==2.1.1
 django-rest-framework==0.1.0
 djangorestframework==3.8.2
+psycopg2==2.7.5
 gunicorn==19.9.0
 python-box==3.2.0
 requests==2.19.1
