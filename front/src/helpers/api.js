@@ -1,5 +1,3 @@
-import moment from "moment";
-
 export function handleErrors(response) {
     if (!response.ok) {
         throw Error(response.statusText);
@@ -8,7 +6,7 @@ export function handleErrors(response) {
 }
 
 export const locale = window.navigator.userLanguage || window.navigator.language;
-moment.locale(locale);
+require('moment').locale(locale);
 
 export function playerLeagueFromTrophies(trophies) {
     let r = Number((Number(trophies) - 4000) / 300);
