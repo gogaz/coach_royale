@@ -7,8 +7,6 @@ import ClashRoyaleStat from './ClashRoyaleStat';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-require('intl');
-
 describe('<Loading />', () => {
     it('renders loading.svg image', () => {
         const wrapper = render(<Loading/>);
