@@ -4,7 +4,8 @@
   "private": false,
   "jest": {
     "coverageDirectory": "./coverage/",
-    "collectCoverage": true
+    "collectCoverage": true,
+    "collectCoverageFrom": ["src/**/**/*.{js,jsx}"]
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
