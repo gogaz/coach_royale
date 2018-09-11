@@ -97,7 +97,7 @@ jobs:
       - run:
           name: Test front-end
           command: |
-            cd front && npm test && codecov
+            cd front && npm test && npm run coverage
 
 workflows:
   version: 2
