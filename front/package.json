@@ -1,7 +1,11 @@
 {
   "name": "front",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.4",
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
@@ -20,7 +24,8 @@
   },
   "scripts": {
     "build-dev": "webpack --mode=development",
-    "build": "webpack --mode=production"
+    "build": "webpack --mode=production",
+    "test": "jest"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -31,9 +36,12 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "chai": "^4.1.2",
     "codecov": "^3.1.0",
     "css-loader": "^0.28.11",
     "dateformat": "^3.0.3",
+    "enzyme": "^3.6.0",
+    "enzyme-adapter-react-16": "^1.5.0",
     "file-loader": "^1.1.11",
     "jest": "^23.6.0",
     "json-loader": "^0.5.7",

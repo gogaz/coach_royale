@@ -94,6 +94,11 @@ jobs:
           name: Build front-end
           command: cd front && npm run build
 
+      - run:
+          name: Test front-end
+          command: |
+            cd front && npm test && codecov
+
 workflows:
   version: 2
   build_and_test:
