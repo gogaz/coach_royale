@@ -12,7 +12,7 @@ describe('<Loading />', () => {
         const wrapper = render(<Loading/>);
         expect(wrapper.html()).to.contain('svg');
     });
-    it('renders only an img when `height` is passed', () => {
+    it('renders a single img when `height` is passed', () => {
         const wrapper = render(<Loading height={10}/>);
         expect(wrapper.find('div')).to.have.lengthOf(0);
     })
@@ -28,7 +28,7 @@ describe('<ClashRoyaleStat/>', () => {
         const wrapper = render(<ClashRoyaleStat title="" value={9999}/>);
         expect(wrapper.find('.value').text()).to.equal('9,999');
     });
-    it('is able to format using given locale', () => {
+    it('is able to format without locale', () => {
         const wrapper = render(<ClashRoyaleStat title="" value={9999} localeString=""/>);
         expect(wrapper.find('.value').text()).to.equal('9999');
     })
