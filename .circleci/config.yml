@@ -94,6 +94,10 @@ jobs:
           name: Build front-end
           command: cd front && npm run build
 
+      - run:
+          name: Prepare testing
+          command: npm install -g
+
 workflows:
   version: 2
   build_and_test:
