@@ -27,7 +27,7 @@
     "build-dev": "webpack --mode=development",
     "build": "webpack --mode=production",
     "test": "jest",
-    "coverage": "codecov"
+    "coverage": "codecov --root=.."
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
