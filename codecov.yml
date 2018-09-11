@@ -1,5 +1,5 @@
 fixes:
-  - "src::front/src"
+  - "src/::front/src/"
 parsers:
   javascript:
     enable_partials: yes
