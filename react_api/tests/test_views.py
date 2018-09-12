@@ -74,3 +74,11 @@ class ViewsTestCase(TestCase):
         self.assertIn('last_refresh', data)
 
         self._test_route('player_clan', args=['A'], status_code=404)
+
+    def test_player_info(self):
+        data = self._test_route('player_info', args=['ABC1'])
+        self.assertGreaterEqual(len(data), 4)
+        self.assertIn('details', data)
+        self.assertGreaterEqual(len(data['details']), 19)
+
+        self._test_route('player_info', args=['A'], status_code=404)
