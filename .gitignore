@@ -3,6 +3,7 @@
 # Trash files
 __pycache__
 *-lock.json
+!package-lock.json
 # External libraries
 venv
 front/node_modules
@@ -13,6 +14,7 @@ pip-selfcheck.json
 # sensitive files
 settings*.py
 !settings.example.py
-# CI
+# CI & Docker
 .coverage
 front/coverage/
+logs
