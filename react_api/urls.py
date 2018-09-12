@@ -6,7 +6,7 @@ from react_api.views.default import home
 from react_api.views.player import player_info, player_clan
 
 urlpatterns = [
-    path('home', home),
+    path('home', home, name='home'),
     path('clan/', include([
         path('all', clans_list, name='clans_list'),
         path('<slug:tag>/', include([
@@ -16,8 +16,8 @@ urlpatterns = [
     ])),
     path('player/', include([
         path('<slug:tag>/', include([
-            path('', player_info),
-            path('clan', player_clan)
+            path('', player_info, name="player_info"),
+            path('clan', player_clan, name="player_clan")
         ]))
     ]))
 ]

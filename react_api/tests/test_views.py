@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from react_api.models import Player, PlayerClanHistory, Clan, ClanHistory
 
@@ -13,7 +16,11 @@ class ViewsTestCase(TestCase):
             p.save()
             pch = PlayerClanHistory(joined_clan=None, left_clan=None, player=p, clan=self.clans[0])
             pch.save()
-        ch = ClanHistory(clan=self.clans[0], score=9999, badge="hello")
+
+        now = timezone.now()
+        ch = ClanHistory(clan=self.clans[0], score=5555, badge="bye", last_refresh=now - timedelta(minutes=1))
+        ch.save()
+        ch = ClanHistory(clan=self.clans[0], score=9999, badge="hello", last_refresh=now)
         ch.save()
         ch = ClanHistory(clan=self.clans[1], score=1)
         ch.save()
@@ -22,6 +29,12 @@ class ViewsTestCase(TestCase):
         response = self.client.get(reverse(route, **kwargs), format='json')
         self.assertEqual(response.status_code, status_code)
         return response.data
+
+    def test_home(self):
+        data = self._test_route('home')
+        self.assertIn('url', data)
+        self.assertNotEquals(data['url'][:3], '/api')
+        self.assertEqual(data['url'][0], '/')
 
     def test_clans_list_view(self):
         data = self._test_route('clans_list')
@@ -48,9 +61,16 @@ class ViewsTestCase(TestCase):
 
     def test_clan_members(self):
         data = self._test_route('clan_members', args=['ABCD0'])
-        self.assertEqual(len(data), 3)
+        self.assertGreaterEqual(len(data), 3)
 
         data = self._test_route('clan_members', args=['ABCD1'])
         self.assertEqual(len(data), 0)
 
         self._test_route('clan_members', args=['A'], status_code=404)
+
+    def test_player_clan(self):
+        data = self._test_route('player_clan', args=['ABC1'])
+        self.assertGreaterEqual(len(data), 6)
+        self.assertIn('last_refresh', data)
+
+        self._test_route('player_clan', args=['A'], status_code=404)
