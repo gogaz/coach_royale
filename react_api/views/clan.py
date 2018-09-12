@@ -12,7 +12,7 @@ from react_api.serializers.clan import ClanSerializer, ClanFullSerializer, Playe
 def clans_list(request):
     if request.method == 'GET':
         clans = Clan.objects.all()
-        serializer = ClanSerializer(clans, many=True)
+        serializer = ClanFullSerializer(clans, many=True)
         return Response(serializer.data)
 
 
