@@ -2,8 +2,12 @@ import unittest
 from io import StringIO
 
 from clashroyale.errors import NotResponding
+from django.test import TestCase
 
+from react_api.helpers.api.clan import refresh_clan_details
 from react_api.helpers.api.helpers import command_print, run_refresh_method
+from react_api.models import Clan, Player, ClanHistory, PlayerClanHistory, PlayerClanStatsHistory
+from react_api.tests.fake_api_client import FakeAPIClient
 
 
 class HelpersTestCase(unittest.TestCase):
@@ -43,3 +47,17 @@ class HelpersTestCase(unittest.TestCase):
         run_refresh_method(self, options, func, [None, None])
 
     # TODO: def test_store_battle_players(self):
+
+
+class ClanHelpersTestCase(TestCase):
+    def setUp(self):
+        self.api_client = FakeAPIClient()
+
+    def test_refresh_clan_details(self):
+        refresh_clan_details(None, {'clan': '', 'verbose': False}, None, self.api_client)
+        self.assertEqual(Clan.objects.count(), 1)
+        self.assertEqual(Player.objects.count(), 3)
+        self.assertEqual(ClanHistory.objects.count(), 1)
+        self.assertEqual(PlayerClanHistory.objects.count(), 3)
+        self.assertEqual(PlayerClanStatsHistory.objects.count(), 3)
+        self.assertEqual(PlayerClanHistory.objects.filter(joined_clan__isnull=True).count(), 3)

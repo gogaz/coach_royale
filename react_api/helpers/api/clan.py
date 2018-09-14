@@ -23,10 +23,13 @@ def refresh_clan_details(command, options, db_clan, api_client):
     :param Clan|None db_clan: a clan
     :return: False on error
     """
-    if options['verbose']:
-        if db_clan:
+
+    if db_clan:
+        if options['verbose']:
             command_print(command, "#INFO: Refreshing clan %s (%s)", db_clan.name, db_clan.tag)
-        else:
+    else:
+        db_clan = Clan(tag=options['clan'])
+        if options['verbose']:
             command.stdout.write("#INFO: Refreshing new clan %s" % options['clan'])
 
     clan = api_client.get_clan(db_clan.tag)
@@ -66,6 +69,11 @@ def refresh_clan_details(command, options, db_clan, api_client):
 
     db_clan_history.save()
 
+    read_clan_members(clan, db_clan, command, now, options['verbose'], clan_created)
+    read_ended_wars(command, db_clan, api_client, options['verbose'])
+
+
+def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False, clan_created=False):
     # Read clan members
     read_players = []
     for player in clan.members:
@@ -107,7 +115,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
             if p not in read_players:
                 pch.left_clan = now
                 pch.save()
-                if options['verbose']:
+                if verbose:
                     command_print(command, "#INFO: Player %s (%s) left clan", p.name, p.tag)
         for p in read_players:
             if p not in actual_players:
@@ -126,10 +134,12 @@ def refresh_clan_details(command, options, db_clan, api_client):
                 else:
                     db_player_clan.joined_clan = now
                 db_player_clan.save()
-                if options['verbose']:
+                if verbose:
                     command_print(command, "#INFO: Player %s (%s) joined clan", p.name, p.tag)
 
-    if options['verbose']:
+
+def read_ended_wars(command, db_clan, api_client, verbose=False):
+    if verbose:
         command.stdout.write("Refreshing ended wars")
     wars = api_client.get_clan_war_log(db_clan.tag)
     for war in wars:
@@ -160,8 +170,6 @@ def refresh_clan_details(command, options, db_clan, api_client):
             db_war.season = war.season_number
             db_war.date_end = db_war.date_start + timezone.timedelta(hours=48)
             db_war.save()
-
-    return True
 
 
 def update_war_status(command, options, db_clan):
