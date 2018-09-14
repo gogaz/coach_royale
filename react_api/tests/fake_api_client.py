@@ -108,15 +108,7 @@ class FakeAPIClient:
                         "battlesPlayed": 1,
                         "wins": 1,
                         "collectionDayBattlesPlayed": 3
-                    },
-                    {
-                        "tag": "ABCDEF03",
-                        "name": "g",
-                        "cardsEarned": 1680,
-                        "battlesPlayed": 1,
-                        "wins": 1,
-                        "collectionDayBattlesPlayed": 3
-                    },
+                    }
                 ],
                 "standings": [
                     {
@@ -218,5 +210,12 @@ class FakeAPIClient:
                 ],
                 "seasonNumber": 11
             },
+            {
+                # Duplicated `createdDate` value
+                "createdDate": 1536937058,
+                "participants": [],
+                "standings": [],
+                "seasonNumber": 11
+            }
         ]
         return BoxList(data, camel_killer_box=True)
