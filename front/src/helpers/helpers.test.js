@@ -27,6 +27,6 @@ test('assets.image returns an image URL with https', () => {
         let result = images[key];
         if (result && {}.toString.call(result) === '[object Function]')
             result = result(42);
-        expect(result).toEqual(expect.stringMatching(/^https:\/\/.*/))
+        expect(result).toEqual(expect.stringMatching(/.*\.(png|jpg|gif|svg)/))
     }
 });

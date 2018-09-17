@@ -43,13 +43,13 @@ export default class PlayersClan extends React.Component {
                     <span className="text-muted">
                         {player.donations}
                         <i className="donations-icons">
-                            <img src={images.cwCards} /><FontAwesomeIcon icon="arrow-up" />
+                            <img src={images.cardsWar} /><FontAwesomeIcon icon="arrow-up" />
                         </i>
                     </span>
                     <span className="text-muted">
                         {player.donations_received}
                         <i className="donations-icons">
-                            <img src={images.cwCards} /><FontAwesomeIcon icon="arrow-down" />
+                            <img src={images.cardsWar} /><FontAwesomeIcon icon="arrow-down" />
                         </i>
                     </span>
                 </div>

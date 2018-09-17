@@ -1,15 +1,6 @@
 @import "./responsive.css";
 @import "./style.css";
 
-.img-valign {
-  vertical-align: middle;
-  margin-bottom: 0.75em;
-}
-
-.display-deck {
-    margin-top: 15px;
-}
-
 .navbar-hidden .navbar-toggler
 {
     display: none;
@@ -39,12 +30,6 @@
     top: 55px;
 }
 
-.profile-activity-item {
-    padding: 5px;
-}
-.card-header > i.fa{
-    margin: 0;
-}
 .card-danger>.card-header {
     color: #f63c3a;
     background-color: #f2dede;
@@ -81,104 +66,6 @@
     border-color: #f0f3f5;
 }
 
-/** VERTICAL TIMELINE **/
-.timeline {
-    position: relative;
-    padding: 21px 0px 10px;
-    margin-top: 4px;
-    margin-bottom: 30px;
-}
-
-.timeline .line {
-    position: absolute;
-    width: 4px;
-    display: block;
-    background: currentColor;
-    top: 0px;
-    bottom: 0px;
-    margin-left: 30px;
-}
-
-.timeline .separator {
-    border-top: 1px solid currentColor;
-    padding: 5px;
-    padding-left: 40px;
-    font-style: italic;
-    font-size: .9em;
-    margin-left: 30px;
-}
-
-.timeline .line::before { top: -4px; }
-.timeline .line::after { bottom: -4px; }
-.timeline .line::before,
-.timeline .line::after {
-    content: '';
-    position: absolute;
-    left: -4px;
-    width: 12px;
-    height: 12px;
-    display: block;
-    border-radius: 50%;
-    background: currentColor;
-}
-
-.timeline .card {
-    position: relative;
-    margin: 10px 0px 21px 70px;
-    clear: both;
-}
-
-.timeline .card::before {
-    position: absolute;
-    display: block;
-    top: 8px;
-    left: -25px;
-    content: '';
-    width: 0px;
-    height: 0px;
-    border: inherit;
-    border-width: 12px;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
-}
-
-.timeline .card .card-header.icon .fa {font-size: 20px;}
-.timeline .card .card-header.icon * {vertical-align: middle;line-height: 40px;}
-.timeline .card .card-header.icon {
-    position: absolute;
-    left: -59px;
-    display: block;
-    min-width: 45px;
-    min-height: 45px;
-    padding: 0px;
-    border: 1px solid #c2cfd6;
-    text-align: center;
-    float: left;
-}
-
-.timeline .card-outline {
-    border-color: transparent;
-    background: transparent;
-    box-shadow: none;
-}
-
-.timeline .card-outline .card-body {
-    padding: 10px 0px;
-}
-
-.timeline .card-outline .card-header:not(.icon),
-.timeline .card-outline .card-footer {
-    display: none;
-}
-
-.image-container {
-    position: relative;
-    text-align: center;
-    color: white;
-    /* padding: 3pc; */
-}
-
 /* Bottom left text */
 .image-bottom-left {
     position: absolute;
@@ -207,24 +94,6 @@
     right: 16px;
 }
 
-/* Centered text */
-.image-content-centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.timeline-datetime
-{
-    font-size: 15px;
-    display: block;
-    overflow-x: visible;
-}
-img.image-50
-{
-    margin-left: 25%;
-}
 .btn-card
 {
     display: flex;

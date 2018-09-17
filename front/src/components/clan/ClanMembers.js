@@ -79,7 +79,7 @@ export default class ClanMembers extends React.Component {
                         Cell: ({ row }) => {
                             return (<span>{row.received}
                                 <i className="donations-icons">
-                                    <img src={images.cwCards} /><FontAwesomeIcon icon="arrow-down" />
+                                    <img src={images.cardsWar} /><FontAwesomeIcon icon="arrow-down" />
                                 </i>
                             </span>)
                         }
@@ -92,7 +92,7 @@ export default class ClanMembers extends React.Component {
                         Cell: ({ row }) => {
                             return (<span>{row.given}
                                 <i className="donations-icons">
-                                    <img src={images.cwCards} /><FontAwesomeIcon icon="arrow-up" />
+                                    <img src={images.cardsWar} /><FontAwesomeIcon icon="arrow-up" />
                                 </i>
                             </span>)
                         }
