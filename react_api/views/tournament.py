@@ -15,4 +15,4 @@ def joinable_tournaments(request):
                                                 end_time__gt=timezone.now()) \
                                         .order_by('-start_time')
 
-        return Response(TournamentSerializer(tournaments, many=True, context={'request': request}).data)
+        return Response(TournamentSerializer(tournaments, many=True).data)

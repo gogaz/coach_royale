@@ -29,10 +29,11 @@ def read_tournament(data, save=True):
 
 
 def refresh_open_tournaments(command, options, api_client):
-    pages = options['open']
     refresh = OpenTournamentRefresh(timestamp=timezone.now(), pages=pages)
     total = 0
-    for i in range(pages):
+    page_total = 1
+    while page_total > 0:
+        page_total = 0
         try:
             tournaments = api_client.get_open_tournaments(page=options['open'])
         except NotResponding:
@@ -47,7 +48,6 @@ def refresh_open_tournaments(command, options, api_client):
                 command.stderr.write("#ERR: %s" % e.reason)
         else:
             refresh.success = True
-            page_total = 0
             for tournament in tournaments:
                 _, new = read_tournament(tournament)
                 if new:
@@ -58,5 +58,5 @@ def refresh_open_tournaments(command, options, api_client):
         finally:
             refresh.save()
             Tournament.objects.filter(end_time__lte=timezone.now()).delete()
-    if options['verbose'] and options['open'] > 1:
+    if options['verbose']:
         command.stdout.write("#INFO: Read %d tournaments total" % total)
