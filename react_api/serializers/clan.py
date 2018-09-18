@@ -1,7 +1,8 @@
-from rest_framework.fields import SerializerMethodField, DateTimeField
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
 from react_api.models import Clan, ClanHistory, PlayerClanStatsHistory, Player
+
 
 class ClanDetailsSerializer(HyperlinkedModelSerializer):
 

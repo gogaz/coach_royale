@@ -274,24 +274,25 @@ class PlayerClanWar(models.Model):
             .format(self, "Win" if self.final_battles_wins else "Lose" if self.final_battles_done else "Yet!")
 
 
-class JoinableTournamentRefresh(models.Model):
+class OpenTournamentRefresh(models.Model):
     timestamp = models.DateTimeField()
     success = models.BooleanField()
     error = models.TextField(null=True)
+    pages = models.IntegerField(default=1)
 
 
 class Tournament(models.Model):
     tag = models.CharField(max_length=20)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True)
     open = models.BooleanField()
-    max_players = models.IntegerField()
-    current_players = models.IntegerField()
-    status = models.CharField(max_length=50)
+    max_players = models.IntegerField(null=True)
+    current_players = models.IntegerField(null=True)
+    status = models.CharField(max_length=50, null=True)
     create_time = models.DateTimeField()
-    prep_time = models.IntegerField()  # in seconds
+    prep_time = models.IntegerField(null=True)  # in seconds
     start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True)
-    duration = models.IntegerField()  # in seconds
+    duration = models.IntegerField(null=True)  # in seconds
 
     class Meta:
         unique_together = (('tag', 'create_time'),)

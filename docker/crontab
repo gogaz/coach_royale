@@ -1,0 +1,3 @@
+*/15 * * * * python /code/manage.py royaleapi_pull --battles
+25 */6 * * * python /code/manage.py royaleapi_pull_clans --war
+*/20 * * * * python /code/manage.py royaleapi_tournaments --open 15

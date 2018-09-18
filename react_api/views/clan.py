@@ -3,9 +3,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from react_api.models import Clan, ClanHistory, PlayerClanStatsHistory, Player
+from react_api.models import Clan, PlayerClanStatsHistory
 from react_api.repository import ClanRepository
-from react_api.serializers.clan import ClanSerializer, ClanFullSerializer, PlayerClanDetailsSerializer
+from react_api.serializers.clan import ClanFullSerializer, PlayerClanDetailsSerializer
 
 
 @api_view(['GET'])
