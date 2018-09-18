@@ -1,7 +1,8 @@
+import datetime
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
-from .helpers import command_print, store_battle_players
 from react_api.models import (Player,
                               Clan,
                               PlayerClanHistory,
@@ -10,6 +11,7 @@ from react_api.models import (Player,
                               PlayerCardLevel,
                               Battle,
                               BattleMode)
+from .helpers import command_print, store_battle_players
 
 
 def refresh_player_profile(command, options, db_player, api_client):
@@ -94,14 +96,14 @@ def refresh_player_profile(command, options, db_player, api_client):
 
     # Player battles
     if options['battles']:
-        refresh_player_battles(command, options, db_player, False)
+        refresh_player_battles(command, options, api_client, db_player, False)
 
     db_player.last_refresh = now
     db_player.save()
     return True
 
 
-def refresh_player_battles(command, options, db_player, announce_player=True):
+def refresh_player_battles(command, options, api_client, db_player, announce_player=True):
     if announce_player:
         try:
             command_print(command, "#INFO: Refreshing battles for player (%s) %s", db_player.name, db_player.tag)
@@ -157,10 +159,10 @@ def refresh_player_battles(command, options, db_player, announce_player=True):
             for card in team_decks[1]:
                 db_battle.team_deck.add(card)
 
-            oppononet_decks = store_battle_players(db_player, db_battle.team, b.opponent)
-            for card in oppononet_decks[0]:
+            opponent_decks = store_battle_players(db_player, db_battle.team, b.opponent)
+            for card in opponent_decks[0]:
                 db_battle.opponent_deck.add(card)
-            for card in oppononet_decks[1]:
+            for card in opponent_decks[1]:
                 db_battle.opponent_team_deck.add(card)
         else:
             store_battle_players(db_player, db_battle.team, b.team, False)
