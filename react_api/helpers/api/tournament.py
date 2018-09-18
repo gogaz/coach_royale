@@ -1,43 +1,62 @@
+import datetime
+
 from clashroyale import StatusError, NotResponding
-from django.db import IntegrityError
 from django.utils import timezone
 
-from react_api.models import Tournament, JoinableTournamentRefresh
+from react_api.models import Tournament, OpenTournamentRefresh
 
 
 def read_tournament(data, save=True):
-    t = Tournament(tag=data.tag,
-                   name=data.name,
-                   open=data.open,
-                   max_players=data.max_players,
-                   current_players=data.current_players,
-                   status=data.status,
-                   create_time=data.create_time,
-                   prep_time=data.prep_time,
-                   start_time=data.start_time,
-                   end_time=data.end_time,
-                   duration=data.duration)
+    data.create_time = datetime.datetime.fromtimestamp(data.create_time, tz=datetime.timezone.utc)
+    if not data.start_time:
+        data.start_time = data.create_time + datetime.timedelta(seconds=data.prep_time)
+    if not data.end_time:
+        data.end_time = data.start_time + datetime.timedelta(seconds=data.duration)
+
+    t, created = Tournament.objects.get_or_create(tag=data.tag, create_time=data.create_time, defaults={'open': data.open})
+    t.tag = data.tag
+    t.name = data.name
+    t.max_players = data.max_players
+    t.current_players = data.current_players
+    t.status = data.status
+    t.prep_time = data.prep_time
+    t.start_time = data.start_time
+    t.end_time = data.end_time
+    t.duration = data.duration
     if save:
+        t.save()
+    return t, created
+
+
+def refresh_open_tournaments(command, options, api_client):
+    pages = options['open']
+    refresh = OpenTournamentRefresh(timestamp=timezone.now(), pages=pages)
+    total = 0
+    for i in range(pages):
         try:
-            t.save()
-        except IntegrityError:
-            pass
-    return t
-
-
-def refresh_joinable_tournaments(api_client):
-    refresh = JoinableTournamentRefresh(timestamp=timezone.now())
-    try:
-        tournaments = api_client.get_joinable_tournaments()
-    except NotResponding:
-        refresh.error = "Not responding"
-        refresh.success = False
-    except StatusError as e:
-        refresh.error = e.reason
-        refresh.success = False
-    else:
-        refresh.success = True
-        for tournament in tournaments:
-            read_tournament(tournament)
-    finally:
-        refresh.save()
+            tournaments = api_client.get_open_tournaments(page=options['open'])
+        except NotResponding:
+            refresh.error = "Not responding"
+            refresh.success = False
+            if options['verbose']:
+                command.stderr.write("#ERR: API not responding")
+        except StatusError as e:
+            refresh.error = e.reason
+            refresh.success = False
+            if options['verbose']:
+                command.stderr.write("#ERR: %s" % e.reason)
+        else:
+            refresh.success = True
+            page_total = 0
+            for tournament in tournaments:
+                _, new = read_tournament(tournament)
+                if new:
+                    total += 1
+                    page_total += 1
+            if options['verbose']:
+                command.stdout.write("#INFO: Read %d tournaments page %d" % (page_total, i))
+        finally:
+            refresh.save()
+            Tournament.objects.filter(end_time__lte=timezone.now()).delete()
+    if options['verbose'] and options['open'] > 1:
+        command.stdout.write("#INFO: Read %d tournaments total" % total)

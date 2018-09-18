@@ -270,8 +270,8 @@ class PlayerClanWar(models.Model):
     collections_battles_wins = models.IntegerField(null=True, default=0)
 
     def __str__(self):
-        return "{} in {} (x{} / {})".format(self.player, self.clan_war, self.collections_cards_earned,
-                                            "Win" if self.final_battles_wins else "Lose" if self.final_battles_done else "X")
+        return "{0.player} in {0.clan_war} ({1} | {0.collections_cards_earned} cards)" \
+            .format(self, "Win" if self.final_battles_wins else "Lose" if self.final_battles_done else "Yet!")
 
 
 class JoinableTournamentRefresh(models.Model):
@@ -295,3 +295,6 @@ class Tournament(models.Model):
 
     class Meta:
         unique_together = (('tag', 'create_time'),)
+
+    def __str__(self):
+        return "Tournament {} started on {}".format(self.name, self.create_time.strftime("%Y-%m-%d"))
