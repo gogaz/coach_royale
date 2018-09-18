@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -273,3 +272,22 @@ class PlayerClanWar(models.Model):
     def __str__(self):
         return "{} in {} (x{} / {})".format(self.player, self.clan_war, self.collections_cards_earned,
                                             "Win" if self.final_battles_wins else "Lose" if self.final_battles_done else "X")
+
+
+class TournamentRefresh(models.Model):
+    timestamp = models.DateTimeField()
+    success = models.BooleanField()
+    error = models.TextField()
+
+
+class Tournament(models.Model):
+    tag = models.CharField(max_length=20)
+    name = models.CharField(max_length=255)
+    open = models.BooleanField()
+    max_players = models.IntegerField()
+    status = models.CharField(max_length=50)
+    create_time = models.DateTimeField()
+    prep_time = models.IntegerField()  # in seconds
+    start_time = models.DateTimeField(null=True)
+    end_time = models.DateTimeField(null=True)
+    duration = models.IntegerField()  # in seconds
