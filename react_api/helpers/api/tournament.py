@@ -19,17 +19,17 @@ def read_tournament(data, save=True):
     t.max_players = data.max_players
     t.current_players = data.current_players
     t.status = data.status
-    t.prep_time = data.prep_time
+    t.prep_time = datetime.timedelta(seconds=data.prep_time)
     t.start_time = data.start_time
     t.end_time = data.end_time
-    t.duration = data.duration
+    t.duration = datetime.timedelta(seconds=data.duration)
     if save:
         t.save()
     return t, created
 
 
 def refresh_open_tournaments(command, options, api_client):
-    refresh = OpenTournamentRefresh(timestamp=timezone.now(), pages=pages)
+    refresh = OpenTournamentRefresh(timestamp=timezone.now())
     total = 0
     page_total = 1
     while page_total > 0:
@@ -54,9 +54,9 @@ def refresh_open_tournaments(command, options, api_client):
                     total += 1
                     page_total += 1
             if options['verbose']:
-                command.stdout.write("#INFO: Read %d tournaments page %d" % (page_total, i))
+                command.stdout.write("#INFO: Read %d new tournaments " % page_total)
         finally:
             refresh.save()
             Tournament.objects.filter(end_time__lte=timezone.now()).delete()
     if options['verbose']:
-        command.stdout.write("#INFO: Read %d tournaments total" % total)
+        command.stdout.write("#INFO: Read %d new tournaments total" % total)

@@ -278,7 +278,6 @@ class OpenTournamentRefresh(models.Model):
     timestamp = models.DateTimeField()
     success = models.BooleanField()
     error = models.TextField(null=True)
-    pages = models.IntegerField(default=1)
 
 
 class Tournament(models.Model):
@@ -289,10 +288,10 @@ class Tournament(models.Model):
     current_players = models.IntegerField(null=True)
     status = models.CharField(max_length=50, null=True)
     create_time = models.DateTimeField()
-    prep_time = models.IntegerField(null=True)  # in seconds
+    prep_time = models.DurationField(null=True)
     start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True)
-    duration = models.IntegerField(null=True)  # in seconds
+    duration = models.DurationField(null=True)
 
     class Meta:
         unique_together = (('tag', 'create_time'),)
