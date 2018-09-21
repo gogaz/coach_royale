@@ -12,7 +12,7 @@ def read_tournament(data, save=True):
         data.start_time = data.create_time + datetime.timedelta(seconds=data.prep_time)
     if not data.end_time:
         data.end_time = data.start_time + datetime.timedelta(seconds=data.duration)
-
+    print(data.end_time.strftime('%d/%m %H:%M:%S'))
     t, created = Tournament.objects.get_or_create(tag=data.tag, create_time=data.create_time, defaults={'open': data.open})
     t.tag = data.tag
     t.name = data.name
