@@ -6,25 +6,20 @@ version: 2
 jobs:
   build:
     docker:
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.1
+      - image: circleci/python:3.6
       - image: circleci/postgres:9.6
         environment:
           POSTGRES_USER: coach_royale
           POSTGRES_DB: test_coach_royale
-
     working_directory: ~/repo
-
     steps:
       - checkout
-
       # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "requirements.txt" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
       - run:
           name: install dependencies
           command: |
@@ -32,34 +27,19 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
             mv coach_royale/settings.example.py coach_royale/settings.py
-
-      - run:
-          name: install codecov
-          command: |
-            . venv/bin/activate
-            pip install codecov
-
       - save_cache:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
       - run:
           name: run tests
           command: |
             . venv/bin/activate
             coverage run manage.py test --noinput
             coverage report
-
       - store_artifacts:
           path: test-reports
           destination: test-reports
-
       - run:
           name: Code coverage
           command: |
@@ -73,34 +53,27 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run:
-          name: Update npm
-          command: 'sudo npm install -g npm@latest'
-
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "front/package.json" }}
             - v1-dependencies-
-
       - run:
-          name: Install npm dependencies
+          name: Install dependencies
           command: cd front && npm install
-
       - save_cache:
           key: v1-dependencies-{{ checksum "front/package.json" }}
           paths:
             - node_modules
       - run:
-          name: Build front-end
-          command: cd front && npm run build
-
-      - run:
           name: Test front-end
           command: cd front && npm test && npm run coverage
+      - run:
+          name: Build front-end
+          command: cd front && npm run build
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build
       - build-front
+      - build
