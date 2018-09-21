@@ -30,9 +30,12 @@ def read_tournament(data, save=True):
 
 def refresh_open_tournaments(command, options, api_client):
     refresh = OpenTournamentRefresh(timestamp=timezone.now())
+    max = -1
+    if options['max']:
+        max = options['max']
     total = 0
     page_total = 1
-    while page_total > 0:
+    while page_total > 0 and max != 0:
         page_total = 0
         try:
             tournaments = api_client.get_open_tournaments(page=options['open'])
@@ -58,5 +61,6 @@ def refresh_open_tournaments(command, options, api_client):
         finally:
             refresh.save()
             Tournament.objects.filter(end_time__lte=timezone.now()).delete()
+            max -= 1
     if options['verbose']:
         command.stdout.write("#INFO: Read %d new tournaments total" % total)
