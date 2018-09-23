@@ -278,7 +278,7 @@ class OpenTournamentRefresh(models.Model):
     timestamp = models.DateTimeField()
     success = models.BooleanField()
     error = models.TextField(null=True)
-
+    pages = models.IntegerField(default=0)
 
 class Tournament(models.Model):
     tag = models.CharField(max_length=20)
