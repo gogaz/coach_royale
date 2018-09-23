@@ -7,13 +7,13 @@ export default class TournamentApp extends React.Component {
         super(props);
 
         this.state = {
-            endpoint: '/tournaments/playable',
+            endpoint: '/api/tournaments/playable',
             loading: true,
             tournaments: [],
         }
     }
     componentDidMount() {
-        fetch(this.props.endpoint)
+        fetch(this.state.endpoint)
             .then(res => handleErrors(res))
             .then(res => this.setState({tournaments: res, loading: false}))
             .catch(error => console.log(error))

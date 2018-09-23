@@ -4,6 +4,9 @@ export function handleErrors(response, sender) {
             sender.setState({error: {message: "Application is under maintenance. Please try again later", code: response.status}});
             return;
         }
+        if (response.status === 404) {
+            sender.setState({error: {message: ""}})
+        }
         sender.setState({error: {message: "", code: response.status}});
         throw Error();
     }
