@@ -1,8 +1,9 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
+
 from react_api.models import Player, PlayerCardLevel, PlayerClanHistory, PlayerStatsHistory, PlayerClanStatsHistory
 from react_api.repository import PlayerRepository
-from react_api.serializers.clan import ClanSerializer, ClanFullSerializer
+from react_api.serializers.clan import ClanFullSerializer
 from react_api.serializers.misc import CardSerializer
 
 

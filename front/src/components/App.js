@@ -20,13 +20,14 @@ export default class App extends React.Component {
             user: null,
             defaultUrl: '',
             error: null,
+            mainClan: null,
         }
     }
 
     componentDidMount() {
         fetch('/api/home')
             .then(res => handleErrors(res, this))
-            .then(res => this.setState({defaultUrl: res.url}))
+            .then(res => this.setState({defaultUrl: res.url, mainClan: res.main_clan}))
             .catch(error => console.log(error));
     }
 
@@ -40,7 +41,7 @@ export default class App extends React.Component {
                         <div className='container-fluid mt-3'>
                             <Switch>
                                 {this.state.defaultUrl && <Route exact path='/' component={() => <Redirect to={this.state.defaultUrl} />} />}
-                                <Route path='/clan' component={ClanApp} />
+                                <Route path='/clan' render={(props) => <ClanApp {...props} mainClan={this.state.mainClan} />} />
                                 <Route path='/player' component={PlayerApp} />
                                 <Route path='/tournaments' component={TournamentsApp}/>
                             </Switch>

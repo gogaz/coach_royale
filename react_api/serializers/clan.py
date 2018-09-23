@@ -17,14 +17,9 @@ class ClanDetailsSerializer(HyperlinkedModelSerializer):
 
 
 class ClanSerializer(HyperlinkedModelSerializer):
-    details = SerializerMethodField()
-
-    def get_details(self, obj):
-        return ClanDetailsSerializer(ClanHistory.objects.filter(clan=obj).order_by('-timestamp').first()).data
-
     class Meta:
         model = Clan
-        fields = ('details', 'tag', 'name', 'last_refresh')
+        fields = ('tag', 'name', 'last_refresh')
 
 
 class PlayerClanStatsSerializer(HyperlinkedModelSerializer):

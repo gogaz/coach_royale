@@ -3,6 +3,9 @@ import { Route, Switch } from "react-router-dom";
 import ClanPage from "./ClanPage";
 
 export default class ClanApp extends React.Component {
+    componentDidMount() {
+
+    }
     render() {
         return (<div>
             <Switch>

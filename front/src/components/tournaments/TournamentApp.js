@@ -13,6 +13,7 @@ export default class TournamentApp extends React.Component {
         }
     }
     componentDidMount() {
+        document.title = "Playable tournaments";
         fetch(this.state.endpoint)
             .then(res => handleErrors(res))
             .then(res => this.setState({tournaments: res, loading: false}))

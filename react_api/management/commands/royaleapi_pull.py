@@ -21,6 +21,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=30)
 
+        if not Clan.objects.filter(tag=settings.MAIN_CLAN).count() and options['clan'] != settings.MAIN_CLAN:
+            opts = options
+            opts['clan'] = settings.MAIN_CLAN
+            run_refresh_method(self, opts, refresh_clan_details, [None], api_client=api_client)
+
         db_clans = Clan.objects.filter(refresh=True)
         if not options['force']:
             db_clans = db_clans.filter(Q(last_refresh__lte=timezone.now() - timezone.timedelta(minutes=60)) | Q(last_refresh__isnull=True))
