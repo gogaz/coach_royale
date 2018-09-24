@@ -7,6 +7,14 @@ import ClashRoyaleStat from './ClashRoyaleStat';
 
 Enzyme.configure({ adapter: new Adapter() });
 
+if(typeof(String.prototype.trim) === "undefined")
+{
+    String.prototype.trim = function()
+    {
+        return String(this).replace(/^\s+|\s+$/g, '');
+    };
+}
+
 describe('<Loading />', () => {
     it('renders loading.svg image', () => {
         const wrapper = render(<Loading/>);
@@ -21,15 +29,15 @@ describe('<Loading />', () => {
 describe('<ClashRoyaleStat/>', () => {
     it('displays given title and value', () => {
         const wrapper = render(<ClashRoyaleStat title="the_title" value="the_value"/>);
-        expect(wrapper.find('.title').text()).to.equal('the_title');
-        expect(wrapper.find('.value').text()).to.equal('the_value');
+        expect(wrapper.find('.title').text().trim()).to.equal('the_title');
+        expect(wrapper.find('.value').text().trim()).to.equal('the_value');
     });
     it('formats int values to en-us by default', () => {
         const wrapper = render(<ClashRoyaleStat title="" value={9999}/>);
-        expect(wrapper.find('.value').text()).to.equal('9,999');
+        expect(wrapper.find('.value').text().trim()).to.equal('9,999');
     });
     it('is able to format without locale', () => {
         const wrapper = render(<ClashRoyaleStat title="" value={9999} localeString=""/>);
-        expect(wrapper.find('.value').text()).to.equal('9999');
+        expect(wrapper.find('.value').text().trim()).to.equal('9999');
     })
 });

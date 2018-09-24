@@ -1,7 +1,7 @@
 const { handleErrors, playerLeagueFromTrophies } = require('./api');
 const { images } = require('./assets');
 
-test('handleErrors properly processes JSON', () => {
+test('handleErrors returns JSON', () => {
     expect(handleErrors({
         json: () => {
             return 42

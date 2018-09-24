@@ -1,13 +1,16 @@
 export function handleErrors(response, sender) {
     if (!response.ok) {
         if (response.status >= 502) {
-            sender.setState({error: {message: "Application is under maintenance. Please try again later", code: response.status}});
+            sender.setState({error: {message: "Application is under maintenance. Please try again later"}});
             return;
         }
-        if (response.status === 404) {
+        else if (response.status === 404) {
             sender.setState({error: {message: ""}})
         }
-        sender.setState({error: {message: "", code: response.status}});
+        else if (response.status === 500) {
+            sender.setState({error: {message: "There was an error accessing the resource. Please try again."}})
+        }
+        else sender.setState({error: {message: "Unknown error"}});
         throw Error();
     }
     return response.json();
