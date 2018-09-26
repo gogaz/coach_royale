@@ -97,8 +97,8 @@ DATABASES = {
 }
 
 # Royale API configuration
-ROYALE_API_KEY = "YOUR API KEY"
-MAIN_CLAN = "YOUR CLAN TAG"
+ROYALE_API_KEY = "YOUR_API_KEY"
+MAIN_CLAN = "YOUR_CLAN_TAG"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
