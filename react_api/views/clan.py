@@ -12,10 +12,10 @@ from react_api.serializers.clan import ClanFullSerializer, PlayerClanDetailsSeri
 def clans_list(request):
     if request.method == 'GET':
         try:
-            main_clan = Clan.objects.get(settings.MAIN_CLAN)
+            main_clan = Clan.objects.filter(tag=settings.MAIN_CLAN)
         except Clan.DoesNotExist:
             return not_found_response("main")
-        clans = Clan.objects.exclude(main_clan)
+        clans = Clan.objects.exclude(tag=settings.MAIN_CLAN)
         serializer = ClanFullSerializer(main_clan | clans, many=True)
         return Response(serializer.data)
 

@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -9,7 +10,7 @@ from react_api.models import Player, PlayerClanHistory, Clan, ClanHistory
 
 class ViewsTestCase(TestCase):
     def setUp(self):
-        self.clans = [Clan(name="Clan " + str(i), tag="ABCD" + str(i)) for i in range(2)]
+        self.clans = [Clan(name="Clan " + str(i), tag=settings.MAIN_CLAN + (str(i + 1) if i else '')) for i in range(2)]
         self.players = [Player(name="Player " + str(i), tag="ABC" + str(i)) for i in range(3)]
         for c in self.clans: c.save()
         for p in self.players:
@@ -46,13 +47,13 @@ class ViewsTestCase(TestCase):
             i += 1
 
     def test_clan_info(self):
-        data = self._test_route('clan_info', args=['ABCD0'])
+        data = self._test_route('clan_info', args=[settings.MAIN_CLAN])
         self.assertGreaterEqual(len(data), 3)
         self.assertIn('details', data)
         self.assertEqual(data['details']['score'], 9999)
         self.assertEqual(data['details']['badge'], 'hello')
 
-        data = self._test_route('clan_info', args=['ABCD1'])
+        data = self._test_route('clan_info', args=[settings.MAIN_CLAN + '2'])
         self.assertGreaterEqual(len(data), 3)
         self.assertIn('details', data)
         self.assertFalse(data['details']['badge'])
@@ -60,25 +61,22 @@ class ViewsTestCase(TestCase):
         self._test_route('clan_info', args=['A'], status_code=404)
 
     def test_clan_members(self):
-        data = self._test_route('clan_members', args=['ABCD0'])
+        data = self._test_route('clan_info', args=[settings.MAIN_CLAN])
         self.assertGreaterEqual(len(data), 3)
-
-        data = self._test_route('clan_members', args=['ABCD1'])
-        self.assertEqual(len(data), 0)
 
         self._test_route('clan_members', args=['A'], status_code=404)
 
     def test_player_clan(self):
-        data = self._test_route('player_clan', args=['ABC1'])
-        self.assertGreaterEqual(len(data), 6)
-        self.assertIn('last_refresh', data)
+        data = self._test_route('clan_info', args=[settings.MAIN_CLAN])
+        self.assertGreaterEqual(len(data), 3)
+        self.assertIn('last_refresh', data['details'])
 
         self._test_route('player_clan', args=['A'], status_code=404)
 
     def test_player_info(self):
-        data = self._test_route('player_info', args=['ABC1'])
-        self.assertGreaterEqual(len(data), 4)
+        data = self._test_route('clan_info', args=[settings.MAIN_CLAN])
+        self.assertGreaterEqual(len(data), 3)
         self.assertIn('details', data)
-        self.assertGreaterEqual(len(data['details']), 19)
+        self.assertGreaterEqual(len(data['details']), 9)
 
         self._test_route('player_info', args=['A'], status_code=404)

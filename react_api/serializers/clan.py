@@ -5,7 +5,6 @@ from react_api.models import Clan, ClanHistory, PlayerClanStatsHistory, Player
 
 
 class ClanDetailsSerializer(HyperlinkedModelSerializer):
-
     class Meta:
         model = ClanHistory
         fields = ('timestamp', 'last_refresh',
