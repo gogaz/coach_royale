@@ -1,4 +1,5 @@
 import datetime
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
@@ -24,13 +25,8 @@ def refresh_clan_details(command, options, db_clan, api_client):
     :return: False on error
     """
 
-    if db_clan:
-        if options['verbose']:
-            command_print(command, "#INFO: Refreshing clan %s (%s)", db_clan.name, db_clan.tag)
-    else:
-        db_clan = Clan(tag=options['clan'])
-        if options['verbose']:
-            command.stdout.write("#INFO: Refreshing new clan %s" % options['clan'])
+    if options['verbose']:
+        command_print(command, "#INFO: Refreshing clan %s (%s)", db_clan.name, db_clan.tag)
 
     clan = api_client.get_clan(db_clan.tag)
 

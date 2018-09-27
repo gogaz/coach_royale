@@ -41,7 +41,10 @@ export default class PlayerStats extends React.Component {
                         <img src={player.clan.details.badge} style={{ float: 'right', height: '5pc' }} />
                     </div>
                 </div>
-                <div className="row mt-2">
+                <div className="row mt-1 ml-md-3 ml-1" hidden={player.details.last_refresh !== null}>
+                    No more information available {/*<a className="btn" href="#"><FontAwesomeIcon icon={"sync"}/> Refresh </a>*/}
+                </div>
+                <div className="row mt-1" hidden={player.details.last_refresh === null}>
                     <ClashRoyaleStat title="Trophies" localeString={null}
                                      image={player.details.current_trophies > 4000 ? images.arenaX(player.details.arena) : images.trophy}
                                      value={player.details.current_trophies} />
