@@ -3,7 +3,7 @@ import ReactTooltip from 'react-tooltip'
 import moment from "moment";
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import { images } from "../../helpers/assets";
-import { handleErrors } from "../../helpers/api";
+import { handleErrors, setTitle } from "../../helpers/api";
 import Loading from "../ui/Loading";
 
 export default class ClanDetails extends React.Component {
@@ -18,13 +18,15 @@ export default class ClanDetails extends React.Component {
     }
 
     componentDidMount() {
+        setTitle("Clan overview");
         fetch(this.props.endpoint)
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
                     console.log(result);
                     this.setState({ loading: false, clan: result });
-                    this.props.onDataLoaded(result)
+                    this.props.onDataLoaded(result);
+                    setTitle(result.name);
                 })
             .catch(error => console.log(error) );
     }

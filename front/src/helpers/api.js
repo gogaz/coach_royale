@@ -23,3 +23,7 @@ export function playerLeagueFromTrophies(trophies) {
     let r = Number((Number(trophies) - 4000) / 300);
     return r < 0 ? 0 : Math.floor(r) + 1;
 }
+
+export function setTitle(title) {
+    document.title = "Coach Royale" + title.length ? ' ' + title : '';
+}

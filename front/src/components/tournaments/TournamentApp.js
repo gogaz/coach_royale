@@ -1,5 +1,5 @@
 import React from 'react'
-import { handleErrors } from "../../helpers/api";
+import { handleErrors, setTitle } from "../../helpers/api";
 import TournamentsTable from "./TournamentsTable";
 
 export default class TournamentApp extends React.Component {
@@ -13,7 +13,7 @@ export default class TournamentApp extends React.Component {
         }
     }
     componentDidMount() {
-        document.title = "Playable tournaments";
+        setTitle("Playable tournaments");
         fetch(this.state.endpoint)
             .then(res => handleErrors(res))
             .then(res => this.setState({tournaments: res, loading: false}))
