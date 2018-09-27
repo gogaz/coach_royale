@@ -12,10 +12,10 @@ def run_refresh_method(cmd, options, func, iterable, depth=3, **kwargs):
     for i in iterable:
         if i is None:
             if options['clan']:
-                i = Clan(tag=options['clan'])
+                i = Clan(tag=options['clan'], refresh=True)
                 options.update(clan=None)
             elif options['player']:
-                i = Player(tag=options['player'])
+                i = Player(tag=options['player'], refresh=True)
                 options.update(player=None)
             else:
                 exit_with_failure(cmd)
