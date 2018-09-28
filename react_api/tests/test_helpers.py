@@ -60,7 +60,7 @@ class ClanHelpersTestCase(TestCase):
         self.api_client = FakeAPIClient()
 
     def test_refresh_clan_details(self):
-        refresh_clan_details(None, {'clan': '', 'verbose': False}, None, self.api_client)
+        refresh_clan_details(None, {'verbose': False}, Clan(tag=''), self.api_client)
         self.assertEqual(Clan.objects.count(), 1)
         self.assertEqual(Player.objects.count(), 3)
         self.assertEqual(ClanHistory.objects.count(), 1)
