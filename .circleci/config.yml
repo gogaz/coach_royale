@@ -1,7 +1,3 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
 version: 2
 jobs:
   build:
@@ -35,6 +31,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
+            sleep 2 # Wait for postgres to finish startup
             coverage run manage.py test --noinput
             coverage report
       - store_artifacts:
@@ -55,13 +52,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "front/package.json" }}
+            - v1-dependencies-{{ checksum "front/package-lock.json" }}
             - v1-dependencies-
       - run:
           name: Install dependencies
           command: cd front && npm install
       - save_cache:
-          key: v1-dependencies-{{ checksum "front/package.json" }}
+          key: v1-dependencies-{{ checksum "front/package-lock.json" }}
           paths:
             - node_modules
       - run:
