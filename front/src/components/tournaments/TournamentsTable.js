@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactTable from "react-table";
 import StatusCell from "./cells/StatusCell";
-import moment from "moment";
+
+const moment = require('moment');
 
 export default class TournamentsTable extends React.Component {
     render() {

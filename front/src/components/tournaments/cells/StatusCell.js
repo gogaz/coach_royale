@@ -1,5 +1,6 @@
 import React from 'react';
-import moment from "moment";
+
+const moment = require('moment');
 
 require('../../../helpers/api');
 

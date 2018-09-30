@@ -3,8 +3,8 @@ from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from react_api.models import Tournament
-from react_api.serializers.tournament import TournamentSerializer
+from react_api.models import Tournament, OpenTournamentRefresh
+from react_api.serializers.tournaments import TournamentSerializer, OpenTournamentRefreshSerializer
 
 
 @api_view(['GET'])
@@ -19,5 +19,7 @@ def playable_tournaments(request):
                                                 open=True,
                                                 current_players__lt=F('max_players')) \
                                         .order_by('-start_time')
-
-        return Response(TournamentSerializer(tournaments, many=True).data)
+        json = TournamentSerializer(tournaments, many=True).data
+        refresh = OpenTournamentRefresh.objects.filter(success=True).order_by('-timestamp').first()
+        j = OpenTournamentRefreshSerializer(refresh, tournaments=json)
+        return Response(j.data)

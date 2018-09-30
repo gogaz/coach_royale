@@ -12,10 +12,11 @@ export default class PlayerStats extends React.Component {
         this.state = {
             loading: true,
             player: {details:{}}
-        }
+        };
+
+        this.fetchData = this.fetchData.bind(this);
     }
-    componentDidMount() {
-        console.log(this.props.endpoint);
+    fetchData() {
         fetch(this.props.endpoint)
             .then((res) => handleErrors(res))
             .then(
@@ -24,6 +25,9 @@ export default class PlayerStats extends React.Component {
                     this.setState({ loading: false, player: result });
                 })
             .catch(error => console.log(error) );
+    }
+    componentDidMount() {
+        this.fetchData();
     }
     render() {
         const { loading, player} = this.state;
@@ -42,7 +46,7 @@ export default class PlayerStats extends React.Component {
                     </div>
                 </div>
                 <div className="row mt-1 ml-md-3 ml-1" hidden={player.details.last_refresh !== null}>
-                    No more information available {/*<a className="btn" href="#"><FontAwesomeIcon icon={"sync"}/> Refresh </a>*/}
+                    No more information available {/*<a className="btn" onClick={() => this.forceRefresh()}><FontAwesomeIcon icon={"sync"}/> Refresh</a>*/}
                 </div>
                 <div className="row mt-1" hidden={player.details.last_refresh === null}>
                     <ClashRoyaleStat title="Trophies" localeString={null}

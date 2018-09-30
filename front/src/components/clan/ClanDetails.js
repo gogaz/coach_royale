@@ -1,10 +1,11 @@
 import React from "react";
 import ReactTooltip from 'react-tooltip'
-import moment from "moment";
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import { images } from "../../helpers/assets";
 import { handleErrors, setTitle } from "../../helpers/api";
 import Loading from "../ui/Loading";
+
+const moment = require('moment');
 
 export default class ClanDetails extends React.Component {
     constructor(props) {

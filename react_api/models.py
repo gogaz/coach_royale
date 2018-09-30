@@ -280,6 +280,7 @@ class OpenTournamentRefresh(models.Model):
     error = models.TextField(null=True)
     pages = models.IntegerField(default=0)
 
+
 class Tournament(models.Model):
     tag = models.CharField(max_length=20)
     name = models.CharField(max_length=255, null=True)
