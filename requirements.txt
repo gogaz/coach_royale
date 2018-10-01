@@ -1,6 +1,6 @@
 chardet==3.0.4
 clashroyale==3.5.14
-Django==2.1.1
+Django==2.1.2
 djangorestframework==3.8.2
 psycopg2==2.7.5
 gunicorn==19.9.0
