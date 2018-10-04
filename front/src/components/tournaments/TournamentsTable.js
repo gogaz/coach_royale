@@ -16,7 +16,7 @@ export default class TournamentsTable extends React.Component {
                 filterable
                 sortable
                 className="-striped -highlight"
-                defaultSorted={[{id: 'status', desc: true}, {id: 'current_players', desc: true}, {id: 'start_time'}]}
+                defaultSorted={[{id: 'status', desc: true}, {id: 'start_time', desc: true}, {id: 'current_players', desc: true}]}
                 columns={[
                     {
                         Header: "Name",

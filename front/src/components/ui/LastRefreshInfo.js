@@ -54,30 +54,31 @@ export default class LastRefreshInfo extends React.Component {
             ;
         else
             this.setState({error: "An unknown error occurred."});
-        setTimeout(() => {this.setState({error: undefined})}, 60 * 1000)
+        setTimeout(() => {this.setState({error: undefined})}, 30 * 1000)
     }
 
     render() {
-        const { time, url } = this.props;
+        const { refreshable, time, url } = this.props;
+        const { refreshing, error, now } = this.state;
         const last_refresh = moment(time);
 
         return (
             <small className="last-refresh-info">
                 <span className="text-muted text-uppercase" data-tip="last refreshed">
-                    Last refresh {this.state.now && last_refresh.fromNow()}
+                    Last refresh {now && last_refresh.fromNow()}
                 </span>
                 <ReactTooltip place="bottom" type="dark" effect="solid">
                     {last_refresh.format('L') + ' ' + last_refresh.format('LTS')}
                 </ReactTooltip>
                 <button className="btn btn-xs ml-1"
-                        hidden={false/*!refreshable || this.state.now.diff(last_refresh) < (15 * 60 * 1000)*/}
+                        hidden={!refreshable || error !== undefined || now.diff(last_refresh) < (15 * 60 * 1000)}
                         onClick={() => this.refreshData(url)}
-                        disabled={this.state.refreshing}>
-                    <FontAwesomeIcon icon="sync" spin={this.state.refreshing} />
+                        disabled={refreshing}>
+                    <FontAwesomeIcon icon="sync" spin={refreshing} />
                 </button>
                 <br/>
-                { this.state.error &&
-                    <span className="badge badge-warning"><FontAwesomeIcon icon='exclamation-triangle'/> {this.state.error}</span>
+                { error &&
+                    <span className="badge badge-warning"><FontAwesomeIcon icon='exclamation-triangle'/> {error}</span>
                 }
             </small>
         );
