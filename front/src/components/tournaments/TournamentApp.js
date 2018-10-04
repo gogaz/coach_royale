@@ -1,10 +1,8 @@
 import React from 'react'
-import ReactTooltip from 'react-tooltip'
 import { handleErrors, setTitle } from "../../helpers/api";
 import TournamentsTable from "./TournamentsTable";
 import { images } from "../../helpers/assets";
-
-const moment = require("moment");
+import LastRefreshInfo from "../ui/LastRefreshInfo";
 
 export default class TournamentApp extends React.Component {
     constructor(props) {
@@ -14,42 +12,44 @@ export default class TournamentApp extends React.Component {
             endpoint: '/api/tournaments/playable',
             loading: true,
             data: {},
-        }
+            refreshInfo: {}
+        };
     }
-    componentDidMount() {
-        setTitle("Playable tournaments");
+
+    fetchData() {
         fetch(this.state.endpoint)
             .then(res => handleErrors(res))
             .then(res => this.setState({data: res, loading: false}))
             .catch(error => console.log(error))
     }
+
+    componentDidMount() {
+        setTitle("Playable tournaments");
+        this.fetchData();
+    }
+
     render() {
-        const { data, loading } = this.state;
+        const {data, loading, endpoint} = this.state;
         const tournaments = data.tournaments;
-        const last_refresh = moment(data.timestamp);
 
         return (
             <div className="card">
                 <div className="card-header">
                     <div className="row">
                         <div className="col-7">
-                            <h3>Joinable tournaments</h3>
-                            <small>
-                                <span className="text-muted text-uppercase" data-tip="last refreshed">
-                                    Last successful refresh { last_refresh.fromNow() }
-                                </span>
-                                <ReactTooltip place="bottom" type="dark" effect="solid">
-                                    { last_refresh.format('L') + ' ' + last_refresh.format('LTS') }
-                                </ReactTooltip>
-                            </small>
+                            <h3>Playable tournaments</h3>
+                            <LastRefreshInfo time={data.timestamp}
+                                             refreshable={true}
+                                             url={endpoint + '/refresh'}
+                                             handleData={data => this.setState({data: data})} />
                         </div>
                         <div className="col-5">
-                            <img src={images.tournament} style={{ float: 'right', height: '3pc' }} />
+                            <img src={images.tournament} style={{float: 'right', height: '3pc'}} />
                         </div>
                     </div>
                 </div>
                 <div className="card-body">
-                    <TournamentsTable data={tournaments} loading={loading}/>
+                    <TournamentsTable data={tournaments} loading={loading} />
                 </div>
             </div>
         )

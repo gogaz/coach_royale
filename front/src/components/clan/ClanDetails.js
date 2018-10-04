@@ -1,11 +1,9 @@
 import React from "react";
-import ReactTooltip from 'react-tooltip'
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import { images } from "../../helpers/assets";
 import { handleErrors, setTitle } from "../../helpers/api";
 import Loading from "../ui/Loading";
-
-const moment = require('moment');
+import LastRefreshInfo from "../ui/LastRefreshInfo";
 
 export default class ClanDetails extends React.Component {
     constructor(props) {
@@ -41,8 +39,6 @@ export default class ClanDetails extends React.Component {
         let region = lookup.countries({name: clan.details.region})[0].alpha2.toLowerCase();
         let country_icon = images.regionIcon(region);
 
-        let last_refresh = moment(clan.last_refresh);
-
         return (
             <div>
                 <div className="card-header">
@@ -50,14 +46,7 @@ export default class ClanDetails extends React.Component {
                         <div className="col-9">
                             <h3>{ clan.name }</h3>
                             <span className="d-block">{clan.details.description}</span>
-                            <small>
-                                <span className="text-muted text-uppercase" data-tip="last refreshed">
-                                    Last refresh { last_refresh.fromNow() }
-                                </span>
-                                <ReactTooltip place="bottom" type="dark" effect="solid">
-                                    { last_refresh.format('L') + ' ' + last_refresh.format('LTS') }
-                                </ReactTooltip>
-                            </small>
+                            <LastRefreshInfo time={clan.last_refresh}/>
                         </div>
                         <div className="col-3">
                             <img src={ clan.details.badge }

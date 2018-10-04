@@ -1,8 +1,5 @@
 import React from 'react';
-
-const moment = require('moment');
-
-require('../../../helpers/api');
+import moment from "moment";
 
 export default class StatusCell extends React.Component {
     constructor(props) {
