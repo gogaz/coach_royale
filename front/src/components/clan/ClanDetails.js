@@ -24,8 +24,7 @@ export default class ClanDetails extends React.Component {
                 (result) => {
                     console.log(result);
                     this.setState({ loading: false, clan: result });
-                    this.props.onDataLoaded(result);
-                    setTitle(result.name);
+                    setTitle(`${result.name} (${result.tag})`);
                 })
             .catch(error => console.log(error) );
     }
@@ -59,7 +58,10 @@ export default class ClanDetails extends React.Component {
                         <div className="row mt-2">
                             <ClashRoyaleStat title="Score"
                                              image={images.trophyRibbon}
-                                             value={Number(clan.details.score).toLocaleString('en-us')}/>
+                                             value={clan.details.score}/>
+                            {clan.war.total_trophies &&
+                                <ClashRoyaleStat image={images.clanWarTrophy} title="Trophies" value={clan.war.total_trophies}/>
+                            }
                             <ClashRoyaleStat title="Members"
                                              image={images.members}
                                              value={clan.details.member_count + " / 50"}/>
@@ -73,4 +75,3 @@ export default class ClanDetails extends React.Component {
         );
     }
 }
-ClanDetails.defaultProps = {onDataLoaded: () => {}};

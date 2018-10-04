@@ -249,6 +249,7 @@ class ClanWar(models.Model):
     collections_cards = models.IntegerField(null=True)
     crowns = models.IntegerField(null=True)
     final_position = models.IntegerField(null=True)
+    total_trophies = models.IntegerField(null=True)
     trophies = models.IntegerField(null=True)
     season = models.IntegerField(null=True)
 

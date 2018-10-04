@@ -66,7 +66,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
     db_clan_history.save()
 
     read_clan_members(clan, db_clan, command, now, options['verbose'], clan_created)
-    read_ended_wars(command, db_clan, api_client, options['verbose'])
+    read_war_log(command, db_clan, api_client, options['verbose'])
 
 
 def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False, clan_created=False):
@@ -135,7 +135,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
                     command_print(command, "#INFO: Player %s (%s) joined clan", p.name, p.tag)
 
 
-def read_ended_wars(command, db_clan, api_client, verbose=False):
+def read_war_log(command, db_clan: Clan, api_client, verbose=False):
     if verbose:
         command.stdout.write("Refreshing ended wars")
     wars = api_client.get_clan_war_log(db_clan.tag)
@@ -160,6 +160,7 @@ def read_ended_wars(command, db_clan, api_client, verbose=False):
             war_results = war.standings[position]
             db_war.final_position = position + 1
             db_war.trophies = war_results.war_trophies_change
+            db_war.total_trophies = war_results.war_trophies
             db_war.crowns = war_results.crowns
             db_war.wins = war_results.wins
             db_war.final_battles = war_results.battles_played

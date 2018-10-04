@@ -1,4 +1,5 @@
 import React from 'react'
+import { locale } from "../../helpers/api";
 
 export default class ClashRoyaleStat extends React.Component {
     render () {
@@ -16,4 +17,4 @@ export default class ClashRoyaleStat extends React.Component {
         );
     }
 }
-ClashRoyaleStat.defaultProps = {localeString: 'en-us'};
+ClashRoyaleStat.defaultProps = {localeString: locale};

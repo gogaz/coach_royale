@@ -10,15 +10,10 @@ export default class ClanPage extends React.Component {
             endPoint: "/api/clan/" + props.match.params.tag,
         }
     }
-
-    onDataLoaded(data) {
-        document.title = `${data.name} (${data.tag})`;
-    }
-
     render() {
         return (
             <div className="card">
-                <ClanDetails endpoint={this.state.endPoint} onDataLoaded={this.onDataLoaded} />
+                <ClanDetails endpoint={this.state.endPoint} />
                 <div className="card-body">
                     <ClanMembers endpoint={this.state.endPoint} />
                 </div>

@@ -49,10 +49,10 @@ export default class PlayerStats extends React.Component {
                     No more information available {/*<a className="btn" onClick={() => this.forceRefresh()}><FontAwesomeIcon icon={"sync"}/> Refresh</a>*/}
                 </div>
                 <div className="row mt-1" hidden={player.details.last_refresh === null}>
-                    <ClashRoyaleStat title="Trophies" localeString={null}
+                    <ClashRoyaleStat title="Trophies"
                                      image={player.details.current_trophies > 4000 ? images.arenaX(player.details.arena) : images.trophy}
                                      value={player.details.current_trophies} />
-                    <ClashRoyaleStat title="Highest" localeString={null}
+                    <ClashRoyaleStat title="Highest"
                                      image={player.details.highest_trophies > 4000 ?
                                          images.leagueX(playerLeagueFromTrophies(player.details.highest_trophies)) : images.trophyRibbon}
                                      value={player.details.highest_trophies} />

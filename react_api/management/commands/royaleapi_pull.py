@@ -15,7 +15,7 @@ class Command(BaseCommand):
         parser.add_argument('--verbose', action='store_true', help="enable verbose mode")
         parser.add_argument('--clan', type=str, help="add clan tag to database and enable auto-refresh")
         parser.add_argument('--player', type=str, help="add player tag to database and enable auto-refresh")
-        parser.add_argument('--force', action='store_true', help="Force update without taking care of last refresh")
+        parser.add_argument('--force', action='store_true', help="Force update without taking last refresh into account")
         parser.add_argument('--battles', action='store_true', help="Refresh player war battles")
 
     def handle(self, *args, **options):
