@@ -38,7 +38,7 @@ class PlayerClanDetailsSerializer(HyperlinkedModelSerializer):
         fields = ('tag', 'name', 'last_refresh', 'details')
 
 
-class ClanFullSerializer(HyperlinkedModelSerializer):
+class ClanWithDetailsSerializer(HyperlinkedModelSerializer):
     details = SerializerMethodField()
 
     def get_details(self, obj):

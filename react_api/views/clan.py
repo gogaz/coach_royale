@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from react_api.models import Clan, PlayerClanStatsHistory
 from react_api.repository import ClanRepository
-from react_api.serializers.clan import ClanFullSerializer, PlayerClanDetailsSerializer
+from react_api.serializers.clan import ClanWithDetailsSerializer, PlayerClanDetailsSerializer
 
 
 @api_view(['GET'])
@@ -16,8 +16,8 @@ def clans_list(request):
         except Clan.DoesNotExist:
             return not_found_response("main")
         clans = Clan.objects.exclude(tag=settings.MAIN_CLAN)
-        serializer = ClanFullSerializer(main_clan | clans, many=True)
-        return Response(serializer.data)
+        serializer = ClanWithDetailsSerializer(clans, many=True)
+        return Response({'main': ClanWithDetailsSerializer(main_clan).data, 'family': serializer.data})
 
 
 @api_view(['GET'])
@@ -28,7 +28,7 @@ def clan_info(request, tag):
         except Clan.DoesNotExist:
             return not_found_response(tag)
 
-        serializer = ClanFullSerializer(clan)
+        serializer = ClanWithDetailsSerializer(clan)
         return Response(serializer.data)
 
 
@@ -52,5 +52,5 @@ def clan_members(request, tag):
 
 
 def not_found_response(tag):
-    r = {'error': {'Clan %s was not found' % tag}, 'code': 404}
+    r = {'error': {'message': 'Clan %s was not found' % tag}}
     return Response(r, status=404)

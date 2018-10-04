@@ -32,7 +32,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
 
     clan_created = False
     if not db_clan.name:
-        db_clan, clan_created = Clan.objects.get_or_create(tag=clan.tag)
+        db_clan, clan_created = Clan.objects.get_or_create(tag=clan.tag, defaults={'refresh': db_clan.refresh})
         if clan_created:
             db_clan.name = clan.name
     now = timezone.now()
@@ -84,11 +84,12 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
             db_player.save()
 
         read_players.append(db_player)
-        db_player_clanstats, created = PlayerClanStatsHistory.objects.get_or_create(clan=db_clan,
-                                                                                    player=db_player,
-                                                                                    clan_role=player.role,
-                                                                                    donations=player.donations,
-                                                                                    donations_received=player.donations_received)
+        db_player_clanstats, created = \
+            PlayerClanStatsHistory.objects.get_or_create(clan=db_clan,
+                                                         player=db_player,
+                                                         clan_role=player.role,
+                                                         donations=player.donations,
+                                                         donations_received=player.donations_received)
         db_player_clanstats.current_clan_rank = player.rank
         db_player_clanstats.previous_clan_rank = player.get('previousRank')
         db_player_clanstats.trophies = player.trophies
@@ -170,7 +171,8 @@ def read_ended_wars(command, db_clan, api_client, verbose=False):
 
 def update_war_status(command, options, db_clan):
     war_col_battles = ClanRepository.get_players_battles_in_clan(db_clan).filter(war__isnull=True,
-                                                                                 mode__collection_day=True).order_by('time')
+                                                                                 mode__collection_day=True) \
+                                                                         .order_by('time')
     if options['verbose']:
         command.stdout.write("Found %d collection battles to sort" % war_col_battles.count())
 
@@ -210,17 +212,3 @@ def update_war_status(command, options, db_clan):
                 if options['verbose']:
                     command.stdout.write("found war for orphan battle")
                 break
-
-    # wars = ClanWar.objects.filter(clan=db_clan, date_end__isnull=True, date_start__lte=timezone.now() - timezone.timedelta(hours=48))
-    # for war in wars:
-    #     battles = Battle.objects.filter(war=war)
-    #     war.participants = ClanRepository.get_players_in_clan_2(db_clan, war.date_start).filter(team__war=war).distinct().count()
-    #     war.final_battles = battles.filter(mode__war_day=True).count()
-    #     war.collections_battles = battles.filter(mode__collection_day=True).count()
-    #     war.wins = battles.filter(mode__war_day=True, win=True).count()
-    #     war.losses = battles.filter(mode__war_day=True, win=False).count()
-    #     war.crowns = battles.filter(mode__war_day=True).aggregate(Sum('team_crowns'))['team_crowns__sum']
-    #     latest_final_battle = battles.filter(mode__war_day=True).order_by('-time')
-    #     if latest_final_battle.count():
-    #         war.date_end = latest_final_battle[0].time
-    #     war.save()

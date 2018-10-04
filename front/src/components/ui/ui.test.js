@@ -5,6 +5,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import Loading from './Loading';
 import ClashRoyaleStat from './ClashRoyaleStat';
 
+let { describe, it} = global;
+
 Enzyme.configure({ adapter: new Adapter() });
 
 if(typeof(String.prototype.trim) === "undefined")

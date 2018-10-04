@@ -38,7 +38,7 @@ class Command(BaseCommand):
         if not options['force']:
             db_players = db_players.filter(Q(last_refresh__lte=timezone.now() - timezone.timedelta(minutes=60)) | Q(last_refresh__isnull=True))
 
-        run_refresh_method(self, options, refresh_player_profile, db_players.order_by('last_refresh'))
+        run_refresh_method(self, options, refresh_player_profile, db_players.order_by('last_refresh'), api_client=api_client)
 
         if options['player']:
             run_refresh_method(self, options, refresh_player_profile, [None], api_client=api_client)

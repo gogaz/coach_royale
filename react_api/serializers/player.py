@@ -3,7 +3,7 @@ from rest_framework.serializers import HyperlinkedModelSerializer
 
 from react_api.models import Player, PlayerCardLevel, PlayerClanHistory, PlayerStatsHistory, PlayerClanStatsHistory
 from react_api.repository import PlayerRepository
-from react_api.serializers.clan import ClanFullSerializer
+from react_api.serializers.clan import ClanWithDetailsSerializer
 from react_api.serializers.misc import CardSerializer
 
 
@@ -37,7 +37,7 @@ class PlayerSerializer(HyperlinkedModelSerializer):
         return PlayerStatsSerializer(PlayerStatsHistory.objects.filter(player=obj).order_by('-timestamp').first()).data
 
     def get_clan(self, obj):
-        return ClanFullSerializer(PlayerRepository.get_clan_for_player(obj)).data
+        return ClanWithDetailsSerializer(PlayerRepository.get_clan_for_player(obj)).data
 
     class Meta:
         model = Player
@@ -53,7 +53,7 @@ class PlayerCardLevelSerializer(HyperlinkedModelSerializer):
 
 
 class PlayerClanSerializer(HyperlinkedModelSerializer):
-    clan = ClanFullSerializer(required=False)
+    clan = ClanWithDetailsSerializer(required=False)
 
     class Meta:
         model = PlayerClanHistory

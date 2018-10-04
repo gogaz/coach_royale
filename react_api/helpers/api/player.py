@@ -31,7 +31,7 @@ def refresh_player_profile(command, options, db_player, api_client):
     now = timezone.now()
 
     if not db_player.name:
-        db_player, created = Player.objects.get_or_create(tag=player.tag)
+        db_player, created = Player.objects.get_or_create(tag=player.tag, defaults={'refresh': db_player.refresh})
     db_player.name = player.name
 
     if player.clan is not None:

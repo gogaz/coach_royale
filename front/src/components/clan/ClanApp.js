@@ -36,9 +36,7 @@ class ClanList extends React.Component {
 
     render() {
         return (
-            <ul>{ this.state.clans.map((e, key) => {
-                return <li key={ key }>{ e }</li>;
-            }) }
+            <ul>{ this.state.clans.map((e, key) => <li key={ key }>{ e }</li>) }
             </ul>
         );
     }
