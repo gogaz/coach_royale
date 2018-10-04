@@ -1,5 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F
+from django.db.models import Q, F, ExpressionWrapper, DurationField
 from django.utils import timezone
 
 from react_api.models import *
@@ -73,3 +73,17 @@ class PlayerRepository:
             return clan.get()
         except ObjectDoesNotExist:
             return None
+
+
+class TournamentRepository:
+    @staticmethod
+    def get_playable_tournaments():
+        return Tournament.objects.filter(end_time__gt=timezone.now())\
+                                        .annotate(remaining=ExpressionWrapper(F('end_time') - timezone.now(),
+                                                                              output_field=DurationField())) \
+                                        .annotate(midtime=ExpressionWrapper(F('duration') / 2,
+                                                                            output_field=DurationField())) \
+                                        .filter(remaining__gte=F('midtime'),
+                                                open=True,
+                                                current_players__lt=F('max_players')) \
+                                        .order_by('-start_time')

@@ -274,11 +274,14 @@ class PlayerClanWar(models.Model):
             .format(self, "Win" if self.final_battles_wins else "Lose" if self.final_battles_done else "Yet!")
 
 
-class OpenTournamentRefresh(models.Model):
+class TournamentRefresh(models.Model):
     timestamp = models.DateTimeField()
     success = models.BooleanField()
     error = models.TextField(null=True)
-    pages = models.IntegerField(default=0)
+    count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return "Refreshed {0.count} tournaments (success: {0.success}) {1}".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M:%S"))
 
 
 class Tournament(models.Model):

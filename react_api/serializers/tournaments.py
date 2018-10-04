@@ -1,7 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
 
-from react_api.models import Tournament, OpenTournamentRefresh
+from react_api.models import Tournament, TournamentRefresh
 
 
 class TournamentSerializer(HyperlinkedModelSerializer):
@@ -23,7 +23,7 @@ class TournamentSerializer(HyperlinkedModelSerializer):
         return obj.duration.total_seconds()
 
 
-class OpenTournamentRefreshSerializer(ModelSerializer):
+class TournamentRefreshSerializer(ModelSerializer):
     tournaments = SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
@@ -32,8 +32,8 @@ class OpenTournamentRefreshSerializer(ModelSerializer):
         super().__init__(*args, **kwargs)
 
     class Meta:
-        model = OpenTournamentRefresh
-        fields = ('timestamp', 'success', 'error', 'pages', 'tournaments')
+        model = TournamentRefresh
+        fields = ('timestamp', 'success', 'error', 'count', 'tournaments')
 
     def get_tournaments(self, _):
         return self.tournaments_list

@@ -3,7 +3,7 @@ import datetime
 from clashroyale import StatusError, NotResponding
 from django.utils import timezone
 
-from react_api.models import Tournament, OpenTournamentRefresh
+from react_api.models import Tournament, TournamentRefresh
 
 
 def read_tournament(data, save=True):
@@ -34,45 +34,29 @@ def read_tournament(data, save=True):
     return t, created
 
 
-def refresh_open_tournaments(command, options, api_client):
-    refresh = OpenTournamentRefresh(timestamp=timezone.now())
-    max = -1
-    if options['max']:
-        max = options['max']
-    total = 0
-    page_total = 1
+def refresh_open_tournaments(api_client, max=-1, **kwargs):
+    refresh = TournamentRefresh(timestamp=timezone.now())
+    page_total, current_page = 1, 0
     while page_total > 0 and max != 0:
         page_total = 0
         try:
-            tournaments = api_client.get_open_tournaments(page=options['open'])
+            tournaments = api_client.get_open_tournaments(page=current_page)
         except NotResponding:
-            refresh.error = "Not responding"
+            refresh.error = "API not responding"
             refresh.success = False
-            if options['verbose']:
-                command.stderr.write("#ERR: API not responding")
         except StatusError as e:
             refresh.error = e.reason
             refresh.success = False
-            if options['verbose']:
-                command.stderr.write("#ERR: %s" % e.reason)
         else:
             refresh.success = True
             for tournament in tournaments:
                 _, new = read_tournament(tournament)
                 if new:
-                    total += 1
                     page_total += 1
             if page_total:
-                refresh.pages += 1
-                if options['verbose']:
-                    command.stdout.write("#INFO: Read %d new tournaments " % page_total)
+                refresh.count += page_total
         finally:
             max -= 1
+            current_page += 1
     refresh.save()
-    expired = Tournament.objects.filter(end_time__lte=timezone.now())
-    if options['verbose']:
-        if total != page_total:
-            command.stdout.write("#INFO: Read %d new tournaments total" % total)
-        if expired.count():
-            command.stdout.write("#INFO: Removing %d expired tournaments" % expired.count())
-    expired.delete()
+    return refresh
