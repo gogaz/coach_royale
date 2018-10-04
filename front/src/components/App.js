@@ -1,7 +1,5 @@
 import React from 'react'
 import { Redirect, Route, Switch } from "react-router-dom"
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
 import ClanApp from "./clan/ClanApp";
 import TopBar from "./ui/TopBar";
 import TournamentsApp from "./tournaments/TournamentApp";
@@ -9,8 +7,6 @@ import "../style/app.css"
 import { handleErrors } from "../helpers/api";
 import PlayerApp from "./player/PlayerApp";
 import CriticalError from "./errors/CriticalError";
-
-library.add(fas);
 
 export default class App extends React.Component {
     constructor(props) {

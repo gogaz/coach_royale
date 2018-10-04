@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactTable from "react-table";
 import { images } from "../../helpers/assets"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '../ui/FontAwesome';
 import { Link } from "react-router-dom";
 
 
@@ -31,7 +31,7 @@ export default class ClanMembers extends React.Component {
     }
 
     render() {
-        const { data, loading } = this.state;
+        const {data, loading} = this.state;
         const roles = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
         return (
             <ReactTable
@@ -46,16 +46,19 @@ export default class ClanMembers extends React.Component {
                     {
                         Header: "Name",
                         accessor: "name",
-                        Cell: ({row, original}) => {return <Link to={"/player/" + original.tag}>{row.name}</Link> }
+                        Cell: ({row, original}) => {
+                            return <Link to={"/player/" + original.tag}>{row.name}</Link>
+                        }
                     },
                     {
                         Header: "Trophies",
                         id: "trophies",
                         accessor: "details.trophies",
                         minWidth: 70,
-                        Cell: ({ row, original }) => {
+                        Cell: ({row, original}) => {
                             return (<span className="trophy-td">
-                                <img src={images.arenaX(original.details.arena)} />{row.trophies}
+                                <img src={images.arenaX(original.details.arena)} />
+                                {row.trophies}
                             </span>)
                         }
                     },
@@ -69,17 +72,19 @@ export default class ClanMembers extends React.Component {
                         id: "role",
                         accessor: "details.clan_role",
                         minWidth: 80,
-                        Cell: ({row}) => {return roles[row.role]}
+                        Cell: ({row}) => {
+                            return roles[ row.role ]
+                        }
                     },
                     {
                         Header: "Received",
                         id: "received",
                         accessor: "details.donations_received",
                         width: 80,
-                        Cell: ({ row }) => {
+                        Cell: ({row}) => {
                             return (<span>{row.received}
                                 <i className="donations-icons">
-                                    <img src={images.cardsWar} /><FontAwesomeIcon icon="arrow-down" />
+                                    <img src={images.cardsWar} /><span className="text-danger"><FontAwesomeIcon icon="arrow-down" /></span>
                                 </i>
                             </span>)
                         }
@@ -89,17 +94,17 @@ export default class ClanMembers extends React.Component {
                         id: "given",
                         accessor: "details.donations",
                         width: 80,
-                        Cell: ({ row }) => {
+                        Cell: ({row}) => {
                             return (<span>{row.given}
                                 <i className="donations-icons">
-                                    <img src={images.cardsWar} /><FontAwesomeIcon icon="arrow-up" />
+                                    <img src={images.cardsWar} /><span className="text-primary"><FontAwesomeIcon icon="arrow-up" /></span>
                                 </i>
                             </span>)
                         }
                     }
                 ]}
                 resizable={false}
-                defaultSorted={[{ id: "rank" }]}
+                defaultSorted={[ {id: "rank"} ]}
                 loading={loading}
                 pageSize={data.length}
                 showPagination={false}

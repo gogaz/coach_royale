@@ -128,10 +128,21 @@
   font-weight: bold;
 }
 
+i.donations-icons .fa {
+    position: absolute;
+    margin: 0;
+    top: auto;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    -webkit-transform: none;
+    transform: none;
+    font-size: .8em;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+}
 i.donations-icons {
     line-height: 1;
     vertical-align: middle;
-    font-size: 2em;
     display: inline-block;
     position: relative;
 }
@@ -140,17 +151,6 @@ i.donations-icons img {
     height: 1.3rem;
     vertical-align: middle;
     margin-left: 0.2rem;
-}
-i.donations-icons svg {
-    top: auto;
-    left: auto;
-    right: 1px;
-    bottom: 1px;
-    -webkit-transform: none;
-    transform: none;
-    font-size: .4em;
-    position: absolute;
-    margin: 0;
 }
 .trophy-td img {
     height: 2rem;

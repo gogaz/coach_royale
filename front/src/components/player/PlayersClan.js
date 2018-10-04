@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Loading from "../ui/Loading";
 import { handleErrors } from "../../helpers/api";
 import { images } from "../../helpers/assets";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "../ui/FontAwesome";
 
 export default class PlayersClan extends React.Component {
     constructor(props) {

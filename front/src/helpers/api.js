@@ -9,7 +9,6 @@ export function handleErrors(response) {
 }
 
 export const locale = window.navigator.userLanguage || window.navigator.language;
-require('moment').locale(locale);
 
 export function playerLeagueFromTrophies(trophies) {
     let r = Number((Number(trophies) - 4000) / 300);

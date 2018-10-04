@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from './FontAwesome';
 import ReactTooltip from 'react-tooltip';
 import moment from 'moment'
 import { handleErrors } from "../../helpers/api";
