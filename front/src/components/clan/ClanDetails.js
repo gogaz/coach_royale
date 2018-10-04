@@ -46,7 +46,7 @@ export default class ClanDetails extends React.Component {
                         <div className="col-9">
                             <h3>{ clan.name }</h3>
                             <span className="d-block">{clan.details.description}</span>
-                            <LastRefreshInfo time={clan.last_refresh}/>
+                            <LastRefreshInfo time={clan.details.last_refresh}/>
                         </div>
                         <div className="col-3">
                             <img src={ clan.details.badge }

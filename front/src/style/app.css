@@ -128,7 +128,7 @@
   font-weight: bold;
 }
 
-i.donations-icons .fa {
+i.donations-icons .fa, i.donations-icons .fas, i.donations-icons .fal {
     position: absolute;
     margin: 0;
     top: auto;

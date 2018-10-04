@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactTable from "react-table";
 import { images } from "../../helpers/assets"
-import { FontAwesomeIcon } from '../ui/FontAwesome';
 import { Link } from "react-router-dom";
+import DonationCell from "./cells/DonationCell";
 
 
 export default class ClanMembers extends React.Component {
@@ -81,26 +81,21 @@ export default class ClanMembers extends React.Component {
                         id: "received",
                         accessor: "details.donations_received",
                         width: 80,
-                        Cell: ({row}) => {
-                            return (<span>{row.received}
-                                <i className="donations-icons">
-                                    <img src={images.cardsWar} /><span className="text-danger"><FontAwesomeIcon icon="arrow-down" /></span>
-                                </i>
-                            </span>)
-                        }
+                        Cell: ({row}) => <DonationCell color='warning' column='received' row={row} icon='arrow-down' />
                     },
                     {
                         Header: "Donated",
                         id: "given",
                         accessor: "details.donations",
                         width: 80,
-                        Cell: ({row}) => {
-                            return (<span>{row.given}
-                                <i className="donations-icons">
-                                    <img src={images.cardsWar} /><span className="text-primary"><FontAwesomeIcon icon="arrow-up" /></span>
-                                </i>
-                            </span>)
-                        }
+                        Cell: ({row}) => <DonationCell color='primary' column='given' row={row} icon='arrow-up' />
+                    },
+                    {
+                        Header: "Total",
+                        id: 'total',
+                        width: 80,
+                        accessor: d => d.details.donations - d.details.donations_received,
+                        Cell: ({row}) => <DonationCell column='received' compareTo='given' row={row} />
                     }
                 ]}
                 resizable={false}
