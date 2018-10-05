@@ -3,6 +3,7 @@ import ReactTable from "react-table";
 import { images } from "../../helpers/assets"
 import { Link } from "react-router-dom";
 import DonationCell from "./cells/DonationCell";
+import { locale } from "../../helpers/api";
 
 
 export default class ClanMembers extends React.Component {
@@ -54,24 +55,26 @@ export default class ClanMembers extends React.Component {
                         Header: "Trophies",
                         id: "trophies",
                         accessor: "details.trophies",
-                        minWidth: 70,
+                        width: 90,
                         Cell: ({row, original}) => {
                             return (<span className="trophy-td">
                                 <img src={images.arenaX(original.details.arena)} />
-                                {row.trophies}
+                                {Number(row.trophies).toLocaleString(locale)}
                             </span>)
                         }
                     },
                     {
                         Header: "Level",
                         accessor: "details.level",
-                        minWidth: 50
+                        id: 'level',
+                        width: 45,
+                        Cell: ({row}) => (<span className="level-td" style={{backgroundImage: 'url('+images.level+')'}}>{row.level}</span>)
                     },
                     {
                         Header: "Role",
                         id: "role",
                         accessor: "details.clan_role",
-                        minWidth: 80,
+                        width: 100,
                         Cell: ({row}) => {
                             return roles[ row.role ]
                         }

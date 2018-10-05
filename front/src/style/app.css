@@ -186,3 +186,19 @@ button:disabled {
 .last-refresh-info .badge {
     font-size: 100%;
 }
+.level-td {
+    display: block;
+    background: no-repeat center;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .5),
+                   1px -1px rgba(0, 0, 0, .5),
+                   -1px 1px rgba(0, 0, 0, .5),
+                   -1px -1px rgba(0, 0, 0, .5);
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 800;
+    font-size: .75rem;
+    width: 100%;
+    background-size: 21px;
+    height: 21px;
+}
