@@ -12,12 +12,15 @@ from react_api.serializers.clan import ClanWithDetailsSerializer, PlayerClanDeta
 def clans_list(request):
     if request.method == 'GET':
         try:
-            main_clan = Clan.objects.filter(tag=settings.MAIN_CLAN)
+            main_clan = Clan.objects.get(tag=settings.MAIN_CLAN)
         except Clan.DoesNotExist:
             return not_found_response("main")
         clans = Clan.objects.exclude(tag=settings.MAIN_CLAN)
-        serializer = ClanWithDetailsSerializer(clans, many=True)
-        return Response({'main': ClanWithDetailsSerializer(main_clan).data, 'family': serializer.data})
+        if clans:
+            family = ClanWithDetailsSerializer(clans, many=True).data
+        else:
+            family = []
+        return Response({'main': ClanWithDetailsSerializer(main_clan, allow_null=True).data, 'family': family})
 
 
 @api_view(['GET'])
