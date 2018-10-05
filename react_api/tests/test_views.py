@@ -41,8 +41,9 @@ class ViewsTestCase(TestCase):
         data = self._test_route('clans_list')
         self.assertEqual(len(data), 2)
 
-        i = 0
-        for clan in data:
+        i = 1
+        self.assertEqual(data['main']['name'], self.clans[0].name)
+        for clan in data['family']:
             self.assertEqual(clan['name'], self.clans[i].name)
             i += 1
 
