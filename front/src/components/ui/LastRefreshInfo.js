@@ -58,7 +58,7 @@ export default class LastRefreshInfo extends React.Component {
     }
 
     render() {
-        const { refreshable, time, url } = this.props;
+        const { refreshable, time, url, allowRefreshAfter } = this.props;
         const { refreshing, error, now } = this.state;
         const last_refresh = moment(time);
 
@@ -71,7 +71,7 @@ export default class LastRefreshInfo extends React.Component {
                     {last_refresh.format('L') + ' ' + last_refresh.format('LTS')}
                 </ReactTooltip>
                 <button className="btn btn-xs ml-1"
-                        hidden={!refreshable || error !== undefined || now.diff(last_refresh) < (15 * 60 * 1000)}
+                        hidden={!refreshable || error !== undefined || now.diff(last_refresh) < allowRefreshAfter}
                         onClick={() => this.refreshData(url)}
                         disabled={refreshing}>
                     <FontAwesomeIcon icon="sync" spin={refreshing} />
@@ -89,6 +89,7 @@ LastRefreshInfo.defaultProps = {
     refreshable: false,
     update: 15,
     handleData: d => {},
+    allowRefreshAfter: 15 * 60 * 1000,
     url: '',
     time: 0
 };
