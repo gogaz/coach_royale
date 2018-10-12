@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 
 export default class Loading extends React.Component {
     render() {
@@ -16,3 +17,7 @@ export default class Loading extends React.Component {
     }
 }
 Loading.defaultProps = {loading: true, height: null};
+Loading.propTypes = {
+    loading: PropTypes.bool,
+    height: PropTypes.number,
+};

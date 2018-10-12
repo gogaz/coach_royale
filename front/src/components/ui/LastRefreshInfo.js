@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from './FontAwesome';
 import ReactTooltip from 'react-tooltip';
 import moment from 'moment'
 import { handleErrors } from "../../helpers/api";
+import PropTypes from 'prop-types';
 
 export default class LastRefreshInfo extends React.Component {
     constructor(props) {
@@ -91,5 +92,13 @@ LastRefreshInfo.defaultProps = {
     handleData: d => {},
     allowRefreshAfter: 15 * 60 * 1000,
     url: '',
-    time: 0
+    time: moment().subtract(100, 'year').format(),
+};
+LastRefreshInfo.propTypes = {
+    refreshable: PropTypes.bool,
+    update: PropTypes.number,
+    handleData: PropTypes.func,
+    allowRefreshAfter: PropTypes.number,
+    url: PropTypes.string,
+    time: PropTypes.string,
 };

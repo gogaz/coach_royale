@@ -3,9 +3,13 @@ from django.db import models
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from react_api.models import Clan, PlayerClanStatsHistory
+from react_api.models import Clan, PlayerClanStatsHistory, ClanWar
 from react_api.repository import ClanRepository
-from react_api.serializers.clan import ClanWithDetailsSerializer, PlayerClanDetailsSerializer
+from react_api.serializers.clan import (ClanWithDetailsSerializer,
+                                        PlayerClanDetailsSerializer,
+                                        PlayerInClanWarSerializer,
+                                        ClanWarSerializer)
+from react_api.serializers.misc import not_found_error
 
 
 @api_view(['GET'])
@@ -14,7 +18,7 @@ def clans_list(request):
         try:
             main_clan = Clan.objects.get(tag=settings.MAIN_CLAN)
         except Clan.DoesNotExist:
-            return not_found_response("main")
+            return not_found_error("clan", "main")
         clans = Clan.objects.exclude(tag=settings.MAIN_CLAN)
         if clans:
             family = ClanWithDetailsSerializer(clans, many=True).data
@@ -29,7 +33,7 @@ def clan_info(request, tag):
         try:
             clan = Clan.objects.get(tag=tag)
         except Clan.DoesNotExist:
-            return not_found_response(tag)
+            return not_found_error("clan", tag)
 
         serializer = ClanWithDetailsSerializer(clan)
         return Response(serializer.data)
@@ -40,7 +44,7 @@ def clan_members(request, tag):
     try:
         clan = Clan.objects.get(tag=tag)
     except Clan.DoesNotExist:
-        return not_found_response(tag)
+        return not_found_error("clan", tag)
 
     if request.method == 'GET':
         latest_stats_history_pks = PlayerClanStatsHistory.objects.values('player').annotate(
@@ -54,6 +58,14 @@ def clan_members(request, tag):
         return Response(serializer.data)
 
 
-def not_found_response(tag):
-    r = {'error': {'message': 'Clan %s was not found' % tag}}
-    return Response(r, status=404)
+@api_view(['GET'])
+def clan_wars(request, tag):
+    try:
+        clan = Clan.objects.get(tag=tag)
+    except Clan.DoesNotExist:
+        return not_found_error("clan", tag)
+
+    players = ClanRepository.get_players_in_clan_2(clan)
+    players_json = PlayerInClanWarSerializer(players, many=True)
+    wars_json = ClanWarSerializer(ClanWar.objects.filter(clan=clan).order_by('-id'), many=True)
+    return Response({'wars': wars_json.data, 'members': players_json.data})

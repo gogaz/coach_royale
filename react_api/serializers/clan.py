@@ -1,7 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from react_api.models import Clan, ClanHistory, PlayerClanStatsHistory, Player, ClanWar
+from react_api.models import Clan, ClanHistory, PlayerClanStatsHistory, Player, ClanWar, PlayerClanWar
 
 
 class ClanDetailsSerializer(HyperlinkedModelSerializer):
@@ -25,7 +25,7 @@ class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = PlayerClanStatsHistory
         fields = ('last_refresh',
-                  'clan_role', 'current_clan_rank', 'previous_clan_rank',
+                  'clan_role', 'current_clan_rank',
                   'donations', 'donations_received',
                   'level', 'trophies', 'arena')
 
@@ -45,6 +45,7 @@ class ClanWarSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = ClanWar
         fields = (
+            'id',
             'date_start', 'date_end',
             'participants',
             'final_battles',
@@ -53,6 +54,35 @@ class ClanWarSerializer(HyperlinkedModelSerializer):
             'final_position',
             'trophies', 'total_trophies', 'season',
         )
+        
+        
+class PlayerClanWarSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = PlayerClanWar
+        fields = ('clan_war_id',
+                  'final_battles',
+                  'final_battles_done',
+                  'final_battles_wins',
+                  'crowns',
+                  'collections_cards_earned',
+                  'collections_battles',
+                  'collections_battles_done',
+                  'collections_battles_wins',)
+
+
+class PlayerInClanWarSerializer(HyperlinkedModelSerializer):
+    wars = SerializerMethodField()
+    details = SerializerMethodField()
+
+    def get_details(self, obj):
+        return PlayerClanStatsSerializer(PlayerClanStatsHistory.objects.filter(player=obj).order_by('-id').first()).data
+
+    def get_wars(self, obj):
+        return PlayerClanWarSerializer(PlayerClanWar.objects.filter(player=obj).order_by('-id')[:10], many=True).data
+
+    class Meta:
+        model = Player
+        fields = ('tag', 'name', 'details', 'wars')
 
 
 class ClanWithDetailsSerializer(HyperlinkedModelSerializer):

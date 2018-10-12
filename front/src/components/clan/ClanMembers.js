@@ -23,7 +23,6 @@ export default class ClanMembers extends React.Component {
             .then(
                 (result) => {
                     this.setState({data: result});
-                    console.log(result)
                 })
             .then(() => this.setState({loading: false}))
             .catch((error) => {

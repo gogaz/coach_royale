@@ -1,6 +1,8 @@
 import React from 'react'
 import ClanDetails from "./ClanDetails";
 import ClanMembers from "./ClanMembers";
+import { Tab, Tabs } from "../ui/Tabs";
+import ClanWarMembers from "./ClanWarMembers";
 
 export default class ClanPage extends React.Component {
     constructor(props) {
@@ -14,9 +16,10 @@ export default class ClanPage extends React.Component {
         return (
             <div className="card">
                 <ClanDetails endpoint={this.state.endPoint} />
-                <div className="card-body">
-                    <ClanMembers endpoint={this.state.endPoint} />
-                </div>
+                <Tabs>
+                    <Tab id='members' label='Clan members'><ClanMembers endpoint={this.state.endPoint} /></Tab>
+                    <Tab id='war' label="War"><ClanWarMembers endpoint={this.state.endPoint} /></Tab>
+                </Tabs>
             </div>
         );
     }

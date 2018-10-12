@@ -199,6 +199,16 @@ button:disabled {
     font-weight: 800;
     font-size: .75rem;
     width: 100%;
-    background-size: 21px;
-    height: 21px;
+    background-size: 28px;
+    height: 32px;
+    padding-top: .4rem;
+}
+/** PlayerWarResultCell **/
+.war-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.war-result>img {
+    height: 30px;
 }
