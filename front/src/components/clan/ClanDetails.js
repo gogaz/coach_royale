@@ -43,13 +43,12 @@ export default class ClanDetails extends React.Component {
                 <div className="card-header">
                     <div className="row">
                         <div className="col-9">
-                            <h3>{ clan.name }</h3>
+                            <h3 className="d-inline mr-2">{ clan.name }</h3><LastRefreshInfo time={clan.details.last_refresh}/>
                             <span className="d-block">{clan.details.description}</span>
-                            <LastRefreshInfo time={clan.details.last_refresh}/>
                         </div>
                         <div className="col-3">
                             <img src={ clan.details.badge }
-                                 style={ { float: 'right', height: '5pc' } } />
+                                 style={ { float: 'right', height: '52px' } } />
                         </div>
                     </div>
                 </div>

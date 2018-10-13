@@ -1,5 +1,9 @@
 @import "./responsive.css";
-@import "./style.css";
+
+/* Page presentation */
+body {
+    background-color: #e4e5e6;
+}
 
 .navbar-hidden .navbar-toggler
 {

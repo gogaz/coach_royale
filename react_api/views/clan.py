@@ -3,6 +3,7 @@ from django.db import models
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from react_api.forms import DateRangeForm
 from react_api.models import Clan, PlayerClanStatsHistory, ClanWar
 from react_api.repository import ClanRepository
 from react_api.serializers.clan import (ClanWithDetailsSerializer,
@@ -67,5 +68,11 @@ def clan_wars(request, tag):
 
     players = ClanRepository.get_players_in_clan_2(clan)
     players_json = PlayerInClanWarSerializer(players, many=True)
-    wars_json = ClanWarSerializer(ClanWar.objects.filter(clan=clan).order_by('-id'), many=True)
+    range_start = request.query_params.get('start', None)
+    range_end = request.query_params.get('end', None)
+    wars = ClanWar.objects.filter(clan=clan).order_by('-date_start')
+    if range_start and range_end:
+        wars_json = ClanWarSerializer(wars.filter(date_start__lte=range_start, date_end__gte=range_end))
+    else:
+        wars_json = ClanWarSerializer(wars[:10], many=True)
     return Response({'wars': wars_json.data, 'members': players_json.data})

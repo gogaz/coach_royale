@@ -6,6 +6,8 @@ import Loading from "../ui/Loading";
 import PlayerWarResultCell from "./cells/PlayerWarResultCell";
 import '../../style/indicators.css';
 import { locale } from "../../helpers/api";
+import { images } from "../../helpers/assets";
+import DateRangeForm from "../forms/DateRangeForm";
 
 export default class ClanWarMembers extends React.Component {
     constructor(props) {
@@ -15,7 +17,7 @@ export default class ClanWarMembers extends React.Component {
             endpoint: this.props.endpoint + '/wars',
             data: { wars: [], members: [] },
             loading: true,
-        }
+        };
     }
     componentDidMount() {
         fetch(this.state.endpoint)
@@ -28,8 +30,21 @@ export default class ClanWarMembers extends React.Component {
                 console.log(error)
             });
     }
+
     render() {
+        /*
+         * TODO: all available columns +/- visibility
+         * TODO: Filters
+         * TODO: date range picker (backend)
+         */
         let columns = [
+            {
+                Header: <img src={images.trophy} height={20}/>,
+                id: 'trophies',
+                accessor: "details.trophies",
+                width: 50,
+                Cell: ({row}) => Number(row.trophies).toLocaleString(locale)
+            },
             {
                 Header: "Name",
                 accessor: "name",
@@ -61,10 +76,12 @@ export default class ClanWarMembers extends React.Component {
                         color = {g: 255, r: 250 - row.winrate, b: 255 - row.winrate};
                     return (
                     <div style={{padding: 'inherit'}}>
-                        <div className="indicator" style={{backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, 60)`}}/>
+                        <div className="indicator"
+                             style={{backgroundColor: `rgb(${color.r}, ${color.g}, ${color.b})`}}
+                        />
                         <div className="indicator-data text-right">
                             {row.winrate !== null && Number(row.winrate).toLocaleString(locale, {
-                                minimumFractionDigits:2,
+                                minimumFractionDigits: 2,
                                 maximumFractionDigits: 2
                             }) + '%'}
                         </div>
@@ -74,7 +91,7 @@ export default class ClanWarMembers extends React.Component {
         ];
         const { data: {wars, members}, loading } = this.state;
         if (wars)
-        wars.reverse().map(e => {
+        wars.map(e => {
             const date = moment(e.date_end).format('DD/MM');
             const column = {
                 Header: date,
