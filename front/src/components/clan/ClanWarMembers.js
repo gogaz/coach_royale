@@ -41,6 +41,7 @@ export default class ClanWarMembers extends React.Component {
             {
                 Header: <img src={images.trophy} height={20}/>,
                 id: 'trophies',
+                className: "text-right",
                 accessor: "details.trophies",
                 width: 50,
                 Cell: ({row}) => Number(row.trophies).toLocaleString(locale)
@@ -87,6 +88,13 @@ export default class ClanWarMembers extends React.Component {
                         </div>
                     </div>
                 )},
+            },
+            {
+                Header: "Count",
+                className: "text-right",
+                id: "count",
+                width: 60,
+                accessor: (data) => data.wars.reduce((acc, elem) => acc + elem.final_battles_wins, 0),
             }
         ];
         const { data: {wars, members}, loading } = this.state;
@@ -106,12 +114,13 @@ export default class ClanWarMembers extends React.Component {
 
         return (
             <div>
+                <DateRangeForm endpoint={this.state.endpoint} handleData={(data) => this.setState({data: data})} />
                 <Loading loading={loading}/>
                 <ReactTable
                     data={members}
                     columns={columns}
                     resizable={false}
-                    defaultSorted={[ {id: "rank"} ]}
+                    defaultSorted={[{id: "rank"}]}
                     hidden={loading}
                     loading={loading}
                     pageSize={members.length}

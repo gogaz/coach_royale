@@ -4,116 +4,8 @@
 body {
     background-color: #e4e5e6;
 }
-
-.navbar-hidden .navbar-toggler
-{
-    display: none;
-}
-.app-header.navbar .navbar-brand,
-.app-header.navbar
-{
-    background-color: #29363d;
-}
-.app-header.navbar .navbar-brand {
-    height: 100%;
-    border-bottom: 0;
-}
-.app-header.navbar {
-    border-bottom: 0;
-}
-
-.sidebar-fixed .sidebar {
-    position: absolute;
-}
-
-.app-header.navbar {
-    position:fixed;
-}
-
-.aside-menu-fixed .aside-menu {
-    top: 55px;
-}
-
-.card-danger>.card-header {
-    color: #f63c3a;
-    background-color: #f2dede;
-    border-color: #eed3d7;
-}
-.card-primary>.card-header {
-    color: #fff;
-    background-color: #63c2de;
-    border-color: #63c2de;
-}
-.card-success>.card-header {
-    color: #fff;
-    background-color: #3a9d5d;
-    border-color: #3a9d5d;
-}
-.card-warning>.card-header {
-    color: #c09853;
-    background-color: #fcf8e3;
-    border-color: #fbeed5;
-}
-.timeline .card-danger{
-    border-color: #f63c3a;
-}
-.timeline .card-primary {
-    border-color: #63c2de;
-}
-.timeline .card-success {
-    border-color: #3a9d5d;
-}
-.timeline .card-warning {
-    border-color: #c09853;
-}
-.timeline .card-default {
-    border-color: #f0f3f5;
-}
-
-/* Bottom left text */
-.image-bottom-left {
-    position: absolute;
-    bottom: 8px;
-    left: 16px;
-}
-
-/* Top left text */
-.image-top-left {
-    position: absolute;
-    top: 8px;
-    left: 16px;
-}
-
-/* Top right text */
-.image-top-right {
-    position: absolute;
-    top: 8px;
-    right: 16px;
-}
-
-/* Bottom right text */
-.image-bottom-right {
-    position: absolute;
-    bottom: 8px;
-    right: 16px;
-}
-
-.btn-card
-{
-    display: flex;
-    margin-bottom: 1.5rem;
-    flex-direction: column;
-    min-width: 0;
-    border: 1px solid #c2cfd6;
-}
-.btn-card-body
-{
-    padding: 1rem;
-    width: 100%;
-}
-.header-fixed .app-body
-{
-    padding-top: 55px;
+#root .navbar {
+    padding: .1rem 1rem;
 }
 .card-header .list-group li.list-group-item {
     background-color: #f0f3f5;
@@ -215,4 +107,8 @@ button:disabled {
 }
 .war-result>img {
     height: 30px;
+}
+/* DateRangeForm */
+.date-range input.form-control {
+    width: 110px;
 }

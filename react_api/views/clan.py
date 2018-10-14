@@ -10,7 +10,7 @@ from react_api.serializers.clan import (ClanWithDetailsSerializer,
                                         PlayerClanDetailsSerializer,
                                         PlayerInClanWarSerializer,
                                         ClanWarSerializer)
-from react_api.serializers.misc import not_found_error
+from react_api.serializers.misc import not_found_error, form_error
 
 
 @api_view(['GET'])
@@ -59,20 +59,29 @@ def clan_members(request, tag):
         return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def clan_wars(request, tag):
     try:
         clan = Clan.objects.get(tag=tag)
     except Clan.DoesNotExist:
         return not_found_error("clan", tag)
 
-    players = ClanRepository.get_players_in_clan_2(clan)
-    players_json = PlayerInClanWarSerializer(players, many=True)
-    range_start = request.query_params.get('start', None)
-    range_end = request.query_params.get('end', None)
     wars = ClanWar.objects.filter(clan=clan).order_by('-date_start')
-    if range_start and range_end:
-        wars_json = ClanWarSerializer(wars.filter(date_start__lte=range_start, date_end__gte=range_end))
+    players = ClanRepository.get_players_in_clan_2(clan)
+
+    form = DateRangeForm(request.POST)
+    if form.is_valid():
+        range_start = form.cleaned_data["start"]
+        range_end = form.cleaned_data["end"]
+        wars = wars.filter(date_end__gte=range_start, date_start__lte=range_end)
     else:
-        wars_json = ClanWarSerializer(wars[:10], many=True)
+        wars = wars[:10]
+
+    if request.method == "POST" and not form.is_valid():
+        print(form.data)
+        return form_error(form)
+
+    wars_json = ClanWarSerializer(wars, many=True)
+    players_json = PlayerInClanWarSerializer(players, wars=wars, many=True)
+
     return Response({'wars': wars_json.data, 'members': players_json.data})

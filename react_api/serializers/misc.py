@@ -1,3 +1,4 @@
+from django.forms import Form
 from rest_framework.response import Response
 from rest_framework.serializers import HyperlinkedModelSerializer
 
@@ -14,6 +15,13 @@ def refresh_error(message, status=403):
 
 def not_found_error(object, id, status=404):
     return raise_error("%s %s was not found." % (object.title(), id), status=status)
+
+
+def form_error(form: Form, status=403):
+    return Response({
+        'success': False,
+        'errors': dict(form.errors.items()),
+    }, status=status)
 
 
 class ArenaSerializer(HyperlinkedModelSerializer):

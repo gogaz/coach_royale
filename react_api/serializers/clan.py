@@ -74,11 +74,16 @@ class PlayerInClanWarSerializer(HyperlinkedModelSerializer):
     wars = SerializerMethodField()
     details = SerializerMethodField()
 
+    def __init__(self, *args, wars=[], **kwargs):
+        self.wars_list = wars
+        super().__init__(*args, **kwargs)
+
     def get_details(self, obj):
         return PlayerClanStatsSerializer(PlayerClanStatsHistory.objects.filter(player=obj).order_by('-id').first()).data
 
     def get_wars(self, obj):
-        return PlayerClanWarSerializer(PlayerClanWar.objects.filter(player=obj).order_by('-id')[:10], many=True).data
+        query = PlayerClanWar.objects.filter(player=obj, clan_war__in=self.wars_list).order_by('-id')[:10]
+        return PlayerClanWarSerializer(query, many=True).data
 
     class Meta:
         model = Player
