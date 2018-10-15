@@ -22,7 +22,6 @@ export default class ClanDetails extends React.Component {
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
-                    console.log(result);
                     this.setState({ loading: false, clan: result });
                     setTitle(`${result.name} (${result.tag})`);
                 })
