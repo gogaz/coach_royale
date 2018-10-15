@@ -1,6 +1,7 @@
 import React from 'react';
 import { images } from "../../../helpers/assets";
 import { FontAwesomeIcon } from "../../ui/FontAwesome";
+import PropTypes from 'prop-types';
 
 export default class DonationCell extends React.Component {
     render () {
@@ -24,3 +25,11 @@ export default class DonationCell extends React.Component {
         )
     }
 }
+DonationCell.defaultProps = {
+    compareTo: '',
+};
+DonationCell.propTypes = {
+    column: PropTypes.string.isRequired,
+    row: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
+    compareTo: PropTypes.string,
+};

@@ -4,6 +4,7 @@ import Loading from "../ui/Loading";
 import { handleErrors } from "../../helpers/api";
 import { images } from "../../helpers/assets";
 import { FontAwesomeIcon } from "../ui/FontAwesome";
+import DonationCell from "../clan/cells/DonationCell";
 
 export default class PlayersClan extends React.Component {
     constructor(props) {
@@ -41,16 +42,10 @@ export default class PlayersClan extends React.Component {
                     <span className="text-muted">{roles[player.clan_role]}</span>
                     <span className="text-muted">#{player.current_clan_rank}</span>
                     <span className="text-muted">
-                        {player.donations}
-                        <i className="donations-icons">
-                            <img src={images.cardsWar} /><FontAwesomeIcon icon="arrow-up" />
-                        </i>
+                        <DonationCell row={player} column="donations"/>
                     </span>
                     <span className="text-muted">
-                        {player.donations_received}
-                        <i className="donations-icons">
-                            <img src={images.cardsWar} /><FontAwesomeIcon icon="arrow-down" />
-                        </i>
+                        <DonationCell row={player} column="donations_received"/>
                     </span>
                 </div>
             </div>

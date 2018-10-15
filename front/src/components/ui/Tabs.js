@@ -1,48 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {Link, Redirect, Route, Switch} from "react-router-dom";
 
 class Tabs extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            activeTab: this.props.children[ 0 ].props.id,
-        };
-        this.onClickTabItem = this.onClickTabItem.bind(this);
-    }
-
-    onClickTabItem() {
-        this.setState({activeTab: tab});
-    };
-
     render() {
-        const {props: {children,}, state: {activeTab,}} = this;
-        let my_children = React.Children.toArray(this.props.children);
+        const {children, match} = this.props;
+        let baseUrl = match.url;
+        let my_children = React.Children.toArray(children);
 
         return (
             <div className="tabs">
                 <ul className="nav nav-tabs">
                     {my_children.map(child => {
                         let classes = ['nav-link'];
-                        if (child.props.id === activeTab) classes = [...classes, 'active'];
+                        if (child.props.match && child.props.match.url === baseUrl) classes = [...classes, 'active'];
                         return (
                             <li className="nav-item" key={child.props.id}>
-                                <a className={classes.join(' ')} data-toggle="tab" href="#" onClick={() => this.setState({activeTab: child.props.id})}>
-                                    {child.props.label}
-                                </a>
+                                <Link to={match.url + '/' + child.props.id} className={classes.join(' ')}>{child.props.label}</Link>
                             </li>
                         )
                     })}
                 </ul>
                 <div className="tab-content">
-                    {my_children.map((child) => {
-                        if (child.props.id !== activeTab) return undefined;
-                        return (
-                            <div className="tab-pane active" key={child.props.id}>
-                                {child}
-                            </div>
-                        );
-                    })}
+                    <Switch>
+                        <Route exact path={match.url} component={() => <Redirect to={baseUrl + '/' + my_children.find(e => e.props.default === true).props.id} />} />
+                        {my_children.map((child) => <Route key={child.props.id} path={baseUrl + '/' + child.props.id} component={() => child} />)}
+                    </Switch>
                 </div>
             </div>
         );
@@ -51,12 +34,20 @@ class Tabs extends Component {
 
 class Tab extends Component {
     render() {
-        return this.props.children
+        return (
+            <div className="tab-pane active" key={this.props.id}>
+                {this.props.children}
+            </div>
+        )
     }
 }
+Tab.defaultProps = {
+    default: false,
+};
 Tab.propTypes = {
-        id: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-    };
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    default: PropTypes.bool,
+};
 
 export { Tab, Tabs }

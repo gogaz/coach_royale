@@ -111,10 +111,13 @@ export default class ClanWarMembers extends React.Component {
             columns = [...columns, column]
         });
 
-
+        const end_date = wars ? wars.length ? moment(data.wars[data.wars.length - 1]) : moment().subtract(15, 'day') : null;
         return (
             <div>
-                <DateRangeForm endpoint={this.state.endpoint} handleData={(data) => this.setState({data: data})} />
+                <DateRangeForm endpoint={this.state.endpoint}
+                               handleData={(data) => this.setState({data: data})}
+                               end={end_date}
+                />
                 <Loading loading={loading}/>
                 <ReactTable
                     data={members}

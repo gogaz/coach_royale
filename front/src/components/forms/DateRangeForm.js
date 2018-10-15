@@ -12,24 +12,28 @@ export default class DateRangeForm extends React.Component {
         super(props);
 
         this.state = {
-            start: props.start || this.defaultProps.start,
-            end: props.end || this.defaultProps.end,
+            start: props.start,
+            end: props.end,
             loading: false,
             error: undefined,
         };
 
         this.handleChangeStart = this.handleChangeStart.bind(this);
         this.handleChangeEnd = this.handleChangeEnd.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChangeStart(value) {
-        this.setState({selectedRange: {start: value}});
+    componentWillReceiveProps(newProps) {
+        this.setState({start: newProps.start, end: newProps.end})
     }
 
-    handleChangeEnd(value) {
-        this.setState({selectedRange: {end: value}});
+    handleChangeStart(event) {
+        this.setState({selectedRange: {start: event.target.value}});
     }
+
+    handleChangeEnd(event) {
+        this.setState({selectedRange: {end: event.target.value}});
+    }
+
     handleSubmit(event) {
         event.preventDefault();
         const form = new FormData(event.target);

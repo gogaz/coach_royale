@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM debian:stable
 
 # Install global dependencies
 RUN apt-get update && apt-get upgrade -y
