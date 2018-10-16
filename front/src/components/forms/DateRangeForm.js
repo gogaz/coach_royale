@@ -20,18 +20,19 @@ export default class DateRangeForm extends React.Component {
 
         this.handleChangeStart = this.handleChangeStart.bind(this);
         this.handleChangeEnd = this.handleChangeEnd.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentWillReceiveProps(newProps) {
         this.setState({start: newProps.start, end: newProps.end})
     }
 
-    handleChangeStart(event) {
-        this.setState({selectedRange: {start: event.target.value}});
+    handleChangeStart(value) {
+        this.setState({start: value});
     }
 
-    handleChangeEnd(event) {
-        this.setState({selectedRange: {end: event.target.value}});
+    handleChangeEnd(value) {
+        this.setState({end: value});
     }
 
     handleSubmit(event) {
@@ -63,8 +64,7 @@ export default class DateRangeForm extends React.Component {
     }
 
     render() {
-        const {start, end} = this.props;
-        const {loading, error} = this.state;
+        const {loading, error, start, end} = this.state;
         return (
             <form onSubmit={this.handleSubmit} className="input-group date-range">
                 <input type="hidden" name="csrfmiddlewaretoken" value={getCookie(cookies.csrf)} />
@@ -75,6 +75,7 @@ export default class DateRangeForm extends React.Component {
                     selectsStart
                     startDate={start}
                     endDate={end}
+                    autoComplete="off"
                     name="start"
                     onChange={this.handleChangeStart}
                 />
@@ -88,6 +89,7 @@ export default class DateRangeForm extends React.Component {
                     selectsEnd
                     startDate={start}
                     endDate={end}
+                    autoComplete="off"
                     name="end"
                     onChange={this.handleChangeEnd}
                 />

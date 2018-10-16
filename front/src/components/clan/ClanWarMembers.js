@@ -107,7 +107,7 @@ export default class ClanWarMembers extends React.Component {
         const { data: {wars, members}, loading } = this.state;
         if (wars)
         wars.map(e => {
-            const date = moment(e.date_end).format('DD/MM');
+            const date = moment(e.date_start).format('DD/MM');
             const column = {
                 Header: date,
                 id: 'war' + e.id,
@@ -118,12 +118,13 @@ export default class ClanWarMembers extends React.Component {
             columns = [...columns, column]
         });
 
-        const end_date = wars ? wars.length ? moment(wars[wars.length - 1]) : moment().subtract(15, 'day') : null;
+        const end_date = wars.reduce((acc, e) => e.end_date < acc ? e.end_date : acc, moment().toISOString());
+        console.log(end_date);
         return (
             <div>
                 <DateRangeForm endpoint={this.state.endpoint}
                                handleData={(data) => this.setState({data: data})}
-                               end={end_date}
+                               start={moment(end_date)}
                 />
                 <Loading loading={loading}/>
                 <ReactTable
