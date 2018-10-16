@@ -1,7 +1,8 @@
 import React from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { NavTab } from 'react-router-tabs';
 import ClanDetails from "./ClanDetails";
 import ClanMembers from "./ClanMembers";
-import { Tab, Tabs } from "../ui/Tabs";
 import ClanWarMembers from "./ClanWarMembers";
 
 export default class ClanPage extends React.Component {
@@ -18,10 +19,20 @@ export default class ClanPage extends React.Component {
         return (
             <div className="card">
                 <ClanDetails endpoint={this.state.endPoint} />
-                <Tabs match={match}>
-                    <Tab id="members" label="Clan members" default><ClanMembers endpoint={this.state.endPoint} /></Tab>
-                    <Tab id="war" label="War log"><ClanWarMembers endpoint={this.state.endPoint} /></Tab>
-                </Tabs>
+                <ul className="nav nav-tabs">
+                    <li className="nav-item">
+                        <NavTab to={`${match.url}/members`} className="nav-link">Clan members</NavTab>
+                    </li>
+                    <li className="nav-item">
+                        <NavTab to={`${match.url}/wars`} className="nav-link">War log</NavTab>
+                    </li>
+                </ul>
+
+                <Switch>
+                    <Route exact path={`${match.url}`} render={() => <Redirect replace to={`${match.url}/members`} />} />
+                    <Route path={`${match.url}/members`} render={(props) => <ClanMembers {...props} endpoint={this.state.endPoint} />} />
+                    <Route path={`${match.url}/wars`} render={(props) => <ClanWarMembers {...props} endpoint={this.state.endPoint} />} />
+                </Switch>
             </div>
         );
     }
