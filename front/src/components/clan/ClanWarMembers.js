@@ -90,11 +90,18 @@ export default class ClanWarMembers extends React.Component {
                 )},
             },
             {
-                Header: "Count",
+                Header: <img src={images.battle} height={20}/>,
                 className: "text-right",
                 id: "count",
-                width: 60,
-                accessor: (data) => data.wars.reduce((acc, elem) => acc + elem.final_battles_wins, 0),
+                width: 40,
+                accessor: (data) => data.wars.reduce((acc, elem) => acc + elem.final_battles_done, 0),
+            },
+            {
+                Header: <img src={images.warYet} height={20}/>,
+                className: "text-right",
+                id: "count_missing",
+                width: 40,
+                accessor: (data) => data.wars.reduce((acc, elem) => acc + (elem.final_battles_done === 0 ? 1 : 0), 0),
             }
         ];
         const { data: {wars, members}, loading } = this.state;
