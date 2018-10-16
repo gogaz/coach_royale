@@ -33,7 +33,7 @@ services:
     volumes:
       - .:/code
       - ./logs:/logs
-      - ./docker/crontab:/etc/cron.d/coach_royale
+    #  - ./docker/crontab:/etc/cron.d/coach_royale
     expose:
       - "8000"
     depends_on:

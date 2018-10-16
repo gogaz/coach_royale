@@ -10,3 +10,8 @@ WORKDIR /code
 RUN mkdir -p logs
 ADD requirements.txt /code/
 RUN pip3 install -r requirements.txt
+
+# Setup cron jobs
+ADD docker/crontab /etc/cron.d/coach_royale
+RUN chmod 644 /etc/cron.d/coach_royale
+RUN crontab /etc/cron.d/coach_royale
