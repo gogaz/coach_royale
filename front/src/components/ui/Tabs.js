@@ -1,19 +1,45 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Link, Redirect, Route, Switch} from "react-router-dom";
+import { Link, Redirect, Route, Switch } from "react-router-dom";
 
 class Tabs extends Component {
+    constructor(props) {
+        super(props);
+
+        const children = React.Children.toArray(props.children);
+        this.state = {
+            children:  children,
+            defaultElement: children.find(e => e.props.default === true) || children[0],
+            selected: null,
+        };
+
+        this.getActiveComponent = this.getActiveComponent.bind(this);
+    }
+    componentWillReceiveProps(newProps) {
+        const children = React.Children.toArray(newProps.children);
+        this.setState({
+            children: children,
+            defaultElement: children.find(e => e.props.default === true),
+        })
+    }
+    getActiveComponent(props) {
+        const id = props.match.params.tab;
+        if (this.state.selected !== id)
+            this.setState({selected: id});
+        return this.state.children.find(e => e.props.id === id)
+    }
     render() {
-        const {children, match} = this.props;
+        const {match} = this.props;
+        const {children, defaultElement} = this.state;
+        let selected = this.state.selected || defaultElement ? defaultElement.props.id : null;
         let baseUrl = match.url;
-        let my_children = React.Children.toArray(children);
 
         return (
             <div className="tabs">
                 <ul className="nav nav-tabs">
-                    {my_children.map(child => {
+                    {children.map(child => {
                         let classes = ['nav-link'];
-                        if (child.props.match && child.props.match.url === baseUrl) classes = [...classes, 'active'];
+                        if (selected === child.props.id) classes = [...classes, 'active'];
                         return (
                             <li className="nav-item" key={child.props.id}>
                                 <Link to={match.url + '/' + child.props.id} className={classes.join(' ')}>{child.props.label}</Link>
@@ -23,14 +49,17 @@ class Tabs extends Component {
                 </ul>
                 <div className="tab-content">
                     <Switch>
-                        <Route exact path={match.url} component={() => <Redirect to={baseUrl + '/' + my_children.find(e => e.props.default === true).props.id} />} />
-                        {my_children.map((child) => <Route key={child.props.id} path={baseUrl + '/' + child.props.id} component={() => child} />)}
+                        {defaultElement && <Route exact path={baseUrl} component={() => <Redirect to={`${baseUrl}/${selected}`} />}/>}
+                        <Route path={baseUrl + '/:tab'} render={this.getActiveComponent}/>
                     </Switch>
                 </div>
             </div>
         );
     }
 }
+Tabs.propTypes = {
+    children: PropTypes.node.isRequired,
+};
 
 class Tab extends Component {
     render() {
@@ -47,6 +76,7 @@ Tab.defaultProps = {
 Tab.propTypes = {
     id: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    children: PropTypes.node,
     default: PropTypes.bool,
 };
 

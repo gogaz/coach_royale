@@ -1,5 +1,4 @@
 import React from 'react';
-import {Redirect, Route, Switch} from "react-router-dom";
 import ClanDetails from "./ClanDetails";
 import ClanMembers from "./ClanMembers";
 import { Tab, Tabs } from "../ui/Tabs";
@@ -20,8 +19,8 @@ export default class ClanPage extends React.Component {
             <div className="card">
                 <ClanDetails endpoint={this.state.endPoint} />
                 <Tabs match={match}>
-                    <Tab id='members' label='Clan members' default><ClanMembers endpoint={this.state.endPoint} /></Tab>
-                    <Tab id='war' label="Wars"><ClanWarMembers endpoint={this.state.endPoint} /></Tab>
+                    <Tab id="members" label="Clan members" default><ClanMembers endpoint={this.state.endPoint} /></Tab>
+                    <Tab id="war" label="War log"><ClanWarMembers endpoint={this.state.endPoint} /></Tab>
                 </Tabs>
             </div>
         );

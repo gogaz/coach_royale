@@ -67,7 +67,7 @@ export default class ClanWarMembers extends React.Component {
                 accessor: (data) => {
                     const wins = data.wars.reduce((acc, elem) => acc + elem.final_battles_wins, 0);
                     const battles = data.wars.reduce((acc, elem) => acc + elem.final_battles_done, 0);
-                    return battles > 0 ? (wins / battles) * 100 : null;
+                    return battles > 0 ? (wins / battles) * 100 : 0;
                 },
                 Cell: ({row}) => {
                     let color = {r: 255, g: 255, b: 255};
@@ -111,7 +111,7 @@ export default class ClanWarMembers extends React.Component {
             columns = [...columns, column]
         });
 
-        const end_date = wars ? wars.length ? moment(data.wars[data.wars.length - 1]) : moment().subtract(15, 'day') : null;
+        const end_date = wars ? wars.length ? moment(wars[wars.length - 1]) : moment().subtract(15, 'day') : null;
         return (
             <div>
                 <DateRangeForm endpoint={this.state.endpoint}
