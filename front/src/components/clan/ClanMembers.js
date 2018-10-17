@@ -14,7 +14,7 @@ export default class ClanMembers extends React.Component {
         this.state = {
             data: [],
             loading: true,
-            endpoint: props.endpoint + '/members'
+            endpoint: props.endpoint + '/members',
         };
     }
 
