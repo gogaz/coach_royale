@@ -36,7 +36,7 @@ export default class App extends React.Component {
                     <main className='main'>
                         <div className='container-fluid mt-3'>
                             <Switch>
-                                {this.state.defaultUrl && <Route exact path='/' component={() => <Redirect to={this.state.defaultUrl} />} />}
+                                {this.state.defaultUrl && <Route exact path='/' component={() => <Redirect replace to={this.state.defaultUrl} />} />}
                                 <Route path='/clan' render={(props) => <ClanApp {...props} mainClan={this.state.mainClan} />} />
                                 <Route path='/player' component={PlayerApp} />
                                 <Route path='/tournaments' component={TournamentsApp}/>

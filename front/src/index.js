@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { locale } from "./helpers/api";
+import { locale } from "./helpers/browser";
 import App from "./components/App"
 import "react-table/react-table.css";
 

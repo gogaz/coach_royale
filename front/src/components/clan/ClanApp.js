@@ -1,7 +1,8 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom";
 import ClanPage from "./ClanPage";
-import { handleErrors, setTitle } from "../../helpers/api";
+import { handleErrors } from "../../helpers/api";
+import { setTitle } from "../../helpers/browser";
 
 export default class ClanApp extends React.Component {
     componentDidMount() {

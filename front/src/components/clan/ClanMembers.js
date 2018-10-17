@@ -3,7 +3,7 @@ import ReactTable from "react-table";
 import { images } from "../../helpers/assets"
 import { Link } from "react-router-dom";
 import DonationCell from "./cells/DonationCell";
-import { locale } from "../../helpers/api";
+import { locale } from "../../helpers/browser";
 import Loading from "../ui/Loading";
 
 

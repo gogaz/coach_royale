@@ -2,7 +2,8 @@ import React from 'react'
 import moment from 'moment'
 import DatePicker from "react-datepicker";
 import PropTypes from "prop-types";
-import { cookies, getCookie, handleErrors, locale } from "../../helpers/api";
+import { handleErrors } from "../../helpers/api";
+import { cookies, locale } from "../../helpers/browser";
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from "../ui/FontAwesome";
@@ -16,6 +17,7 @@ export default class DateRangeForm extends React.Component {
             end: props.end,
             loading: false,
             error: undefined,
+            changed: true,
         };
 
         this.handleChangeStart = this.handleChangeStart.bind(this);
@@ -28,11 +30,17 @@ export default class DateRangeForm extends React.Component {
     }
 
     handleChangeStart(value) {
-        this.setState({start: value});
+        this.setState({
+            start: value,
+            changed: true,
+        });
     }
 
     handleChangeEnd(value) {
-        this.setState({end: value});
+        this.setState({
+            end: value,
+            changed: true,
+        });
     }
 
     handleSubmit(event) {
@@ -45,7 +53,10 @@ export default class DateRangeForm extends React.Component {
         })
             .then(res => handleErrors(res))
             .then(result => {
-                this.setState({loading: false});
+                this.setState({
+                    loading: false,
+                    changed: false,
+                });
                 this.props.handleData(result);
                 console.log(result);
             })
@@ -54,7 +65,6 @@ export default class DateRangeForm extends React.Component {
             });
     }
     catchErrors(error) {
-        this.setState({loading: false});
         if (error.status === 403 || error.status === 404)
         {
             error.json().then(res => console.log(res));
@@ -64,10 +74,10 @@ export default class DateRangeForm extends React.Component {
     }
 
     render() {
-        const {loading, error, start, end} = this.state;
+        const {loading, error, changed, start, end} = this.state;
         return (
             <form onSubmit={this.handleSubmit} className="input-group date-range">
-                <input type="hidden" name="csrfmiddlewaretoken" value={getCookie(cookies.csrf)} />
+                <input type="hidden" name="csrfmiddlewaretoken" value={cookies.csrf} />
                 <DatePicker
                     className="form-control"
                     locale={locale}
@@ -96,7 +106,7 @@ export default class DateRangeForm extends React.Component {
                 <div className="input-group-append">
                     <button type="submit"
                             className="btn btn-primary"
-                            disabled={loading || error}>
+                            disabled={loading || changed === false || error}>
                         {loading && <FontAwesomeIcon icon="sync" spin/>}
                         {!loading && 'Submit'}
                     </button>

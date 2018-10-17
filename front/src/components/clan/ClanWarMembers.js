@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Loading from "../ui/Loading";
 import PlayerWarResultCell from "./cells/PlayerWarResultCell";
 import '../../style/indicators.css';
-import { locale } from "../../helpers/api";
+import { locale } from "../../helpers/browser";
 import { images } from "../../helpers/assets";
 import DateRangeForm from "../forms/DateRangeForm";
 
@@ -24,7 +24,6 @@ export default class ClanWarMembers extends React.Component {
             .then((res) => res.json())
             .then(result => {
                 this.setState({data: result, loading: false});
-                console.log(result);
             })
             .catch((error) => {
                 console.log(error)
@@ -32,10 +31,11 @@ export default class ClanWarMembers extends React.Component {
     }
 
     render() {
+        const { data: {wars, members}, loading } = this.state;
+        if (wars === undefined || !wars.length) return <Loading/>;
         /*
          * TODO: all available columns +/- visibility
          * TODO: Filters
-         * TODO: date range picker (backend)
          */
         let columns = [
             {
@@ -104,8 +104,7 @@ export default class ClanWarMembers extends React.Component {
                 accessor: (data) => data.wars.reduce((acc, elem) => acc + (elem.final_battles_done === 0 ? 1 : 0), 0),
             }
         ];
-        const { data: {wars, members}, loading } = this.state;
-        if (wars)
+
         wars.map(e => {
             const date = moment(e.date_start).format('DD/MM');
             const column = {
@@ -118,7 +117,7 @@ export default class ClanWarMembers extends React.Component {
             columns = [...columns, column]
         });
 
-        const end_date = wars.reduce((acc, e) => e.end_date < acc ? e.end_date : acc, moment().toISOString());
+        const end_date = wars.reduce((acc, e) => e.end_date < acc ? e.end_date : acc, 0);
         console.log(end_date);
         return (
             <div>

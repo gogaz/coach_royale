@@ -1,7 +1,8 @@
 import React from "react";
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import { images } from "../../helpers/assets";
-import { handleErrors, setTitle } from "../../helpers/api";
+import { handleErrors } from "../../helpers/api";
+import { setTitle } from "../../helpers/browser";
 import Loading from "../ui/Loading";
 import LastRefreshInfo from "../ui/LastRefreshInfo";
 

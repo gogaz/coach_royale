@@ -1,5 +1,5 @@
 import React from 'react'
-import { locale } from "../../helpers/api";
+import { locale } from "../../helpers/browser";
 
 export default class ClashRoyaleStat extends React.Component {
     render () {

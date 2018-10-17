@@ -1,5 +1,6 @@
 import React from 'react'
-import { handleErrors, setTitle } from "../../helpers/api";
+import { handleErrors } from "../../helpers/api";
+import { setTitle } from "../../helpers/browser";
 import TournamentsTable from "./TournamentsTable";
 import { images } from "../../helpers/assets";
 import LastRefreshInfo from "../ui/LastRefreshInfo";
