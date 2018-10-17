@@ -73,7 +73,7 @@ def clan_wars(request, tag):
     if form.is_valid():
         range_start = form.cleaned_data["start"]
         range_end = form.cleaned_data["end"]
-        wars = wars.filter(date_end__gte=range_start, date_start__lte=range_end)
+        wars = wars.filter(date_start__gte=range_start, date_start__lte=range_end)
     else:
         wars = wars[:10]
 

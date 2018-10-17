@@ -67,6 +67,9 @@ class ViewsTestCase(TestCase):
 
         self._test_route('clan_members', args=['A'], status_code=404)
 
+    def test_player_wars(self):
+        self._test_route('clan_wars', args=['A'], status_code=404)
+
     def test_player_clan(self):
         data = self._test_route('clan_info', args=[settings.MAIN_CLAN])
         self.assertGreaterEqual(len(data), 3)

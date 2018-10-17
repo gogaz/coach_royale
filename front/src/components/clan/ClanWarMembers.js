@@ -8,6 +8,7 @@ import '../../style/indicators.css';
 import { locale } from "../../helpers/browser";
 import { images } from "../../helpers/assets";
 import DateRangeForm from "../forms/DateRangeForm";
+import { handleErrors } from "../../helpers/api";
 
 export default class ClanWarMembers extends React.Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export default class ClanWarMembers extends React.Component {
     }
     componentDidMount() {
         fetch(this.state.endpoint)
-            .then((res) => res.json())
+            .then(res => handleErrors(res))
             .then(result => {
                 this.setState({data: result, loading: false});
             })
@@ -72,9 +73,9 @@ export default class ClanWarMembers extends React.Component {
                 Cell: ({row}) => {
                     let color = {r: 255, g: 255, b: 255};
                     if (row.winrate < 50 && row.winrate !== null)
-                        color = {r: 255, g: 100 + 3 * row.winrate, b: 105 + 3 * row.winrate};
+                        color = {r: 230 + row.winrate / 5, g: 100 + 2.5 * row.winrate, b: 105 + 2.5 * row.winrate};
                     if (row.winrate > 50)
-                        color = {g: 255, r: 250 - row.winrate, b: 255 - row.winrate};
+                        color = {g: 230 + (100 - row.winrate) / 3, r: 250 - 2.5 * (row.winrate - 50), b: 255 - 2.5 * (row.winrate - 50)};
                     return (
                     <div style={{padding: 'inherit'}}>
                         <div className="indicator"
@@ -117,7 +118,10 @@ export default class ClanWarMembers extends React.Component {
             columns = [...columns, column]
         });
 
-        const end_date = wars.reduce((acc, e) => e.end_date < acc ? e.end_date : acc, 0);
+        const end_date = wars.reduce((acc, e) => {
+            console.log(e);
+            return e.date_start;
+        }, 0);
         console.log(end_date);
         return (
             <div>
