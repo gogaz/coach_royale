@@ -1,6 +1,7 @@
 import sys
 
 import clashroyale
+from django.db.models import Model
 
 from react_api.models import Clan, Player, Card
 
@@ -31,10 +32,13 @@ def run_refresh_method(cmd, options, func, iterable, depth=3, **kwargs):
                 else:
                     cmd.stderr.write("#ERROR: Request timed out while fetching data for #" + str(i))
             failed.append(i)
+        except clashroyale.NotFoundError:
+            if isinstance(i, Model):
+                failed.append(i)
         except clashroyale.ServerError:
             pass
 
-    run_refresh_method(cmd, options, func, failed, depth - 1)
+    run_refresh_method(cmd, options, func, failed, depth - 1, **kwargs)
 
 
 def store_battle_players(db_player, team, players, save_decks=True):
