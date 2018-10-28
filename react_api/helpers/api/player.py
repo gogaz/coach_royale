@@ -24,7 +24,7 @@ def refresh_player_profile(command, options, db_player, api_client):
     :return: False on APIError
     """
     if options['verbose']:
-        command_print(command, "#INFO: Refreshing player %s (#%s)", db_player.name, db_player.tag)
+        command_print(command, "#INFO: Refreshing player #%s", db_player.name, db_player.tag)
 
     player = api_client.get_player(db_player.tag)
 
