@@ -3,9 +3,9 @@ version: '3'
 services:
   front:
     build: ./front
-    working_dir: /code/front
+    working_dir: /code
     volumes:
-      - .:/code
+      - ./front/dist:/code/dist
     restart: 'no'
   postgres:
     container_name: db.postgres
