@@ -11,12 +11,14 @@ from react_api.models import (Player,
                               PlayerCardLevel,
                               Battle,
                               BattleMode)
+from react_api.repository import PlayerRepository
 from .helpers import command_print, store_battle_players
 
 
-def refresh_player_profile(command, options, db_player, api_client):
+def refresh_player_profile(command, options, db_player: Player, api_client):
     """
-    Refreshes a single user profile
+    Refresh a single user's profile
+
     :param clashroyale.RoyaleAPI api_client: The API client to request from
     :param BaseCommand command: The command which is executed from (used to print)
     :param dict options: options passed to the command
@@ -35,7 +37,12 @@ def refresh_player_profile(command, options, db_player, api_client):
     db_player.name = player.name
 
     if player.clan is not None:
-        player_clan, clan_created = Clan.objects.get_or_create(tag=player.clan.tag, name=player.clan.name)
+        player_clan = PlayerRepository.get_clan_for_player(db_player)
+        clan_created = player_clan is None
+        # This avoid dealing with multiple clans in db when players leave focused clan
+        # But this avoid fully refreshing a player who has refresh to True
+        if clan_created or not player_clan.refresh:
+            player_clan, clan_created = Clan.objects.get_or_create(tag=player.clan.tag, name=player.clan.name)
         db_player_clan, created = PlayerClanHistory.objects.get_or_create(player=db_player, left_clan__isnull=True)
 
         if created:
