@@ -18,7 +18,7 @@ Second, you need to copy `coach_royale/settings.example.py` to `coach_royale/set
 
 When Docker and Django are properly set up, all you have to do is
 ```
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
 #### Without Docker
@@ -40,6 +40,6 @@ You're all set ! In order for the application to be viewable, you need to launch
 
 #### Access the app
 Coach Royale, by default, is running on [localhost:8000](http://127.0.0.1:8000)
-
+When you are finished, you can stop the web server with `Ctrl-C`, either way.
 
 ### Have fun!
