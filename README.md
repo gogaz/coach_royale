@@ -39,7 +39,8 @@ You're all set ! In order for the application to be viewable, you need to launch
 `gunicorn3 coach_royale.wsgi:application --bind 127.0.0.1:8000`
 
 #### Access the app
-Coach Royale, by default, is running on [localhost:8000](http://127.0.0.1:8000)
+Coach Royale, by default, is running on [localhost:8000](http://127.0.0.1:8000).
+
 When you are finished, you can stop the web server with `Ctrl-C`, either way.
 
 ### Have fun!
