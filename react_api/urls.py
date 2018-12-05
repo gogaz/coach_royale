@@ -18,7 +18,8 @@ urlpatterns = [
     path('player/', include([
         path('<slug:tag>/', include([
             path('', player_info, name="player_info"),
-            path('clan', player_clan, name="player_clan")
+            path('clan', player_clan, name="player_clan"),
+            path('activity')
         ]))
     ])),
     path('tournaments/', include([
