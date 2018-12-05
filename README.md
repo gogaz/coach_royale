@@ -21,33 +21,11 @@ When Docker and Django are properly set up, all you have to do is
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
-#### Without Docker
-You will need :
- - Python3 (preferably version 3.6+)
- - nodejs 8+ with npm
- - nginx
+By default the app is running on [localhost:8000](http://127.0.0.1:8000). You can change this behaviour by editing `docker-compose.prod.yml` or `docker-compose.yml`
 
-You have to setup and build the front-end. First, browse to the `front` folder, then run following commands:
-1. `npm install`
-3. `npm run build`
+When you are finished, you can stop the web server with `Ctrl-C`.
 
-You also need to setup Django and install Python dependencies:
-1. `virtualenv .`
-1. `pip install -r requirements.txt`
-1. copy `coach_royale/settings.example.py` to `coach_royale/settings.py` and adapt it to your needs
-
-You need to launch the API's web server:
-
-in the root directory, run
-```
-gunicorn3 coach_royale.wsgi:application --bind 127.0.0.1:8000
-```
-
-#####TODO : nginx configuration
-
-#### Access the app
-Coach Royale, by default, is running on [localhost:8000](http://127.0.0.1:8000).
-
-When you are finished, you can stop the web server with `Ctrl-C`, either way.
+#### Updating
+##### To be added in the future
 
 ### Have fun!
