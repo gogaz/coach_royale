@@ -1,19 +1,19 @@
 import React from 'react';
+const LineChart = require("react-chartjs").Line;
 
 export default class PlayerActivityStats extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: {players: []},
-
+            data: {},
         }
     }
     componentDidMount() {
         this.fetchData();
     }
     fetchData() {
-        const url = this.state.endpoint + '/activity';
+        const url = this.props.endpoint + '/activity';
         fetch(url)
             .then((res) => res.json())
             .then(result => {
@@ -24,21 +24,24 @@ export default class PlayerActivityStats extends React.Component {
             });
     }
     render() {
+        if (this.state.data)
+        return <LineChart data={this.chartCountData()} width="600" height="250"/>;
         return null;
     }
-    data2() {
+    chartCountData() {
+
         return {
-            labels: [ "Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running" ],
+            labels: [ this.state.data.labels ],
             datasets: [
                 {
-                    label: "My First dataset",
+                    label: "Connections per day",
                     fillColor: "rgba(220,220,220,0.2)",
                     strokeColor: "rgba(220,220,220,1)",
                     pointColor: "rgba(220,220,220,1)",
                     pointStrokeColor: "#fff",
                     pointHighlightFill: "#fff",
                     pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: rand(32, 100, 7)
+                    data: this.state.data.count
                 }
             ]
         };
