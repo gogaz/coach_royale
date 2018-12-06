@@ -4,6 +4,7 @@ import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import Loading from "../ui/Loading";
 import { handleErrors, playerLeagueFromTrophies } from "../../helpers/api";
 import PlayersClan from "./PlayersClan";
+import LastRefreshInfo from "../ui/LastRefreshInfo";
 
 export default class PlayerStats extends React.Component {
     constructor(props) {
@@ -38,7 +39,8 @@ export default class PlayerStats extends React.Component {
             <div className="card-header">
                 <div className="row">
                     <div className="col-7">
-                        <h3>{player.name}</h3>
+                        <h3 className="d-inline mr-2">{player.name}</h3>
+                        <LastRefreshInfo time={player.details.last_refresh}/>
                         <PlayersClan clan={player.clan} endpoint={this.props.endpoint}/>
                     </div>
                     <div className="col-5">
@@ -56,7 +58,7 @@ export default class PlayerStats extends React.Component {
                                      image={player.details.highest_trophies > 4000 ?
                                          images.leagueX(playerLeagueFromTrophies(player.details.highest_trophies)) : images.trophyRibbon}
                                      value={player.details.highest_trophies} />
-                    <ClashRoyaleStat title="War wins" image={images.war} value={player.details.war_day_wins}/>
+                    <ClashRoyaleStat title="War wins" image={images.warWon} value={player.details.war_day_wins}/>
                     <ClashRoyaleStat title="Cards found" image={images.cards} value={player.details.cards_found}/>
                 </div>
             </div>

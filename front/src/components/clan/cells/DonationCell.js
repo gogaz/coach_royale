@@ -27,9 +27,12 @@ export default class DonationCell extends React.Component {
 }
 DonationCell.defaultProps = {
     compareTo: '',
+    color: 'primary',
 };
 DonationCell.propTypes = {
     column: PropTypes.string.isRequired,
     row: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
     compareTo: PropTypes.string,
+    color: PropTypes.string,
+    icon: PropTypes.string,
 };

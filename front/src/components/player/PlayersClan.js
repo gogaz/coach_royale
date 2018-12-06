@@ -28,7 +28,7 @@ export default class PlayersClan extends React.Component {
 
     render() {
         const { clan } = this.props;
-        const { player, loading} = this.state;
+        const { player, loading } = this.state;
         const roles = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
 
         return (
@@ -39,10 +39,10 @@ export default class PlayersClan extends React.Component {
                     <span className="text-muted">{roles[player.clan_role]}</span>
                     <span className="text-muted">#{player.current_clan_rank}</span>
                     <span className="text-muted">
-                        <DonationCell row={player} column="donations"/>
+                        <DonationCell row={player} icon="arrow-up" color="success" column="donations"/>
                     </span>
                     <span className="text-muted">
-                        <DonationCell row={player} column="donations_received"/>
+                        <DonationCell row={player} icon="arrow-down" color="danger" column="donations_received"/>
                     </span>
                 </div>
             </div>
