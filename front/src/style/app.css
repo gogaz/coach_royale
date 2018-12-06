@@ -54,7 +54,7 @@ i.donations-icons img {
 a:hover {
     text-decoration: none;
 }
-.player-clan-info span {
+.player-clan-info>span {
     border-left: 1px solid #c2cfd6;
     padding-left: 8px;
     padding-right: 8px;
