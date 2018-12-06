@@ -3,8 +3,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from react_api.models import Player, PlayerClanStatsHistory, PlayerStatsHistory, int_difference_instances
-from react_api.serializers.player import PlayerSerializer, PlayerClanStatsSerializer
+from react_api.models import Player, PlayerClanStatsHistory, PlayerStatsHistory
+from react_api.serializers.player import PlayerSerializer, PlayerClanStatsSerializer, PlayerStatsHistorySerializer
 
 
 @api_view(['GET'])
@@ -40,7 +40,7 @@ def player_activity(request, tag):
     if request.method == 'GET':
         data = {'count': [], 'labels': [], 'diff': []}
         now = timezone.now()
-        for day in range(30, -1, -1):  # FIXME: not longer than the latest clan join (we have no data before that)
+        for day in range(30, -1, -1):
             delta = timezone.timedelta(days=1)
             date = timezone.datetime(now.year, now.month, now.day, 9, 0, 0)
             date = timezone.make_aware(date - timezone.timedelta(days=day))
@@ -52,14 +52,10 @@ def player_activity(request, tag):
             obj = PlayerStatsHistory.objects.filter(player=player, timestamp__range=(date_prev, date)) \
                                             .order_by('-last_refresh').first()
 
-            obj_prev = PlayerStatsHistory.objects.filter(player=player, timestamp__range=(date_prev - delta, date - delta)) \
-                                                 .order_by('-last_refresh').first()
-
             if obj is not None:
-                diff = int_difference_instances(obj, obj_prev, ['id'])
-                data['diff'].append(diff)
+                data['diff'].append(PlayerStatsHistorySerializer(obj).data)
             else:
-                data['diff'].append({})
+                data['diff'].append(None)
             data['count'].append(count)
 
             data['labels'].append("%02d/%02d" % (date.day, date.month))

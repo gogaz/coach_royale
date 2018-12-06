@@ -1,6 +1,5 @@
 import React from 'react';
-
-const LineChart = require("react-chartjs").Line;
+import { Line } from 'react-chartjs-2';
 
 export default class PlayerActivityStats extends React.Component {
     constructor(props) {
@@ -26,19 +25,44 @@ export default class PlayerActivityStats extends React.Component {
     }
     render() {
         if (this.state.data.labels !== undefined)
-            return <LineChart data={this.chartCountData()} options={{
-                scales: {
-                    yAxes: [ {
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    } ]
-                }
-            }} width="600" height="250" />;
+            return (
+                <div className="row player-charts">
+                    <div className="col-6 card">
+                        <Line data={this.chartCountData()} height={50}/>
+                    </div>
+                    <div className="col-6 card">
+                        <Line data={this.chartTrophiesData()} height={50}
+                              options={{
+                                  min: Math.min(...this.getChartData('current_trophies')),
+                                  max: Math.max(...this.getChartData('highest_trophies')),
+                              }}/>
+                    </div>
+                </div>
+            );
         return null;
     }
+    getChartData(chart, defaultVal) {
+        return this.state.data.diff.map(e => {
+                if (e) return e[chart];
+                return defaultVal || 0;
+            })
+    }
+    chartTrophiesData() {
+        return {
+            labels: this.state.data.labels,
+            datasets: [
+                {
+                    label: "Trophies",
+                    data: this.getChartData('current_trophies'),
+                },
+                {
+                    label: "Highest",
+                    data: this.getChartData('highest_trophies'),
+                }
+            ]
+        };
+    }
     chartCountData() {
-
         return {
             labels: this.state.data.labels,
             datasets: [
