@@ -30,7 +30,7 @@ def player_clan(request, tag):
         return Response(PlayerClanStatsSerializer(stats).data)
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def player_activity(request, tag):
     try:
         player = Player.objects.get(tag=tag)
@@ -40,7 +40,7 @@ def player_activity(request, tag):
     if request.method == 'GET':
         data = {'count': [], 'labels': [], 'diff': []}
         now = timezone.now()
-        for day in range(30, -1, -1):
+        for day in range(30, -1, -1):  # FIXME: not longer than the latest clan join (we have no data before that)
             delta = timezone.timedelta(days=1)
             date = timezone.datetime(now.year, now.month, now.day, 9, 0, 0)
             date = timezone.make_aware(date - timezone.timedelta(days=day))
@@ -54,12 +54,16 @@ def player_activity(request, tag):
 
             obj_prev = PlayerStatsHistory.objects.filter(player=player, timestamp__range=(date_prev - delta, date - delta)) \
                                                  .order_by('-last_refresh').first()
-            diff = None
+
             if obj is not None:
                 diff = int_difference_instances(obj, obj_prev, ['id'])
-            if count > 0 or diff:
-                data['count'].append(count)
                 data['diff'].append(diff)
-                data['labels'].append("%02d/%02d" % (date.day, date.month))
+            else:
+                data['diff'].append({})
+            data['count'].append(count)
+
+            data['labels'].append("%02d/%02d" % (date.day, date.month))
 
         return Response(data)
+    if request.method == "POST":
+        pass  # TODO: handle custom periods

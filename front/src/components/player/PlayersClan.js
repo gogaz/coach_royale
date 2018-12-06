@@ -2,8 +2,6 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import Loading from "../ui/Loading";
 import { handleErrors } from "../../helpers/api";
-import { images } from "../../helpers/assets";
-import { FontAwesomeIcon } from "../ui/FontAwesome";
 import DonationCell from "../clan/cells/DonationCell";
 
 export default class PlayersClan extends React.Component {
@@ -18,7 +16,6 @@ export default class PlayersClan extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.endpoint);
         fetch(this.state.endpoint)
             .then((res) => handleErrors(res))
             .then(

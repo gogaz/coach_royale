@@ -1,4 +1,5 @@
 import React from 'react';
+
 const LineChart = require("react-chartjs").Line;
 
 export default class PlayerActivityStats extends React.Component {
@@ -24,14 +25,22 @@ export default class PlayerActivityStats extends React.Component {
             });
     }
     render() {
-        if (this.state.data)
-        return <LineChart data={this.chartCountData()} width="600" height="250"/>;
+        if (this.state.data.labels !== undefined)
+            return <LineChart data={this.chartCountData()} options={{
+                scales: {
+                    yAxes: [ {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    } ]
+                }
+            }} width="600" height="250" />;
         return null;
     }
     chartCountData() {
 
         return {
-            labels: [ this.state.data.labels ],
+            labels: this.state.data.labels,
             datasets: [
                 {
                     label: "Connections per day",
