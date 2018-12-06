@@ -29,6 +29,21 @@ class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
                   'donations', 'donations_received')
 
 
+class PlayerStatsHistorySerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = PlayerStatsHistory
+        fields = ('timestamp', 'last_refresh',
+                  'level',
+                  'total_donations',
+                  'highest_trophies', 'current_trophies',
+                  'challenge_cards_won', 'tourney_cards_won',
+                  'cards_found', 'favorite_card',
+                  'arena',
+                  'total_games', 'tournament_games',
+                  'wins', 'losses', 'draws', 'win_3_crowns',
+                  'clan_cards_collected', 'war_day_wins')
+
+
 class PlayerSerializer(HyperlinkedModelSerializer):
     details = SerializerMethodField()
     clan = SerializerMethodField()

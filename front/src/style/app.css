@@ -13,7 +13,7 @@ body {
 
 .clan_stats .content {
     background: no-repeat center left;
-    background-size: 2.25rem;
+    background-size: auto 46px;
     padding-left: 3rem;
 }
 
@@ -36,6 +36,9 @@ i.donations-icons .fa, i.donations-icons .fas, i.donations-icons .fal {
     font-size: .8em;
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
+.player-clan-info i.donations-icons .fa, .player-clan-info i.donations-icons .fas, .player-clan-info i.donations-icons .fal {
+    font-size: .6em;
+}
 i.donations-icons {
     line-height: 1;
     vertical-align: middle;
@@ -54,7 +57,7 @@ i.donations-icons img {
 a:hover {
     text-decoration: none;
 }
-.player-clan-info span {
+.player-clan-info>span {
     border-left: 1px solid #c2cfd6;
     padding-left: 8px;
     padding-right: 8px;

@@ -16,7 +16,7 @@ export default class PlayerPage extends React.Component {
             <div className="card">
                 <PlayerStats endpoint={this.state.endpoint}/>
                 <div className="card-body" >
-                    <PlayerActivityStats endpoint={this.state.endPoint} />
+                    <PlayerActivityStats endpoint={this.state.endpoint} />
                 </div>
             </div>
         );

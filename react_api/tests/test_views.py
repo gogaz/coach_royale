@@ -84,3 +84,12 @@ class ViewsTestCase(TestCase):
         self.assertGreaterEqual(len(data['details']), 9)
 
         self._test_route('player_info', args=['A'], status_code=404)
+
+    def test_player_activity(self):
+        data = self._test_route('player_activity', args=["ABC1"])
+        self.assertGreaterEqual(len(data), 3)
+        self.assertIn('labels', data)
+        self.assertIn('count', data)
+        self.assertIn('diff', data)
+
+        self._test_route('player_info', args=['A'], status_code=404)
