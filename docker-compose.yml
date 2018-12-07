@@ -30,6 +30,7 @@ services:
       - front
   web:
     build: .
+    user: root
     volumes:
       - .:/code
       - ./logs:/logs
@@ -40,5 +41,6 @@ services:
       - front
       - nginx
       - postgres
+    restart: always
 volumes:
   postgres:
