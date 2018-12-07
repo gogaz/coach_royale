@@ -23,24 +23,6 @@ export default class PlayerActivityStats extends React.Component {
                 console.log(error)
             });
     }
-    render() {
-        if (this.state.data.labels !== undefined)
-            return (
-                <div className="row player-charts">
-                    <div className="col-6 card">
-                        <Line data={this.chartCountData()} height={50}/>
-                    </div>
-                    <div className="col-6 card">
-                        <Line data={this.chartTrophiesData()} height={50}
-                              options={{
-                                  min: Math.min(...this.getChartData('current_trophies')),
-                                  max: Math.max(...this.getChartData('highest_trophies')),
-                              }}/>
-                    </div>
-                </div>
-            );
-        return null;
-    }
     getChartData(chart, defaultVal) {
         return this.state.data.diff.map(e => {
                 if (e) return e[chart];
@@ -54,6 +36,13 @@ export default class PlayerActivityStats extends React.Component {
                 {
                     label: "Trophies",
                     data: this.getChartData('current_trophies'),
+                    fillColor: "rgba(220, 207, 64,0.2)",
+                    strokeColor: "#dccf40",
+                    pointColor: "#dcdb55",
+                    pointStrokeColor: "#dcdb55",
+                    pointHighlightFill: "#dcdb55",
+                    pointHighlightStroke: "#dccf40",
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
                 },
                 {
                     label: "Highest",
@@ -69,14 +58,50 @@ export default class PlayerActivityStats extends React.Component {
                 {
                     label: "Connections per day",
                     fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
+                    strokeColor: "#dcdcdc",
+                    pointColor: "#dcdcdc",
                     pointStrokeColor: "#fff",
                     pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    pointHighlightStroke: "#dcdcdc",
                     data: this.state.data.count
                 }
             ]
         };
+    }
+    render() {
+        if (this.state.data.labels !== undefined)
+            return (
+                <div className="row player-charts">
+                    <div className="col-6 card">
+                        <Line data={this.chartCountData()} height={60}
+                              options={{
+                                  scales: {
+                                      yAxes: [{
+                                          display: true,
+                                          beginAtZero: true,
+                                          stepSize: 1
+                                      }]
+                                  }
+                              }}/>
+                    </div>
+                    <div className="col-6 card">
+                        <Line data={this.chartTrophiesData()} height={60}
+                              options={{
+                                  scales: {
+                                      yAxes: [{
+                                          display: true,
+                                          ticks: {
+                                              min: Math.min(...this.getChartData('current_trophies')),
+                                              max: Math.max(...this.getChartData('highest_trophies')),
+                                          },
+                                          maxTicksLimit: 3,
+                                          stepSize: 100
+                                      }]
+                                  }
+                              }}/>
+                    </div>
+                </div>
+            );
+        return null;
     }
 }
