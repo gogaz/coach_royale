@@ -11,4 +11,3 @@ RUN npm install
 # Copy files
 ADD .babelrc /code
 ADD webpack.config.js /code
-ADD src /code/src

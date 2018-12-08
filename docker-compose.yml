@@ -6,6 +6,7 @@ services:
     working_dir: /code
     volumes:
       - ./front/dist:/code/dist
+      - ./front/src:/code/src
     restart: 'no'
   postgres:
     container_name: db.postgres
