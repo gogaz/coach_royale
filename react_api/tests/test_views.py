@@ -92,4 +92,4 @@ class ViewsTestCase(TestCase):
         self.assertIn('count', data)
         self.assertIn('diff', data)
 
-        self._test_route('player_info', args=['A'], status_code=404)
+        self._test_route('player_activity', args=['A'], status_code=404)

@@ -1,3 +1,7 @@
+import random
+import string
+import time
+
 from box import Box, BoxList
 
 
@@ -218,4 +222,23 @@ class FakeAPIClient:
                 "seasonNumber": 11
             }
         ]
+        return BoxList(data, camel_killer_box=True)
+
+    def get_open_tournaments(self, *args, **kwargs):
+        data = []
+        for i in range(50):
+            t = {
+                    "create_time": time.time() - random.randint(60, 3600),
+                    "duration": 3600 * 2,
+                    "prep_time": 3600,
+                    "start_time": None,
+                    "end_time": None,
+                    "tag": ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8)),
+                    "name": ''.join(random.choice(string.ascii_uppercase) for _ in range(8)),
+                    "max_players": random.choice([50, 100, 1000]),
+                    "current_players": random.randint(10, 49),
+                    "status": random.choice(["inProgress", "inPreparation"]),
+                    "open": True,
+                 }
+            data.append(t)
         return BoxList(data, camel_killer_box=True)

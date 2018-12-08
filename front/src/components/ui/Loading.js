@@ -19,5 +19,8 @@ export default class Loading extends React.Component {
 Loading.defaultProps = {loading: true, height: null};
 Loading.propTypes = {
     loading: PropTypes.bool,
-    height: PropTypes.string,
+    height: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
 };
