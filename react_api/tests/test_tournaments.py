@@ -21,4 +21,4 @@ class TournamentsTestCase(TestCase):
 
     def test_view_playable(self):
         data = self._test_route('playable_tournaments')
-        self.assertEqual(len(data), 1)
+        self.assertGreaterEqual(len(data), 1)
