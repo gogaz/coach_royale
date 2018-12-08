@@ -64,7 +64,7 @@ export default class ClanDetails extends React.Component {
                             <ClashRoyaleStat title="Members"
                                              image={images.members}
                                              value={clan.details.member_count + " / 50"}/>
-                            <ClashRoyaleStat image={country_icon}
+                            <ClashRoyaleStat image={country_icon} style={{backgroundSize: '2.5rem'}}
                                 title="Region" value={clan.details.region} />
                             <ClashRoyaleStat image={images.cards} title="Donations" value={clan.details.donations}/>
                         </div>

@@ -24,25 +24,21 @@ export default class DateRangeForm extends React.Component {
         this.handleChangeEnd = this.handleChangeEnd.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
     componentWillReceiveProps(newProps) {
         this.setState({start: newProps.start, end: newProps.end})
     }
-
     handleChangeStart(value) {
         this.setState({
             start: value,
             changed: true,
         });
     }
-
     handleChangeEnd(value) {
         this.setState({
             end: value,
             changed: true,
         });
     }
-
     handleSubmit(event) {
         event.preventDefault();
         const form = new FormData(event.target);
@@ -81,13 +77,14 @@ export default class DateRangeForm extends React.Component {
                 <DatePicker
                     className="form-control"
                     locale={locale}
-                    selected={start}
+                    selected={start.toDate()}
                     selectsStart
-                    startDate={start}
-                    endDate={end}
+                    startDate={start.toDate()}
+                    endDate={end.toDate()}
                     autoComplete="off"
                     name="start"
                     onChange={this.handleChangeStart}
+                    dropdownMode={'scroll'}
                 />
                 <div className="input-group-append input-group-prepend">
                     <span className="input-group-text">to</span>
@@ -95,13 +92,14 @@ export default class DateRangeForm extends React.Component {
                 <DatePicker
                     className="form-control"
                     locale={locale}
-                    selected={end}
+                    selected={end.toDate()}
                     selectsEnd
-                    startDate={start}
-                    endDate={end}
+                    startDate={start.toDate()}
+                    endDate={end.toDate()}
                     autoComplete="off"
                     name="end"
                     onChange={this.handleChangeEnd}
+                    dropdownMode={'scroll'}
                 />
                 <div className="input-group-append">
                     <button type="submit"

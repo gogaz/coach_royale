@@ -40,25 +40,23 @@ def player_activity(request, tag):
     if request.method == 'GET':
         data = {'count': [], 'labels': [], 'diff': []}
         now = timezone.now()
+        delta = timezone.timedelta(days=1)
         for day in range(30, -1, -1):
-            delta = timezone.timedelta(days=1)
-            date = timezone.datetime(now.year, now.month, now.day, 9, 0, 0)
-            date = timezone.make_aware(date - timezone.timedelta(days=day))
-            date_prev = date - delta
+            date = now - timezone.timedelta(days=day)
+            date_start = timezone.datetime(date.year, date.month, date.day, 3, 0, 0)
+            date_start = timezone.make_aware(date_start)
+            date_end = date_start + delta
 
-            count = PlayerStatsHistory.objects.filter(player=player, timestamp__range=(date_prev, date)).count()
-            count += PlayerClanStatsHistory.objects.filter(player=player, timestamp__range=(date_prev, date)).count()
+            count = PlayerStatsHistory.objects.filter(player=player, timestamp__range=(date_start, date_end)).count()
+            count += PlayerClanStatsHistory.objects.filter(player=player, timestamp__range=(date_start, date_end)).count()
 
-            obj = PlayerStatsHistory.objects.filter(player=player, timestamp__range=(date_prev, date)) \
+            obj = PlayerStatsHistory.objects.filter(player=player, timestamp__range=(date_start, date_end)) \
                                             .order_by('-last_refresh').first()
 
-            if obj is not None:
+            if count or obj:
                 data['diff'].append(PlayerStatsHistorySerializer(obj).data)
-            else:
-                data['diff'].append(None)
-            data['count'].append(count)
-
-            data['labels'].append("%02d/%02d" % (date.day, date.month))
+                data['count'].append(count)
+                data['labels'].append("%02d/%02d" % (date.day, date.month))
 
         return Response(data)
     if request.method == "POST":
