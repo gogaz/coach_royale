@@ -5,7 +5,7 @@ import { locale } from "./helpers/browser";
 import App from "./components/App"
 import "react-table/react-table.css";
 
-let moment = require("moment");
+let moment = require("moment-shortformat");
 let momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
 moment.locale(locale);

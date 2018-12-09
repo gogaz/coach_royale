@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import PlayerDiffStatsChart from "./charts/PlayerDiffStatsChart";
 
 export default class PlayerActivityStats extends React.Component {
     constructor(props) {
@@ -17,91 +17,66 @@ export default class PlayerActivityStats extends React.Component {
         fetch(url)
             .then((res) => res.json())
             .then(result => {
-                this.setState({data: result, loading: false});
+                console.log(result);
+                this.setState({
+                    data: {
+                        stats: result.stats.reverse(),
+                        clan: result.clan.reverse(),
+                    },
+                    loading: false
+                });
             })
             .catch((error) => {
                 console.log(error)
             });
     }
-    getChartData(chart, defaultVal) {
-        return this.state.data.diff.map(e => {
-                if (e) return e[chart];
-                return defaultVal || 0;
-            })
-    }
-    chartTrophiesData() {
-        return {
-            labels: this.state.data.labels,
-            datasets: [
-                {
-                    label: "Trophies",
-                    data: this.getChartData('current_trophies'),
-                    fillColor: "rgba(220, 207, 64,0.2)",
-                    strokeColor: "#dccf40",
-                    pointColor: "#dcdb55",
-                    pointStrokeColor: "#dcdb55",
-                    pointHighlightFill: "#dcdb55",
-                    pointHighlightStroke: "#dccf40",
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                },
-                {
-                    label: "Highest",
-                    data: this.getChartData('highest_trophies'),
-                }
-            ]
-        };
-    }
-    chartCountData() {
-        return {
-            labels: this.state.data.labels,
-            datasets: [
-                {
-                    label: "Connections per day",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "#dcdcdc",
-                    pointColor: "#dcdcdc",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "#dcdcdc",
-                    data: this.state.data.count
-                }
-            ]
-        };
-    }
     render() {
-        if (this.state.data.labels !== undefined)
-            return (
-                <div className="row player-charts">
-                    <div className="col-6 card">
-                        <Line data={this.chartCountData()} height={60}
-                              options={{
-                                  scales: {
-                                      yAxes: [{
-                                          display: true,
-                                          beginAtZero: true,
-                                          stepSize: 1
-                                      }]
-                                  }
-                              }}/>
-                    </div>
-                    <div className="col-6 card">
-                        <Line data={this.chartTrophiesData()} height={60}
-                              options={{
-                                  scales: {
-                                      yAxes: [{
-                                          display: true,
-                                          ticks: {
-                                              min: Math.min(...this.getChartData('current_trophies')),
-                                              max: Math.max(...this.getChartData('highest_trophies')),
-                                          },
-                                          maxTicksLimit: 3,
-                                          stepSize: 100
-                                      }]
-                                  }
-                              }}/>
-                    </div>
+        const {data : {clan, stats}} = this.state;
+        let statsChart = "";
+        let clanChart = "";
+        if (stats && stats.length > 0)
+            statsChart = <PlayerDiffStatsChart
+                data={stats} height={120} title="Player's stats"
+                datasets={[
+                    {
+                        label: "Trophies",
+                        id: "current_trophies",
+                        borderColor: "#F7CA18",
+                        fill: false,
+                    },
+                    {
+                        label: "Games",
+                        id: "total_games",
+                        borderColor: "#c45850",
+                        fill: false,
+                    },
+                    {
+                        label: "Total donations",
+                        id: "total_donations",
+                        borderColor: "#e8c3b9",
+                        fill: false,
+                    },
+                ]}/>;
+        if (stats && stats.length > 0)
+            clanChart = <PlayerDiffStatsChart
+                data={clan} height={120} title="Player's stats in clan"
+                datasets={[
+                    {
+                        label: "Clan rank",
+                        id: "current_clan_rank",
+                        borderColor: "#3e95cd",
+                        fill: false,
+                    },
+                ]} />;
+        return (
+            <div className="row">
+                <div className="card col-12 col-xl-6">
+                    {statsChart}
                 </div>
-            );
-        return null;
+                <div className="card col-12 col-xl-6">
+                    {clanChart}
+                </div>
+            </div>
+        );
     }
 }
