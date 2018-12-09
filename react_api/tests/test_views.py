@@ -87,9 +87,9 @@ class ViewsTestCase(TestCase):
 
     def test_player_activity(self):
         data = self._test_route('player_activity', args=["ABC1"])
-        self.assertGreaterEqual(len(data), 3)
-        self.assertIn('labels', data)
-        self.assertIn('count', data)
-        self.assertIn('diff', data)
+        self.assertGreaterEqual(len(data), 2)
+        self.assertIn('clan', data)
+        self.assertIn('stats', data)
+        #self.assertIn('war', data)
 
         self._test_route('player_activity', args=['A'], status_code=404)
