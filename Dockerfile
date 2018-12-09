@@ -14,6 +14,7 @@ RUN pip3 install -r requirements.txt
 # Setup cron jobs
 ADD docker/crontab /etc/cron.d/coach_royale
 RUN chmod 0644 /etc/cron.d/coach_royale
+RUN chown root:root /etc/cron.d/coach_royale
 RUN crontab /etc/cron.d/coach_royale
 RUN systemctl enable cron.service
 RUN service cron start
