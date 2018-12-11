@@ -1,0 +1,71 @@
+/* DEFAULT COLOR VARIABLES */
+/* DEFAULT SIZING VARIABLES */
+/* DEFAULT CLASS VARIABLE */
+/* STYLES */
+.switch.large > .switch-toggle {
+  height: 32px;
+  width: 52px;
+  cursor: pointer !important;
+  user-select: none !important;
+  position: relative !important;
+  display: inline-block; }
+  .switch.large > .switch-toggle.on::before, .switch.large > .switch-toggle.on::after, .switch.large > .switch-toggle.off::before, .switch.large > .switch-toggle.off::after {
+    content: '';
+    left: 0;
+    position: absolute !important; }
+  .switch.large > .switch-toggle.on::before, .switch.large > .switch-toggle.off::before {
+    height: inherit;
+    width: inherit;
+    border-radius: 16px;
+    will-change: background;
+    transition: background .4s .3s ease-out; }
+  .switch.large > .switch-toggle.on::after, .switch.large > .switch-toggle.off::after {
+    top: 2px;
+    height: 28px;
+    width: 28px;
+    border-radius: 14px;
+    background: #ffffff !important;
+    will-change: transform;
+    transition: transform .4s ease-out; }
+  .switch.large > .switch-toggle.on::before {
+    background: #62c28e !important; }
+  .switch.large > .switch-toggle.on::after {
+    transform: translateX(22px); }
+  .switch.large > .switch-toggle.off::before {
+    background: #cccccc !important; }
+  .switch.large > .switch-toggle.off::after {
+    transform: translateX(2px); }
+
+.switch.small > .switch-toggle {
+  height: 20px;
+  width: 32px;
+  cursor: pointer !important;
+  user-select: none !important;
+  position: relative !important;
+  display: inline-block; }
+  .switch.small > .switch-toggle.on::before, .switch.small > .switch-toggle.on::after, .switch.small > .switch-toggle.off::before, .switch.small > .switch-toggle.off::after {
+    content: '';
+    left: 0;
+    position: absolute !important; }
+  .switch.small > .switch-toggle.on::before, .switch.small > .switch-toggle.off::before {
+    height: inherit;
+    width: inherit;
+    border-radius: 10px;
+    will-change: background;
+    transition: background .4s .3s ease-out; }
+  .switch.small > .switch-toggle.on::after, .switch.small > .switch-toggle.off::after {
+    top: 2px;
+    height: 16px;
+    width: 16px;
+    border-radius: 8px;
+    background: #ffffff !important;
+    will-change: transform;
+    transition: transform .4s ease-out; }
+  .switch.small > .switch-toggle.on::before {
+    background: gray !important; }
+  .switch.small > .switch-toggle.on::after {
+    transform: translateX(14.5px); }
+  .switch.small > .switch-toggle.off::before {
+    background: #cccccc !important; }
+  .switch.small > .switch-toggle.off::after {
+    transform: translateX(2px); }

@@ -29,7 +29,8 @@
     "react-router-tabs": "^1.2.0",
     "react-scripts": "2.1.1",
     "react-table": "^6.8.6",
-    "react-tooltip": "^3.6.1"
+    "react-tooltip": "^3.6.1",
+    "underscore": "^1.9.1"
   },
   "scripts": {
     "build-dev": "webpack --mode=development",
