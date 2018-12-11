@@ -21,10 +21,12 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/home')
-            .then(res => handleErrors(res))
-            .then(res => this.setState({defaultUrl: res.url, mainClan: res.main_clan}))
-            .catch(error => console.log(error));
+        if (this.props.match === '/') {
+            fetch('/api/home')
+                .then(res => handleErrors(res))
+                .then(res => this.setState({defaultUrl: res.url, mainClan: res.main_clan}))
+                .catch(error => console.log(error));
+        }
     }
 
     render() {
