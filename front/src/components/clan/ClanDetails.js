@@ -34,9 +34,7 @@ export default class ClanDetails extends React.Component {
 
         if (loading) return <div className="card-header"><Loading/></div>;
 
-        let lookup = require('country-data').lookup;
-        let region = lookup.countries({name: clan.details.region})[0].alpha2.toLowerCase();
-        let country_icon = images.regionIcon(region);
+        let country_icon = images.regionIcon(clan.details.region_code);
 
         return (
             <div>

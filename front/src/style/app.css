@@ -23,6 +23,9 @@ body {
 .clan_stats .title {
   font-weight: bold;
 }
+i.donations-icons .text-warning .fa, i.donations-icons .text-warning .fas, i.donations-icons .text-warning .fal {
+    color: #ff9207 !important;
+}
 
 i.donations-icons .fa, i.donations-icons .fas, i.donations-icons .fal {
     position: absolute;
