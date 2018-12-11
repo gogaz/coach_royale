@@ -72,14 +72,10 @@ export default class PlayerActivityStats extends React.Component {
         return (
             <div className="row">
                 <div className="col-12 col-xl-6">
-                    <div className="card">
-                        {statsChart}
-                    </div>
+                    {statsChart}
                 </div>
                 <div className="card col-12 col-xl-6">
-                    <div className="card">
-                        {clanChart}
-                    </div>
+                    {clanChart}
                 </div>
             </div>
         );

@@ -27,7 +27,7 @@ export default class PlayerDiffStatsChart extends React.Component {
         }, []);
     }
     render() {
-        const {height, datasets, title} = this.props;
+        const {height, datasets, title, cardHeader} = this.props;
         const width = window.innerWidth;
         let mobile = false;
         if (width <= 768) {
@@ -37,36 +37,40 @@ export default class PlayerDiffStatsChart extends React.Component {
             mobile = false;
         }
         return (
-            <Line height={height + (mobile ? 80 : 0)}
-                  data={{
-                      datasets: datasets.map(e => {
-                          return {...e, data: this.getData(e.id)}
-                      }),
-                      labels: this.getLabels(),
-                  }}
-                  options={{
-                      scales: {
-                          yAxes: [{
-                              display: true,
-                              beginAtZero: true,
-                              stepSize: 1,
-                              ticks: {
-                                  callback: val => val > 0 ? '+' + val : val
-                              }
-                          }]
-                      },
-                      title: {
-                          display: title.length > 0,
-                          text: title
-                      }
-                  }}
-            />
+            <div className="card">
+                {cardHeader && <div className="card-header">{cardHeader}</div>}
+                <Line height={height + (mobile ? 80 : 0)}
+                      data={{
+                          datasets: datasets.map(e => {
+                              return {...e, data: this.getData(e.id)}
+                          }),
+                          labels: this.getLabels(),
+                      }}
+                      options={{
+                          scales: {
+                              yAxes: [{
+                                  display: true,
+                                  beginAtZero: true,
+                                  stepSize: 1,
+                                  ticks: {
+                                      callback: val => val > 0 ? '+' + val : val
+                                  }
+                              }]
+                          },
+                          title: {
+                              display: title.length > 0,
+                              text: title
+                          }
+                      }}
+                />
+            </div>
         );
     }
 }
 PlayerDiffStatsChart.defaultProps = {
     height: 100,
     title: "",
+    cardHeader: undefined,
 };
 PlayerDiffStatsChart.propTypes = {
     height: PropTypes.number,
@@ -74,4 +78,5 @@ PlayerDiffStatsChart.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
     options: PropTypes.object,
     title: PropTypes.string,
+    cardHeader: PropTypes.oneOfType(PropTypes.element, PropTypes.string),
 };
