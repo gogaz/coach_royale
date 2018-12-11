@@ -5,5 +5,5 @@ djangorestframework==3.9.0
 psycopg2==2.7.6.1
 gunicorn==19.9.0
 python-box==3.2.3
-requests==2.20.1
+requests==2.21.0
 codecov==2.0.15

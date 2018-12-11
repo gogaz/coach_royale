@@ -43,8 +43,6 @@ def player_activity(request, tag):
 
         clan = pcs.values('current_clan_rank', 'timestamp')[:30]
         result = {
-            #"stats": PlayerStatsHistorySerializer(PlayerStatsHistory.objects.filter(player=player).order_by('-id')[:30], many=True).data,
-            #"clan": PlayerClanStatsSerializer(PlayerClanStatsHistory.objects.filter(player=player).order_by('-id')[:30], many=True).data,
             "stats": stats,
             "clan": clan
         }

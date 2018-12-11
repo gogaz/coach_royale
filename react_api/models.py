@@ -195,6 +195,7 @@ class ClanHistory(models.Model):
     member_count = models.IntegerField(null=True)
     donations = models.IntegerField(null=True)
     region = models.CharField(max_length=64)
+    region_code = models.CharField(max_length=2)
     badge = models.CharField(max_length=512)
     trophies = models.IntegerField(null=True)
     # Wars

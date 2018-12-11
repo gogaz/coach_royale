@@ -52,6 +52,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
                                                                  member_count=clan.member_count,
                                                                  donations=clan.donations,
                                                                  region=clan.location.name,
+                                                                 region_code=clan.location.code,
                                                                  badge=clan.badge.image)
     db_clan_history.last_refresh = now
     if created:
