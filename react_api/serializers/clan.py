@@ -11,7 +11,7 @@ class ClanDetailsSerializer(HyperlinkedModelSerializer):
                   'score', 'trophies',
                   'member_count',
                   'donations',
-                  'region',
+                  'region', 'region_code',
                   'badge', 'description')
 
 
