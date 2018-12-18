@@ -2,7 +2,7 @@ version: '3'
 
 services:
   front:
-    command: npm run-script build-dev
+    command: npm start
   web:
     command: >
         bash -c "cron && python3 manage.py makemigrations && python3 manage.py migrate
