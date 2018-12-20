@@ -51,7 +51,7 @@
     "dateformat": "^3.0.3",
     "enzyme": "^3.6.0",
     "enzyme-adapter-react-16": "^1.5.0",
-    "file-loader": "^2.0.0",
+    "file-loader": "^3.0.0",
     "jest": "^23.6.0",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^0.5.0",
