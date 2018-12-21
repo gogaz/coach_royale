@@ -56,8 +56,8 @@ export default class ClanDetails extends React.Component {
                             <ClashRoyaleStat title="Score"
                                              image={images.trophyRibbon}
                                              value={clan.details.score}/>
-                            {clan.war.total_trophies &&
-                                <ClashRoyaleStat image={images.clanWarTrophy} title="Trophies" value={clan.war.total_trophies}/>
+                            {clan.details.trophies &&
+                                <ClashRoyaleStat image={images.clanWarTrophy} title="Trophies" value={clan.details.trophies}/>
                             }
                             <ClashRoyaleStat title="Members"
                                              image={images.members}

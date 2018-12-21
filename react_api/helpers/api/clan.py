@@ -46,6 +46,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
 
     db_clan_history, created = ClanHistory.objects.get_or_create(clan=db_clan,
                                                                  score=clan.score,
+                                                                 trophies=clan.war_trophies,
                                                                  required_trophies=clan.required_score,
                                                                  type=clan.type,
                                                                  description=clan.description,
