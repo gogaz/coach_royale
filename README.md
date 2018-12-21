@@ -20,7 +20,7 @@ Usage
 -----
 When Docker and Django are properly set up, all you have to do is
 ```
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml --build up
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build
 ```
 
 By default the app is running on [localhost:8000](http://127.0.0.1:8000). You can change this behaviour by editing `docker-compose.yml`
