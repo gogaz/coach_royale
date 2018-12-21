@@ -1,7 +1,7 @@
-1. Finish player page
-2. Charts from clan stats
-3. Donations log
+1. Charts for clan stats
+1. Add more data to clan tables with filterable rows/columns
+1. Add API status with information on last successful sync
+1. Add more readable charts in player page
 
-Authentication
---------------
-**Not available atm...**
+#### Authentication
+*Not available...*
