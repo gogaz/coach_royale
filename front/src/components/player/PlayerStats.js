@@ -51,14 +51,14 @@ export default class PlayerStats extends React.Component {
                 </div>
                 <div className="row mt-1" hidden={player.details.last_refresh === null}>
                     <ClashRoyaleStat title="Trophies"
-                                     image={player.details.current_trophies > 4000 ? images.arenaX(player.details.arena) : images.trophy}
+                                     image={player.details.current_trophies > 4000 ? images.arena(player.details.arena) : images.static('trophy')}
                                      value={player.details.current_trophies} />
                     <ClashRoyaleStat title="Highest"
                                      image={player.details.highest_trophies > 4000 ?
-                                         images.leagueX(playerLeagueFromTrophies(player.details.highest_trophies)) : images.trophyRibbon}
+                                         images.league(playerLeagueFromTrophies(player.details.highest_trophies)) : images.static('trophyRibbon')}
                                      value={player.details.highest_trophies} />
-                    <ClashRoyaleStat title="War wins" image={images.warWon} value={player.details.war_day_wins}/>
-                    <ClashRoyaleStat title="Cards found" image={images.cards} value={player.details.cards_found}/>
+                    <ClashRoyaleStat title="War wins" image={images.static('warWon')} value={player.details.war_day_wins}/>
+                    <ClashRoyaleStat title="Cards found" image={images.static('cards')} value={player.details.cards_found}/>
                 </div>
             </div>
         );

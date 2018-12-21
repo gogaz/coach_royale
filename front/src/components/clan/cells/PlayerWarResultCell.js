@@ -13,11 +13,11 @@ export default class PlayerWarResultCell extends React.Component {
         const wins = war.final_battles_wins;
         const lose = war.final_battles_done - war.final_battles_wins;
         for (let i = 0; i < wins; i++)
-            result = [...result, <img src={images.warWon} key={'win' + i} />];
+            result = [...result, <img src={images.static('warWon')} key={'win' + i} />];
         for (let i = 0; i < lose; i++)
-            result = [...result, <img src={images.warLost} key={'lose' + i} />];
+            result = [...result, <img src={images.static('warLost')} key={'lose' + i} />];
         if (wins === 0 && lose === 0)
-            result = [...result, <img src={images.warYet} key={'yet'} />];
+            result = [...result, <img src={images.static('warYet')} key={'yet'} />];
 
         return <div className="war-result">{result}</div>
     }

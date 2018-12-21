@@ -40,7 +40,7 @@ export default class ClanWarMembers extends React.Component {
          */
         let columns = [
             {
-                Header: <img src={images.trophy} height={20}/>,
+                Header: <img src={images.static('trophy')} height={20}/>,
                 id: 'trophies',
                 className: "text-right",
                 accessor: "details.trophies",
@@ -91,14 +91,14 @@ export default class ClanWarMembers extends React.Component {
                 )},
             },
             {
-                Header: <img src={images.battle} height={20}/>,
+                Header: <img src={images.static('battle')} height={20}/>,
                 className: "text-right",
                 id: "count",
                 width: 40,
                 accessor: (data) => data.wars.reduce((acc, elem) => acc + elem.final_battles_done, 0),
             },
             {
-                Header: <img src={images.warYet} height={20}/>,
+                Header: <img src={images.static('warYet')} height={20}/>,
                 className: "text-right",
                 id: "count_missing",
                 width: 40,

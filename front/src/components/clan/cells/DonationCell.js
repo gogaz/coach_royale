@@ -18,7 +18,7 @@ export default class DonationCell extends React.Component {
         return (
             <span>
                 <i className="donations-icons">
-                    <img src={images.cardsWar} /><span className={"text-"+color}><FontAwesomeIcon icon={icon} /></span>
+                    <img src={images.static('cardsWar')} /><span className={"text-"+color}><FontAwesomeIcon icon={icon} /></span>
                 </i>
                 &nbsp;{result}
             </span>

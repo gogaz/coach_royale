@@ -66,7 +66,7 @@ export default class ClanMembers extends React.Component {
                             width: 90,
                             Cell: ({row, original}) => {
                                 return (<span className="trophy-td">
-                                    <img src={images.arenaX(original.details.arena)} />
+                                    <img src={images.arena(original.details.arena)} />
                                     {Number(row.trophies).toLocaleString(locale)}
                                 </span>)
                             }
@@ -76,7 +76,7 @@ export default class ClanMembers extends React.Component {
                             accessor: "details.level",
                             id: 'level',
                             width: 45,
-                            Cell: ({row}) => (<span className="level-td" style={{backgroundImage: 'url('+images.level+')'}}>{row.level}</span>)
+                            Cell: ({row}) => (<span className="level-td" style={{backgroundImage: 'url('+images.static('level')+')'}}>{row.level}</span>)
                         },
                         {
                             Header: "Role",

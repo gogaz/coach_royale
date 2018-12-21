@@ -34,7 +34,7 @@ export default class ClanDetails extends React.Component {
 
         if (loading) return <div className="card-header"><Loading/></div>;
 
-        let country_icon = images.regionIcon(clan.details.region_code);
+        let country_icon = images.region(clan.details.region_code);
 
         return (
             <div>
@@ -54,17 +54,17 @@ export default class ClanDetails extends React.Component {
                     <li className="list-group-item">
                         <div className="row mt-2">
                             <ClashRoyaleStat title="Score"
-                                             image={images.trophyRibbon}
+                                             image={images.static('trophyRibbon')}
                                              value={clan.details.score}/>
                             {clan.details.trophies &&
                                 <ClashRoyaleStat image={images.clanWarTrophy} title="Trophies" value={clan.details.trophies}/>
                             }
                             <ClashRoyaleStat title="Members"
-                                             image={images.members}
+                                             image={images.static('members')}
                                              value={clan.details.member_count + " / 50"}/>
                             <ClashRoyaleStat image={country_icon} style={{backgroundSize: '2.5rem'}}
                                 title="Region" value={clan.details.region} />
-                            <ClashRoyaleStat image={images.cards} title="Donations" value={clan.details.donations}/>
+                            <ClashRoyaleStat image={images.static('cards')} title="Donations" value={clan.details.donations}/>
                         </div>
                     </li>
                 </ul>

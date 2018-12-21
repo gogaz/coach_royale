@@ -45,7 +45,7 @@ export default class TournamentApp extends React.Component {
                                              handleData={data => this.setState({data: data})} />
                         </div>
                         <div className="col-5">
-                            <img src={images.tournament} style={{float: 'right', height: '3pc'}} />
+                            <img src={images.static('tournament')} style={{float: 'right', height: '3pc'}} />
                         </div>
                     </div>
                 </div>
