@@ -16,6 +16,7 @@ class FakeAPIClient:
             "description": "Some clan description",
             "type": "open",
             "score": 42463,
+            "warTrophies": 9999,
             "memberCount": 50,
             "requiredScore": 4000,
             "donations": 9532,
