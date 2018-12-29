@@ -78,5 +78,5 @@ PlayerDiffStatsChart.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object),
     options: PropTypes.object,
     title: PropTypes.string,
-    cardHeader: PropTypes.oneOfType(PropTypes.element, PropTypes.string),
+    cardHeader: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };
