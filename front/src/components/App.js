@@ -22,7 +22,6 @@ export default class App extends React.Component {
 
     componentDidMount() {
         if (this.props.match.path === '/') {
-            console.log("match");
             fetch('/api/home')
                 .then(res => handleErrors(res))
                 .then(res => this.setState({defaultUrl: res.url, mainClan: res.main_clan}))

@@ -34,7 +34,7 @@ export default class ClanDetails extends React.Component {
 
         if (loading) return <div className="card-header"><Loading/></div>;
 
-        let country_icon = images.region(clan.details.region_code);
+        let country_icon = images.region(clan.details.region_code.toLowerCase());
 
         return (
             <div>
@@ -57,7 +57,7 @@ export default class ClanDetails extends React.Component {
                                              image={images.static('trophyRibbon')}
                                              value={clan.details.score}/>
                             {clan.details.trophies &&
-                                <ClashRoyaleStat image={images.clanWarTrophy} title="Trophies" value={clan.details.trophies}/>
+                                <ClashRoyaleStat image={images.static('clanWarTrophy')} title="Trophies" value={clan.details.trophies}/>
                             }
                             <ClashRoyaleStat title="Members"
                                              image={images.static('members')}
