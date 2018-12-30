@@ -92,14 +92,14 @@ class PlayerInClanWarSerializer(HyperlinkedModelSerializer):
 
 class ClanWithDetailsSerializer(HyperlinkedModelSerializer):
     details = SerializerMethodField()
-    war = SerializerMethodField()
+    # war = SerializerMethodField()
 
     def get_details(self, obj):
         return ClanDetailsSerializer(ClanHistory.objects.filter(clan=obj).order_by('-timestamp').first()).data
 
-    def get_war(self, obj):
-        return ClanWarSerializer(ClanWar.objects.filter(clan=obj).order_by('-date_start').first()).data
+    # def get_war(self, obj):
+    #     return ClanWarSerializer(ClanWar.objects.filter(clan=obj).order_by('-date_start').first()).data
 
     class Meta:
         model = Clan
-        fields = ('tag', 'name', 'details', 'war')
+        fields = ('tag', 'name', 'details')
