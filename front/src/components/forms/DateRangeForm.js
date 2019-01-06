@@ -3,7 +3,7 @@ import moment from 'moment'
 import DatePicker from "react-datepicker";
 import PropTypes from "prop-types";
 import { handleErrors } from "../../helpers/api";
-import { cookies, locale } from "../../helpers/browser";
+import { cookies, getLocaleDateString, locale } from "../../helpers/browser";
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from "../ui/FontAwesome";
@@ -78,6 +78,7 @@ export default class DateRangeForm extends React.Component {
                     className="form-control"
                     locale={locale}
                     selected={start.toDate()}
+                    dateFormat={getLocaleDateString()}
                     selectsStart
                     startDate={start.toDate()}
                     endDate={end.toDate()}
@@ -93,6 +94,7 @@ export default class DateRangeForm extends React.Component {
                     className="form-control"
                     locale={locale}
                     selected={end.toDate()}
+                    dateFormat={getLocaleDateString()}
                     selectsEnd
                     startDate={start.toDate()}
                     endDate={end.toDate()}
