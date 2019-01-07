@@ -1,13 +1,9 @@
 import React from 'react';
-import { expect } from 'chai';
-import Enzyme, { render } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { shallow } from '../../enzyme';
 import Loading from './Loading';
 import ClashRoyaleStat from './ClashRoyaleStat';
 
-let { describe, it} = global;
-
-Enzyme.configure({ adapter: new Adapter() });
+let { describe, it, expect } = global;
 
 if(typeof(String.prototype.trim) === "undefined")
 {
@@ -17,29 +13,30 @@ if(typeof(String.prototype.trim) === "undefined")
     };
 }
 
-describe('<Loading />', () => {
+describe('Loading tests', () => {
     it('renders loading.svg image', () => {
-        const wrapper = render(<Loading/>);
-        expect(wrapper.html()).to.contain('svg');
+        const wrapper = shallow(<Loading/>);
+        expect(wrapper.html()).toContain('svg');
+        expect(wrapper.find('img')).toHaveLength(1);
     });
     it('renders a single img when `height` is passed', () => {
-        const wrapper = render(<Loading height={10}/>);
-        expect(wrapper.find('div')).to.have.lengthOf(0);
+        const wrapper = shallow(<Loading height={10}/>);
+        expect(wrapper.find('div')).toHaveLength(0);
     })
 });
 
-describe('<ClashRoyaleStat/>', () => {
+describe('ClashRoyaleStat tests', () => {
     it('displays given title and value', () => {
-        const wrapper = render(<ClashRoyaleStat title="the_title" value="the_value"/>);
-        expect(wrapper.find('.title').text().trim()).to.equal('the_title');
-        expect(wrapper.find('.value').text().trim()).to.equal('the_value');
+        const wrapper = shallow(<ClashRoyaleStat title="the_title" value="the_value"/>);
+        expect(wrapper.find('.title').text().trim()).toBe('the_title');
+        expect(wrapper.find('.value').text().trim()).toBe('the_value');
     });
     it('formats int values to en-us by default', () => {
-        const wrapper = render(<ClashRoyaleStat title="" value={9999}/>);
-        expect(wrapper.find('.value').text().trim()).to.equal('9,999');
+        const wrapper = shallow(<ClashRoyaleStat title="" value={9999}/>);
+        expect(wrapper.find('.value').text().trim()).toBe('9,999');
     });
     it('is able to format without locale', () => {
-        const wrapper = render(<ClashRoyaleStat title="" value={9999} localeString=""/>);
-        expect(wrapper.find('.value').text().trim()).to.equal('9999');
+        const wrapper = shallow(<ClashRoyaleStat title="" value={9999} localeString=""/>);
+        expect(wrapper.find('.value').text().trim()).toBe('9999');
     })
 });
