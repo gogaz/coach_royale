@@ -42,6 +42,9 @@ export default class App extends React.Component {
                                 <Route path='/clan' render={(props) => <ClanApp {...props} mainClan={this.state.mainClan} />} />
                                 <Route path='/player' component={PlayerApp} />
                                 <Route path='/tournaments' component={TournamentsApp}/>
+                                <Route render={routeProps => <CriticalError {...routeProps}
+                                                                            code={404} description="Not found"
+                                                                            message="We're sorry, we cannot find what you are looking for :(" />}/>
                             </Switch>
                         </div>
                     </main>
