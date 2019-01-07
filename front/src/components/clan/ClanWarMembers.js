@@ -67,10 +67,13 @@ export default class ClanWarMembers extends React.Component {
                 width: 70,
                 accessor: (data) => {
                     const wins = data.wars.reduce((acc, elem) => acc + elem.final_battles_wins, 0);
-                    const battles = data.wars.reduce((acc, elem) => acc + elem.final_battles_done, 0);
-                    return battles > 0 ? (wins / battles) * 100 : 0;
+                    const battles = data.wars.length;
+                    return battles > 0 ? (wins / battles) * 100 : -1;
                 },
                 Cell: ({row}) => {
+                    if (row.winrate < 0) {
+                        return <div className="indicator empty" />
+                    }
                     let color = {r: 255, g: 255, b: 255};
                     if (row.winrate < 50 && row.winrate !== null)
                         color = {r: 230 + row.winrate / 5, g: 100 + 2.5 * row.winrate, b: 105 + 2.5 * row.winrate};
@@ -78,9 +81,7 @@ export default class ClanWarMembers extends React.Component {
                         color = {g: 230 + (100 - row.winrate) / 3, r: 250 - 2.5 * (row.winrate - 50), b: 255 - 2.5 * (row.winrate - 50)};
                     return (
                     <div style={{padding: 'inherit'}}>
-                        <div className="indicator"
-                             style={{backgroundColor: `rgb(${color.r}, ${color.g}, ${color.b})`}}
-                        />
+                        <div className="indicator" style={{backgroundColor: `rgb(${color.r}, ${color.g}, ${color.b})`}} />
                         <div className="indicator-data text-right">
                             {row.winrate !== null && Number(row.winrate).toLocaleString(locale, {
                                 minimumFractionDigits: 2,
@@ -118,11 +119,7 @@ export default class ClanWarMembers extends React.Component {
             columns = [...columns, column]
         });
 
-        const end_date = wars.reduce((acc, e) => {
-            console.log(e);
-            return e.date_start;
-        }, 0);
-        console.log(end_date);
+        const end_date = wars.reduce((acc, e) => e.date_start, 0);
         return (
             <div>
                 <DateRangeForm endpoint={this.state.endpoint}

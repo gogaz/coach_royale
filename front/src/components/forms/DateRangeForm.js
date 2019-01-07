@@ -54,7 +54,6 @@ export default class DateRangeForm extends React.Component {
                     changed: false,
                 });
                 this.props.handleData(result);
-                console.log(result);
             })
             .catch((error) => {
                 this.catchErrors(error)

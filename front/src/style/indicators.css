@@ -16,3 +16,7 @@
   height: 100%;
   padding: inherit;
 }
+.indicator.empty {
+    background-color: rgb(242, 246, 249);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+}
