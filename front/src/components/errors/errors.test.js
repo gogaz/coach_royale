@@ -15,7 +15,7 @@ describe('<CriticalError/>', () => {
         expect(wrapper.find('h1').text()).toBe("500");
     });
     it('displays a description if provided', () => {
-        const wrapper = shallow(<CriticalError description="Hello world"/>);
+        const wrapper = shallow(<CriticalError message="Hello world"/>);
         expect(wrapper.find('p').text()).toBe("Hello world");
     })
 });
