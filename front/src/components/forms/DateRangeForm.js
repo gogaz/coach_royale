@@ -3,7 +3,7 @@ import moment from 'moment'
 import DatePicker from "react-datepicker";
 import PropTypes from "prop-types";
 import { handleErrors } from "../../helpers/api";
-import { cookies, getLocaleDateString, locale } from "../../helpers/browser";
+import { cookies, getLocaleDateString } from "../../helpers/browser";
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from "../ui/FontAwesome";
@@ -13,11 +13,11 @@ export default class DateRangeForm extends React.Component {
         super(props);
 
         this.state = {
-            start: props.start,
-            end: props.end,
+            start: props.start.toDate(),
+            end: props.end.toDate(),
             loading: false,
             error: undefined,
-            changed: true,
+            changed: false,
         };
 
         this.handleChangeStart = this.handleChangeStart.bind(this);
@@ -25,7 +25,7 @@ export default class DateRangeForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     componentWillReceiveProps(newProps) {
-        this.setState({start: newProps.start, end: newProps.end})
+        this.setState({start: newProps.start.toDate(), end: newProps.end.toDate()})
     }
     handleChangeStart(value) {
         this.setState({
@@ -75,12 +75,11 @@ export default class DateRangeForm extends React.Component {
                 <input type="hidden" name="csrfmiddlewaretoken" value={cookies.csrf} />
                 <DatePicker
                     className="form-control"
-                    locale={locale}
-                    selected={start.toDate()}
+                    selected={start}
                     dateFormat={getLocaleDateString()}
                     selectsStart
-                    startDate={start.toDate()}
-                    endDate={end.toDate()}
+                    startDate={start}
+                    endDate={end}
                     autoComplete="off"
                     name="start"
                     onChange={this.handleChangeStart}
@@ -91,12 +90,11 @@ export default class DateRangeForm extends React.Component {
                 </div>
                 <DatePicker
                     className="form-control"
-                    locale={locale}
-                    selected={end.toDate()}
+                    selected={end}
                     dateFormat={getLocaleDateString()}
                     selectsEnd
-                    startDate={start.toDate()}
-                    endDate={end.toDate()}
+                    startDate={start}
+                    endDate={end}
                     autoComplete="off"
                     name="end"
                     onChange={this.handleChangeEnd}
