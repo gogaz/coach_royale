@@ -35,7 +35,6 @@ export default class LastRefreshInfo extends React.Component {
 
     refreshData(url) {
         this.setState({refreshing: true});
-        // TODO: protect this with CSRF
         fetch(url, {method: 'POST'})
             .then(res => handleErrors(res))
             .then(res => {
