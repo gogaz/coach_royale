@@ -24,6 +24,7 @@ FontAwesomeIcon.defaultProps = {
     library: 'fas'
 };
 FontAwesomeIcon.propTypes = {
+    icon: PropTypes.string.isRequired,
     spin: PropTypes.bool,
     pulse: PropTypes.bool,
     rotate: PropTypes.oneOf([ 0, 90, 180, 270 ]),

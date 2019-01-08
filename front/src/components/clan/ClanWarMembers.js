@@ -44,8 +44,14 @@ export default class ClanWarMembers extends React.Component {
                 id: 'trophies',
                 className: "text-right",
                 accessor: "details.trophies",
-                width: 50,
-                Cell: ({row}) => Number(row.trophies).toLocaleString(locale)
+                width: 80,
+                Cell: ({row, original}) => {
+                    return (<span className="trophy-td">
+                        <img src={images.arena(original.details.arena)} />
+                        {Number(row.trophies).toLocaleString(locale)}
+                    </span>)
+                },
+                filterable: false,
             },
             {
                 Header: "Name",
@@ -59,6 +65,22 @@ export default class ClanWarMembers extends React.Component {
                 id: "role",
                 accessor: "details.clan_role",
                 width: 85,
+                filterMethod: (filter, row) => {
+                    if (filter.value === "all") {
+                        return true;
+                    }
+                    return row.role === filter.value;
+                },
+                Filter: ({filter, onChange}) =>
+                    <select
+                        onChange={event => onChange(event.target.value)}
+                        style={{width: "100%"}}
+                        value={filter ? filter.value : "all"}>
+                        <option value="all">All</option>
+                        <option value="member">Members</option>
+                        <option value="elder">Elders</option>
+                        <option value="coLeader">Co-Leaders</option>
+                    </select>
             },
             {
                 Header: "Win %",
@@ -90,12 +112,32 @@ export default class ClanWarMembers extends React.Component {
                         </div>
                     </div>
                 )},
+                filterMethod: (filter, row) => {
+                    if (filter.value === "all")
+                        return true;
+                    else if (filter.value === "grey")
+                        return row.winrate < 0;
+                    else if (filter.value === "red")
+                        return row.winrate < 50 && row.winrate >= 0;
+                    return row.winrate >= 50;
+                },
+                Filter: ({filter, onChange}) =>
+                    <select
+                        onChange={event => onChange(event.target.value)}
+                        style={{width: "100%"}}
+                        value={filter ? filter.value : "all"}>
+                        <option value="all">All</option>
+                        <option value="green" style={{backgroundColor: '#7de682'}}>&gt;= 50%</option>
+                        <option value="red" style={{backgroundColor: '#e66469'}}>&lt; 50%</option>
+                        <option value="grey" style={{backgroundColor: '#ccc'}}>None</option>
+                    </select>
             },
             {
                 Header: <img src={images.static('battle')} height={20}/>,
                 className: "text-right",
                 id: "count",
                 width: 40,
+                filterable: false,
                 accessor: (data) => data.wars.reduce((acc, elem) => acc + elem.final_battles_done, 0),
             },
             {
@@ -103,6 +145,7 @@ export default class ClanWarMembers extends React.Component {
                 className: "text-right",
                 id: "count_missing",
                 width: 40,
+                filterable: false,
                 accessor: (data) => data.wars.reduce((acc, elem) => acc + (elem.final_battles_done === 0 ? 1 : 0), 0),
             }
         ];
@@ -115,6 +158,7 @@ export default class ClanWarMembers extends React.Component {
                 width: 65,
                 Cell: ({row, original}) => <PlayerWarResultCell warId={e.id} wars={original.wars}/>,
                 sortable: false,
+                filterable: false,
             };
             columns = [...columns, column]
         });
@@ -131,6 +175,7 @@ export default class ClanWarMembers extends React.Component {
                     data={members}
                     columns={columns}
                     resizable={false}
+                    filterable
                     defaultSorted={[{id: "rank"}]}
                     hidden={loading}
                     loading={loading}
