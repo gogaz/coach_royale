@@ -3,8 +3,8 @@ import ReactTable from "react-table";
 import { images } from "../../helpers/assets"
 import { Link } from "react-router-dom";
 import DonationCell from "./cells/DonationCell";
-import { locale } from "../../helpers/browser";
 import Loading from "../ui/Loading";
+import TrophiesCell from "./cells/TrophiesCell";
 
 
 export default class ClanMembers extends React.Component {
@@ -64,12 +64,7 @@ export default class ClanMembers extends React.Component {
                             id: "trophies",
                             accessor: "details.trophies",
                             width: 90,
-                            Cell: ({row, original}) => {
-                                return (<span className="trophy-td">
-                                    <img src={images.arena(original.details.arena)} />
-                                    {Number(row.trophies).toLocaleString(locale)}
-                                </span>)
-                            }
+                            Cell: ({row, original}) => <TrophiesCell trophies={row.trophies} arena={original.details.arena} />
                         },
                         {
                             Header: "Level",

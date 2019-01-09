@@ -9,6 +9,7 @@ import { locale } from "../../helpers/browser";
 import { images } from "../../helpers/assets";
 import DateRangeForm from "../forms/DateRangeForm";
 import { handleErrors } from "../../helpers/api";
+import TrophiesCell from "./cells/TrophiesCell";
 
 export default class ClanWarMembers extends React.Component {
     constructor(props) {
@@ -35,8 +36,7 @@ export default class ClanWarMembers extends React.Component {
         const { data: {wars, members}, loading } = this.state;
         if (wars === undefined || !wars.length) return <Loading/>;
         /*
-         * TODO: all available columns +/- visibility
-         * TODO: Filters
+         * TODO: toggle columns visibility
          */
         let columns = [
             {
@@ -45,12 +45,7 @@ export default class ClanWarMembers extends React.Component {
                 className: "text-right",
                 accessor: "details.trophies",
                 width: 80,
-                Cell: ({row, original}) => {
-                    return (<span className="trophy-td">
-                        <img src={images.arena(original.details.arena)} />
-                        {Number(row.trophies).toLocaleString(locale)}
-                    </span>)
-                },
+                Cell: ({row, original}) => <TrophiesCell trophies={row.trophies} arena={original.details.arena} />,
                 filterable: false,
             },
             {
@@ -103,7 +98,7 @@ export default class ClanWarMembers extends React.Component {
                         color = {g: 230 + (100 - row.winrate) / 3, r: 250 - 2.5 * (row.winrate - 50), b: 255 - 2.5 * (row.winrate - 50)};
                     return (
                     <div style={{padding: 'inherit'}}>
-                        <div className="indicator" style={{backgroundColor: `rgb(${color.r}, ${color.g}, ${color.b})`}} />
+                        <div className="indicator" style={{backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, 1)`}} />
                         <div className="indicator-data text-right">
                             {row.winrate !== null && Number(row.winrate).toLocaleString(locale, {
                                 minimumFractionDigits: 2,
