@@ -45,6 +45,7 @@ export default class ClanMembers extends React.Component {
                     loading={loading}
                     pageSize={data.length}
                     showPagination={false}
+                    className='-striped -highlight'
                     columns={[
                         {
                             Header: "Rank",

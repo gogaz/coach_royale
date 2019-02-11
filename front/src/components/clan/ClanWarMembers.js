@@ -167,6 +167,7 @@ export default class ClanWarMembers extends React.Component {
                 />
                 <Loading loading={loading}/>
                 <ReactTable
+                    className='-striped -highlight'
                     data={members}
                     columns={columns}
                     resizable={false}
