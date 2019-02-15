@@ -26,7 +26,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
     :return: False on APIError
     """
     if options['verbose']:
-        command_print(command, "#INFO: Refreshing player #%s", db_player.name, db_player.tag)
+        command_print(command, "#INFO: Refreshing player %s (#%s)", db_player.name if db_player.name else '', db_player.tag)
 
     player = api_client.get_player(db_player.tag)
 
@@ -115,7 +115,7 @@ def refresh_player_battles(command, options, api_client, db_player, announce_pla
         try:
             command_print(command, "#INFO: Refreshing battles for player (%s) %s", db_player.name, db_player.tag)
         except:
-            command.stdout.write("#INFO: Refreshing battles for player %s" % db_player.tag)
+            command_print(command, "#INFO: Refreshing battles for player %s", db_player.tag)
     battles = api_client.get_player_battles(db_player.tag)
     latest_battle = None
     try:
