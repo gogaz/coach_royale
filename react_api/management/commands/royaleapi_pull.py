@@ -20,6 +20,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=30)
+        now = timezone.now()
+        time_delta = now - timezone.timedelta(minutes=60)
 
         if not Clan.objects.filter(tag=settings.MAIN_CLAN).count() and options['clan'] != settings.MAIN_CLAN:
             opts = options
@@ -28,15 +30,19 @@ class Command(BaseCommand):
 
         db_clans = Clan.objects.filter(refresh=True)
         if not options['force']:
-            db_clans = db_clans.filter(Q(last_refresh__lte=timezone.now() - timezone.timedelta(minutes=60)) | Q(last_refresh__isnull=True))
+            db_clans = db_clans.filter(Q(last_refresh__lte=time_delta) |
+                                       Q(last_refresh__isnull=True) |
+                                       Q(clanwar__date_end__lte=now, clanwar__date_end__day=now.day))
 
         run_refresh_method(self, options, refresh_clan_details, db_clans, api_client=api_client)
         if options['clan']:
             run_refresh_method(self, options, refresh_clan_details, [None], api_client=api_client)
 
-        db_players = Player.objects.filter((Q(refresh=True) | Q(playerclanhistory__clan__refresh=True, playerclanhistory__left_clan__isnull=True)))
+        db_players = Player.objects.filter((Q(refresh=True) |
+                                            Q(playerclanhistory__clan__refresh=True,
+                                              playerclanhistory__left_clan__isnull=True)))
         if not options['force']:
-            db_players = db_players.filter(Q(last_refresh__lte=timezone.now() - timezone.timedelta(minutes=60)) | Q(last_refresh__isnull=True))
+            db_players = db_players.filter(Q(last_refresh__lte=time_delta) | Q(last_refresh__isnull=True))
 
         run_refresh_method(self, options, refresh_player_profile, db_players.order_by('last_refresh'), api_client=api_client)
 
