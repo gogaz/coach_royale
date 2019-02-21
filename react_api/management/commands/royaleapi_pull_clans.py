@@ -19,11 +19,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=30)
+        now = timezone.now()
 
         db_clans = Clan.objects.filter(refresh=True)
         if not options['force']:
-            db_clans = db_clans.filter(Q(last_refresh__lte=timezone.now() - timezone.timedelta(hours=2))
-                                       | Q(last_refresh__isnull=True))
+            db_clans = db_clans.filter(Q(last_refresh__lte=now - timezone.timedelta(minutes=30)) |
+                                       Q(last_refresh__isnull=True) |
+                                       Q(clanwar__date_end__lte=now, clanwar__date_end__day=now.day))
 
         if options['war']:
             for clan in db_clans:
