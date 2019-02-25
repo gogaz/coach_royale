@@ -28,8 +28,8 @@ class ClanList extends React.Component {
     }
 
     componentDidMount() {
-        setTitle("Playable tournaments");
-        fetch(this.state.endpoint)
+        setTitle("Available clans");
+        fetch(this.props.endpoint)
             .then(res => handleErrors(res))
             .then(res => this.setState({tournaments: res, loading: false}))
             .catch(error => console.log(error))
@@ -37,7 +37,8 @@ class ClanList extends React.Component {
 
     render() {
         return (
-            <ul>{ this.state.clans.map((e, key) => <li key={ key }>{ e }</li>) }
+            <ul>
+                { this.state.clans.map((e, key) => <li key={ key }>{ e }</li>) }
             </ul>
         );
     }
