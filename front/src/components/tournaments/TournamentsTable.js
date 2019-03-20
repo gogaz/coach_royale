@@ -41,7 +41,7 @@ export default class TournamentsTable extends React.Component {
                                 <option value="all">All</option>
                                 <option value="50">50 Players</option>
                                 <option value="100">100 Players</option>
-                                <option value="200">100 Players</option>
+                                <option value="200">200 Players</option>
                                 <option value="1000">1000 Players</option>
                             </select>
                     },

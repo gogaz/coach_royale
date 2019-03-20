@@ -11,7 +11,8 @@ test('handleErrors returns JSON', () => {
 });
 
 test('handleErrors throws when request is invalid', () => {
-    expect(() => handleErrors({ json: () => {}, ok: false })).toThrow()
+    expect(() => handleErrors({ json: () => {}, ok: false, status: 502 })).toThrow();
+    expect(() => handleErrors({ json: () => {}, ok: false, status: 404 })).toThrow();
 });
 
 test('playerLeagueFromTrophies computes the player league from trophies', () => {
