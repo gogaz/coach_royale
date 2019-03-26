@@ -1,6 +1,6 @@
 const { handleErrors, playerLeagueFromTrophies } = require('./api');
 const { images } = require('./assets');
-let { describe, it, expect } = global;
+let { test, expect } = global;
 
 test('handleErrors returns JSON', () => {
     expect(handleErrors({
