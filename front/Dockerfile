@@ -9,6 +9,6 @@ ADD package-lock.json /code
 WORKDIR /code
 RUN npm install
 
-# Copy files
 ADD .babelrc /code
-ADD webpack.*.js /code
+ADD webpack.common.js /code
+ADD webpack.prod.js /code
