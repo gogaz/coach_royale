@@ -12,3 +12,4 @@ RUN npm install
 ADD .babelrc /code
 ADD webpack.common.js /code
 ADD webpack.prod.js /code
+ADD webpack.dev.js /code
