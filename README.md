@@ -25,6 +25,6 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build
 
 By default the app is running on [localhost:8000](http://127.0.0.1:8000). You can change this behaviour by editing `docker-compose.yml`
 
-When you are finished, you can stop the web server with `Ctrl-C`.
+When you are finished, you can stop the web server with `docker-compose down`.
 
 ### Have fun!
