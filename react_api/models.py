@@ -135,10 +135,16 @@ class PlayerStatsHistory(models.Model):
         return "Stats history for player {0.player} ({0.last_refresh})".format(self)
 
 
+class LeagueSeason(models.Model):
+    id = models.AutoField(primary_key=True)
+    identifier = models.CharField(max_length=32)
+    timestamp = models.DateTimeField()
+
+
 class PlayerSeason(models.Model):
     id = models.AutoField(primary_key=True)
     player = models.ForeignKey('Player', null=True, on_delete=models.CASCADE)
-    identifier = models.IntegerField(null=True)
+    season = models.ForeignKey(LeagueSeason, null=True, on_delete=models.CASCADE)
     highest = models.IntegerField(null=True)
     ending = models.IntegerField(null=True)
     ending_rank = models.IntegerField(null=True)

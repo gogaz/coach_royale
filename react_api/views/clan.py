@@ -78,10 +78,19 @@ def clan_wars(request, tag):
         wars = wars[:10]
 
     if request.method == "POST" and not form.is_valid():
-        print(form.data)
         return form_error(form)
 
     wars_json = ClanWarSerializer(wars, many=True)
     players_json = PlayerInClanWarSerializer(players, wars=wars, many=True)
 
     return Response({'wars': wars_json.data, 'members': players_json.data})
+
+
+@api_view(['GET', 'POST'])
+def clan_monthly_season(request, tag):
+    try:
+        clan = Clan.objects.get(tag=tag)
+    except Clan.DoesNotExist:
+        return not_found_error("clan", tag)
+
+    date = None

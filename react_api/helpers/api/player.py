@@ -10,7 +10,7 @@ from react_api.models import (Player,
                               Card,
                               PlayerCardLevel,
                               Battle,
-                              BattleMode)
+                              BattleMode, PlayerSeason, LeagueSeason)
 from react_api.repository import PlayerRepository
 from .helpers import command_print, store_battle_players
 
@@ -107,6 +107,20 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
 
     db_player.last_refresh = now
     db_player.save()
+
+    # Player seasons (current & best seasons skipped)
+    if player.league_statistics is not None and 'previousSeason' in player.league_statistics.keys():
+        prev_season = player.league_statistics.previous_season
+        db_season, s_created = LeagueSeason.objects.get_or_create(identifier=prev_season.id, defaults={'timestamp': now})
+
+        db_season, created = PlayerSeason.objects.get_or_create(player=db_player,
+                                                                season=db_season,
+                                                                defaults={
+                                                                    'ending_rank': prev_season.rank if 'rank' in prev_season.keys() else None,
+                                                                    'highest': prev_season.best_trophies if 'bestTrophies' in prev_season.keys() else prev_season.trophies,
+                                                                    'ending': prev_season.trophies,
+                                                                }
+                                                                )
     return True
 
 
