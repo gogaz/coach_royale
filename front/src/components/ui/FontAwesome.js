@@ -21,7 +21,7 @@ FontAwesomeIcon.defaultProps = {
     rotate: 0,
     flip: false,
     scale: 1,
-    library: 'fas'
+    library: 'fas',
 };
 FontAwesomeIcon.propTypes = {
     icon: PropTypes.string.isRequired,
@@ -30,7 +30,8 @@ FontAwesomeIcon.propTypes = {
     rotate: PropTypes.oneOf([ 0, 90, 180, 270 ]),
     flip: PropTypes.oneOf([ false, 'vertical', 'horizontal' ]),
     scale: PropTypes.oneOf([...Array(5).keys()]),
-    library: PropTypes.oneOf([ 'fa', 'fas', 'fal' ])
+    library: PropTypes.oneOf([ 'fa', 'fas', 'fal' ]),
+    color: PropTypes.oneOf(['danger', 'success', 'warning', 'primary', 'secondary', 'info', 'muted', 'light', 'white'])
 };
 
 export { FontAwesomeIcon };

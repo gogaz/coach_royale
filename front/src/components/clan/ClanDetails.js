@@ -65,6 +65,12 @@ export default class ClanDetails extends React.Component {
                             <ClashRoyaleStat image={country_icon} style={{backgroundSize: '2.5rem'}}
                                 title="Region" value={clan.details.region} />
                             <ClashRoyaleStat image={images.static('cards')} title="Donations" value={clan.details.donations}/>
+                            {clan.details.global_rank &&
+                                <ClashRoyaleStat image={images.static('trophyRibon')} title="Global" value={'#'+clan.details.global_rank}/>
+                            }
+                            {clan.details.local_rank &&
+                                <ClashRoyaleStat image={images.static('trophyRibon')} title="Global" value={'#'+clan.details.global_rank}/>
+                            }
                         </div>
                     </li>
                 </ul>
