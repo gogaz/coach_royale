@@ -2,6 +2,7 @@ import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from clashroyale import RoyaleAPI
 
 from react_api.helpers.api.helpers import command_print
 from react_api.models import (Battle,
@@ -67,6 +68,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
 
     db_clan_history.save()
 
+    read_clan_rank(command, db_clan, api_client, db_clan_history, verbose=options['verbose'])
     read_clan_members(clan, db_clan, command, now, options['verbose'], clan_created)
     read_war_log(command, db_clan, api_client, options['verbose'])
 
@@ -215,3 +217,27 @@ def update_war_status(command, options, db_clan):
                 if options['verbose']:
                     command.stdout.write("found war for orphan battle")
                 break
+
+
+def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: ClanHistory, verbose=False):
+    tops = read_top_ranks(command, api_client, db_clan, clan_stats, region_code=clan_stats.region_code, verbose=verbose)
+    if tops[0] is not None:
+        clan_stats.local_rank = tops[0]
+        clan_stats.prev_local_rank = tops[1]
+        g_tops = read_top_ranks(command, api_client, db_clan, clan_stats, verbose=verbose)
+        if g_tops[0] is not None:
+            clan_stats.global_rank = g_tops[0]
+            clan_stats.prev_global_rank = g_tops[1]
+        clan_stats.save()
+
+
+def read_top_ranks(command, api_client, db_clan, clan_stats, region_code='', verbose=False):
+    tops = api_client.get_top_clans(region_code)
+    if tops[-1].score > clan_stats.score:
+        if verbose:
+            command_print(command, "Clan %s is not in %s ranking", db_clan.name, region_code)
+        return None, None
+    for top in tops:
+        if top.tag == db_clan.tag:
+            return top.rank, top.previous_rank
+    return None, None

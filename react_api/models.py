@@ -204,6 +204,10 @@ class ClanHistory(models.Model):
     region_code = models.CharField(max_length=2)
     badge = models.CharField(max_length=512)
     trophies = models.IntegerField(null=True)
+    prev_local_rank = models.IntegerField(null=True)
+    local_rank = models.IntegerField(null=True)
+    prev_global_rank = models.IntegerField(null=True)
+    global_rank = models.IntegerField(null=True)
     # Wars
     war_state = models.CharField(max_length=512, null=True)
     # Synchronization configuration

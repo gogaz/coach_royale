@@ -118,8 +118,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
                                                                 defaults={
                                                                     'ending_rank': prev_season.rank if 'rank' in prev_season.keys() else None,
                                                                     'highest': prev_season.best_trophies if 'bestTrophies' in prev_season.keys() else prev_season.trophies,
-                                                                    'ending': prev_season.trophies,
-                                                                }
+                                                                    'ending': prev_season.trophies}
                                                                 )
     return True
 
