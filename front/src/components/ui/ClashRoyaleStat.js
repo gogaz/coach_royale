@@ -5,16 +5,20 @@ import {FontAwesomeIcon} from "./FontAwesome";
 
 export default class ClashRoyaleStat extends React.Component {
     render () {
-        let {value, title, localeString, compareTo} = this.props;
+        let {value, title, localeString, compareTo, compareInv} = this.props;
         if (localeString)
             value = isNaN(value) ? value : Number(value).toLocaleString(localeString);
 
         let compare_result = undefined;
-        if (value && !isNaN(value) && compareTo) {
-            const result = value - compareTo;
-            let icon_props = result === 0 ? {icon: 'equals', color: 'muted'} : result > 0 ? {icon: 'arrow-up', color: 'success'} : {icon: 'fa-arrow-down', color: 'danger'};
+        if (value && !isNaN(value) && compareTo !== undefined) {
+            if (!compareTo)
+                compareTo = 1000;
+            let result = value - compareTo;
+            if (compareInv)
+                result = -result;
+            let icon_props = result === 0 ? {icon: 'equals', color: 'muted'} : result > 0 ? {icon: 'arrow-up', color: 'success'} : {icon: 'arrow-down', color: 'danger'};
             let compare_icon = <FontAwesomeIcon {...icon_props}/>;
-            compare_result = result === 0 ? compare_icon : <span> ({compare_icon} {result})</span>;
+            compare_result = result === 0 ? compare_icon : <span> (<small>{compare_icon}</small> {Math.abs(result)})</span>;
         }
 
         return (
@@ -31,6 +35,7 @@ ClashRoyaleStat.propTypes = {
     value: PropTypes.oneOfType([PropTypes.node, PropTypes.number]).isRequired,
     title: PropTypes.node,
     localeString: PropTypes.string,
-    compareTo: PropTypes.number
+    compareTo: PropTypes.any,
+    compareInv: PropTypes.bool, // Invert comparison
 };
-ClashRoyaleStat.defaultProps = {localeString: locale};
+ClashRoyaleStat.defaultProps = {localeString: locale, compareInv: true};

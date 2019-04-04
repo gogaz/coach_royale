@@ -53,8 +53,14 @@ export default class ClanDetails extends React.Component {
                 <ul className="list-group">
                     <li className="list-group-item">
                         <div className="row mt-2">
+                            {clan.details.global_rank &&
+                                <ClashRoyaleStat image={images.static('trophyRibbon')} title="Global rank" value={clan.details.global_rank}/>
+                            }
+                            {clan.details.local_rank &&
+                                <ClashRoyaleStat image={images.static('trophyRibbon')} title="Local rank" value={clan.details.local_rank} compareTo={clan.details.prev_local_rank}/>
+                            }
                             <ClashRoyaleStat title="Score"
-                                             image={images.static('trophyRibbon')}
+                                             image={images.static('trophy')}
                                              value={clan.details.score}/>
                             {clan.details.trophies &&
                                 <ClashRoyaleStat image={images.static('clanWarTrophy')} title="Trophies" value={clan.details.trophies}/>
@@ -65,12 +71,6 @@ export default class ClanDetails extends React.Component {
                             <ClashRoyaleStat image={country_icon} style={{backgroundSize: '2.5rem'}}
                                 title="Region" value={clan.details.region} />
                             <ClashRoyaleStat image={images.static('cards')} title="Donations" value={clan.details.donations}/>
-                            {clan.details.global_rank &&
-                                <ClashRoyaleStat image={images.static('trophyRibon')} title="Global" value={'#'+clan.details.global_rank}/>
-                            }
-                            {clan.details.local_rank &&
-                                <ClashRoyaleStat image={images.static('trophyRibon')} title="Global" value={'#'+clan.details.global_rank}/>
-                            }
                         </div>
                     </li>
                 </ul>
