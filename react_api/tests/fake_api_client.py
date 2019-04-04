@@ -243,3 +243,65 @@ class FakeAPIClient:
                  }
             data.append(t)
         return BoxList(data, camel_killer_box=True)
+
+    def get_top_clans(self, *args, **kwargs):
+        data = [
+            {
+                "tag": "8R8YULRJ",
+                "name": "Sandstorm",
+                "score": 59563,
+                "memberCount": 50,
+                "rank": 1,
+                "previousRank": 2,
+                "badge": {
+                    "name": "Twin_Peaks_02",
+                    "category": "01_Symbol",
+                    "id": 16000097,
+                    "image": "https://cr-api.github.io/cr-api-assets/badges/Twin_Peaks_02.png"
+                },
+                "location": {
+                    "name": "International",
+                    "isCountry": False,
+                    "code": "_INT"
+                }
+            },
+            {
+                "tag": "LCVUYCR",
+                "name": "Nova eSports",
+                "score": 59471,
+                "memberCount": 45,
+                "rank": 2,
+                "previousRank": 1,
+                "badge": {
+                    "name": "Star_Shine_03",
+                    "category": "01_Symbol",
+                    "id": 16000044,
+                    "image": "https://cr-api.github.io/cr-api-assets/badges/Star_Shine_03.png"
+                },
+                "location": {
+                    "name": "International",
+                    "isCountry": False,
+                    "code": "_INT"
+                }
+            },
+            {
+                "tag": "ABCDEF",
+                "name": "Some clan name",
+                "score": 58471,
+                "memberCount": 45,
+                "rank": 3,
+                "previousRank": 42,
+                "badge": {
+                    "name": "flag_j_03",
+                    "category": "02_Flag",
+                    "id": 16000077,
+                    "image": "https://royaleapi.github.io/cr-api-assets/badges/flag_j_03.png"
+                },
+                "location": {
+                    "name": "France",
+                    "isCountry": True,
+                    "code": "FR"
+                },
+            },
+        ]
+        return BoxList(data, camel_killer_box=True)
