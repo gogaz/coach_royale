@@ -94,10 +94,12 @@ def clan_weekly_season(request, tag):
         clan = Clan.objects.get(tag=tag)
     except Clan.DoesNotExist:
         return not_found_error("clan", tag)
-    now = timezone.now() - timezone.timedelta(weeks=1)
+
     form = WeekForm(request.POST)
     if form.is_valid(): # TODO: make this available from front-end
         now = form.cleaned_data['week']
+    else:
+        now = timezone.now()
 
     month = "%s-W%s-1 07:00" % (now.year, now.isocalendar()[1])
     date = timezone.make_aware(timezone.datetime.strptime(month, "%Y-W%W-%w %H:%M"))
