@@ -1,7 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from react_api.models import Clan, ClanHistory, PlayerClanStatsHistory, Player, ClanWar, PlayerClanWar
+from react_api.models import Clan, ClanHistory, PlayerClanStatsHistory, Player, ClanWar, PlayerClanWar, PlayerSeason
 
 
 class ClanDetailsSerializer(HyperlinkedModelSerializer):
@@ -89,6 +89,31 @@ class PlayerInClanWarSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Player
         fields = ('tag', 'name', 'details', 'wars')
+
+
+class PlayerWeeklyDonationsSerializer(HyperlinkedModelSerializer):
+    details = SerializerMethodField()
+
+    def get_details(self, obj):
+        return PlayerClanStatsHistory.objects.filter(player=obj, timestamp__lte=obj.date) \
+                                     .order_by('-id') \
+                                     .values('timestamp', 'donations', 'donations_received', 'trophies', 'arena', 'level') \
+                                     .first()
+
+    class Meta:
+        model = Player
+        fields = ('tag', 'name', 'details')
+
+
+class PlayerClanSeasonSerializer(HyperlinkedModelSerializer):
+    details = SerializerMethodField()
+
+    def get_details(self, obj):
+        return PlayerSeason.objects.filter(player=obj, season__id=obj.season_id).values('ending', 'highest', 'season__identifier').first()
+
+    class Meta:
+        model = Player
+        fields = ('tag', 'name', 'details')
 
 
 class ClanWithDetailsSerializer(HyperlinkedModelSerializer):

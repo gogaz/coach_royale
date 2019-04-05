@@ -4,10 +4,11 @@ import { locale } from "../../../helpers/browser";
 
 export default class TrophiesCell extends React.Component {
     render() {
-        const { arena, trophies } = this.props;
+        const { arena, league, trophies } = this.props;
+        const _arena = arena ? images.arena(arena) : images.league(league);
         return (
             <span className="trophy-td">
-                <img src={images.arena(arena)} />
+                <img src={_arena} />
                 {Number(trophies).toLocaleString(locale)}
             </span>
         );

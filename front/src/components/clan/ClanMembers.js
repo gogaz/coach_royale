@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactTable from "react-table";
-import { images } from "../../helpers/assets"
-import { Link } from "react-router-dom";
-import DonationCell from "./cells/DonationCell";
-import Loading from "../ui/Loading";
+
+import ClanMembersTable from "./ClanMembersTable";
 import TrophiesCell from "./cells/TrophiesCell";
+import { playerLeagueFromTrophies } from "../../helpers/api";
+import moment from "moment";
 
 
 export default class ClanMembers extends React.Component {
@@ -12,101 +11,48 @@ export default class ClanMembers extends React.Component {
         super(props);
 
         this.state = {
-            data: [],
-            loading: true,
-            endpoint: props.endpoint + '/members',
-        };
+            previousSeason: null,
+        }
     }
-
-    componentDidMount() {
-        fetch(this.state.endpoint)
-            .then((res) => res.json())
-            .then(
-                (result) => {
-                    this.setState({data: result});
-                })
-            .then(() => this.setState({loading: false}))
-            .catch((error) => {
-                console.log(error)
-            });
-    }
-
     render() {
-        const {data, loading} = this.state;
-        const roles = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
+        const {previousSeason} = this.state;
         return (
             <div>
-                <Loading loading={loading}/>
-                <ReactTable
-                    data={data}
-                    hidden={loading}
-                    resizable={false}
-                    defaultSorted={[ {id: "rank"} ]}
-                    loading={loading}
-                    pageSize={data.length}
-                    showPagination={false}
-                    className='-striped -highlight'
-                    columns={[
-                        {
-                            Header: "Rank",
-                            id: "rank",
-                            accessor: "details.current_clan_rank",
-                            width: 45
-                        },
-                        {
-                            Header: "Name",
-                            accessor: "name",
-                            Cell: ({row, original}) => {
-                                return <Link to={"/player/" + original.tag}>{row.name}</Link>
-                            }
-                        },
-                        {
-                            Header: "Trophies",
-                            id: "trophies",
-                            accessor: "details.trophies",
-                            width: 90,
-                            Cell: ({row, original}) => <TrophiesCell trophies={row.trophies} arena={original.details.arena} />
-                        },
-                        {
-                            Header: "Level",
-                            accessor: "details.level",
-                            id: 'level',
-                            width: 45,
-                            Cell: ({row}) => (<span className="level-td" style={{backgroundImage: 'url('+images.static('level')+')'}}>{row.level}</span>)
-                        },
-                        {
-                            Header: "Role",
-                            id: "role",
-                            accessor: "details.clan_role",
-                            width: 100,
-                            Cell: ({row}) => {
-                                return roles[ row.role ]
-                            }
-                        },
-                        {
-                            Header: "Received",
-                            id: "received",
-                            accessor: "details.donations_received",
-                            width: 80,
-                            Cell: ({row}) => <DonationCell color='warning' column='received' row={row} icon='arrow-down' />
-                        },
-                        {
-                            Header: "Donated",
-                            id: "given",
-                            accessor: "details.donations",
-                            width: 80,
-                            Cell: ({row}) => <DonationCell color='primary' column='given' row={row} icon='arrow-up' />
-                        },
-                        {
-                            Header: "Total",
-                            id: 'total',
-                            width: 80,
-                            accessor: d => d.details.donations - d.details.donations_received,
-                            Cell: ({row}) => <DonationCell column='received' compareTo='given' row={row} />
-                        }
-                    ]}
-                />
+                <div className="row">
+                    <div className="col-xl-6">
+                        <div className="card-header d-none d-xl-block mt-2"><h4>Members</h4></div>
+                        <ClanMembersTable endpoint={this.props.endpoint + '/members'}/>
+                    </div>
+
+                    <div className="col-xl-6 row">
+                        <div className="col-md-6 mt-2">
+                                <div className="card-header"><h4>Previous week</h4></div>
+                                <ClanMembersTable
+                                    endpoint={this.props.endpoint + '/weekly'}
+                                    columns={['name', 'trophies', 'given']}
+                                    defaultSorted={[{id: "trophies", desc: true}]}
+                                />
+                        </div>
+                        <div className="col-md-6 mt-2">
+                            <div className="card-header"><h4>Previous Season{previousSeason && ` (${previousSeason.format('MMM YYYY')})`}</h4></div>
+                            <ClanMembersTable
+                                endpoint={this.props.endpoint + '/season'}
+                                columns={[
+                                    'name',
+                                    {
+                                        Header: "Trophies",
+                                        id:'trophies',
+                                        accessor: "details.ending",
+                                        width: 90, Cell: ({row, original}) => <TrophiesCell trophies={row.trophies} league={playerLeagueFromTrophies(original.details.ending)} />
+                                    },
+                                ]}
+                                defaultSorted={[{id: "trophies", desc: true}]}
+                                onFetchData={(data) => this.setState({previousSeason: moment(data[0].details.season__identifier + '-01', 'YYYY-MM-DD')})}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
-        );
+        )
     }
 }
