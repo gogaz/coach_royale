@@ -7,7 +7,9 @@ from react_api.models import *
 
 class ClanRepository:
     @staticmethod
-    def get_players_in_clan(db_clan: Clan, date=timezone.now()):
+    def get_players_in_clan(db_clan: Clan, date=None):
+        if date is None:
+            date = timezone.now()
         return Player.objects.filter(
             Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__gte=date)
             | Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__isnull=True)
@@ -54,7 +56,9 @@ class ClanRepository:
 
 class PlayerRepository:
     @staticmethod
-    def get_clan_for_player(db_player: Player, date=timezone.now()):
+    def get_clan_for_player(db_player: Player, date=None):
+        if date is None:
+            date = timezone.now()
         clan = Clan.objects.filter(
                 (Q(playerclanhistory__joined_clan__isnull=True) & Q(playerclanhistory__left_clan__gte=date))
                 | (Q(playerclanhistory__joined_clan__isnull=True) & Q(playerclanhistory__left_clan__isnull=True))

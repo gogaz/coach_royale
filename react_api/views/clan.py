@@ -56,7 +56,6 @@ def clan_members(request, tag):
             .prefetch_related(models.Prefetch('playerstatshistory_set',
                                               queryset=PlayerClanStatsHistory.objects.filter(pk__in=latest_stats_history_pks),
                                               to_attr='last_stat_list'))
-
         serializer = PlayerClanDetailsSerializer(players, many=True)
         return Response(serializer.data)
 
