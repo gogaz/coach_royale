@@ -39,7 +39,7 @@ def player_activity(request, tag):
     if request.method == 'GET':
         ps = PlayerStatsHistory.objects.filter(player=player).order_by('-id')
         pcs = PlayerClanStatsHistory.objects.filter(player=player).order_by('-id')
-        stats = ps.values('current_trophies', 'total_games', 'total_donations', 'timestamp')[:30]
+        stats = ps.values('current_trophies', 'total_games', 'total_donations', 'timestamp', 'wins', 'losses', 'draws')[:30]
 
         clan = pcs.values('current_clan_rank', 'timestamp')[:30]
         result = {
