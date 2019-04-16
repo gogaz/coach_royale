@@ -68,7 +68,7 @@ export default class PlayerRecentBattlesResultsChart extends React.Component {
     }
 }
 PlayerRecentBattlesResultsChart.defaultProps = {
-    height: 100,
+    height: 120,
     title: "",
     cardHeader: undefined,
 };

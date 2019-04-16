@@ -65,7 +65,7 @@ export default class PlayerDiffStatsChart extends React.Component {
     }
 }
 PlayerDiffStatsChart.defaultProps = {
-    height: 100,
+    height: 120,
     title: "",
     cardHeader: undefined,
 };

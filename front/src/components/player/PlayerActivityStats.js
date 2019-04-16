@@ -1,6 +1,7 @@
 import React from 'react';
 import PlayerDiffStatsChart from "./charts/PlayerDiffStatsChart";
 import PlayerRecentBattlesResultsChart from "./charts/PlayerRecentBattlesResultsChart";
+import PlayerWarResultsChart from "./charts/PlayerWarResultsChart";
 
 export default class PlayerActivityStats extends React.Component {
     constructor(props) {
@@ -23,6 +24,7 @@ export default class PlayerActivityStats extends React.Component {
                     data: {
                         stats: result.stats.reverse(),
                         clan: result.clan.reverse(),
+                        wars: result.wars,
                     },
                     loading: false
                 });
@@ -32,14 +34,15 @@ export default class PlayerActivityStats extends React.Component {
             });
     }
     render() {
-        const {data : {clan, stats}} = this.state;
+        const {data : {clan, stats, wars}} = this.state;
         let statsChart = "";
         let clanChart = "";
         let battlesChart = "";
+        let warsChart = "";
         if (stats && stats.length > 0)
         {
             statsChart = <PlayerDiffStatsChart
-                data={stats} height={120} title="Player's stats"
+                data={stats} title="Player's stats"
                 datasets={[
                     {
                         label: "Trophies",
@@ -61,32 +64,29 @@ export default class PlayerActivityStats extends React.Component {
                     },
                 ]}/>;
             battlesChart = <PlayerRecentBattlesResultsChart
-                data={stats} height={120} title="Player's battles"
+                data={stats} title="Player's battles"
                 datasets={[
                     {
                         label: "Draws + 2v2",
                         id: "draws",
-                        backgroundColor: "#007bff",
-                        fill: false,
+                        backgroundColor: "#3e95cd",
                     },
                     {
                         label: "Losses",
                         id: "losses",
                         backgroundColor: "#fd7e14",
-                        fill: false,
                     },
                     {
                         label: "Wins",
                         id: "wins",
                         backgroundColor: "#28a745",
-                        fill: false,
                     },
                 ]} />
         }
 
         if (stats && stats.length > 0)
             clanChart = <PlayerDiffStatsChart
-                data={clan} height={120} title="Player's stats in clan"
+                data={clan} title="Player's stats in clan"
                 datasets={[
                     {
                         label: "Clan rank",
@@ -96,16 +96,23 @@ export default class PlayerActivityStats extends React.Component {
                     },
                 ]} />;
 
+        console.log(wars);
+        if (wars)
+            warsChart = <PlayerWarResultsChart data={wars} title="Player's wars"/>;
+
         return (
             <div className="row">
+                <div className="col-12 col-xl-6 mt-2">
+                    {warsChart}
+                </div>
+                <div className="col-12 col-xl-6 mt-2">
+                    {battlesChart}
+                </div>
                 <div className="col-12 col-xl-6 mt-2">
                     {statsChart}
                 </div>
                 <div className="col-12 col-xl-6 mt-2">
                     {clanChart}
-                </div>
-                <div className="col-12 col-xl-6 mt-2">
-                    {battlesChart}
                 </div>
             </div>
         );

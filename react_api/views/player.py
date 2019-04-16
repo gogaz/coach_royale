@@ -1,8 +1,10 @@
+from django.db.models import Sum, F, Value
+from django.db.models.functions import Greatest
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from react_api.models import Player, PlayerClanStatsHistory, PlayerStatsHistory
+from react_api.models import Player, PlayerClanStatsHistory, PlayerStatsHistory, PlayerClanWar
 from react_api.serializers.player import PlayerSerializer, PlayerClanStatsSerializer
 
 
@@ -39,12 +41,18 @@ def player_activity(request, tag):
     if request.method == 'GET':
         ps = PlayerStatsHistory.objects.filter(player=player).order_by('-id')
         pcs = PlayerClanStatsHistory.objects.filter(player=player).order_by('-id')
-        stats = ps.values('current_trophies', 'total_games', 'total_donations', 'timestamp', 'wins', 'losses', 'draws')[:30]
 
+        stats = ps.values('current_trophies', 'total_games', 'total_donations', 'timestamp', 'wins', 'losses', 'draws')[:30]
         clan = pcs.values('current_clan_rank', 'timestamp')[:30]
+        wars = PlayerClanWar.objects.filter(player=player)\
+                            .aggregate(wins=Sum('final_battles_wins'),
+                                       availables=Sum(Greatest(F('final_battles_done'), Value(1))),
+                                       battles=Sum('final_battles_done'))
+
         result = {
             "stats": stats,
-            "clan": clan
+            "clan": clan,
+            "wars": wars,
         }
         return Response(result)
 
