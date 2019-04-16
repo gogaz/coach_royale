@@ -5,6 +5,7 @@ import Loading from "../ui/Loading";
 import { handleErrors, playerLeagueFromTrophies } from "../../helpers/api";
 import PlayersClan from "./PlayersClan";
 import LastRefreshInfo from "../ui/LastRefreshInfo";
+import moment from 'moment'
 
 export default class PlayerStats extends React.Component {
     constructor(props) {
@@ -50,6 +51,7 @@ export default class PlayerStats extends React.Component {
                     No more information available {/*<a className="btn" onClick={() => this.forceRefresh()}><FontAwesomeIcon icon={"sync"}/> Refresh</a>*/}
                 </div>
                 <div className="row mt-1" hidden={player.details.last_refresh === null}>
+                    <ClashRoyaleStat title="Last viewed" image={images.static('activity')} value={moment(player.details.last_refresh).fromNow()}/>
                     <ClashRoyaleStat title="Trophies"
                                      image={player.details.current_trophies > 4000 ? images.arena(player.details.arena) : images.static('trophy')}
                                      value={player.details.current_trophies} />
