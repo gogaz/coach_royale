@@ -107,7 +107,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
         db_player_clanstats.save()
 
     # Refresh clan members
-    actual_players = ClanRepository.get_players_in_clan_2(db_clan, now)
+    actual_players = ClanRepository.get_players_in_clan(db_clan, now)
     if read_players:
         for p in actual_players:
             if p.tag not in read_players:  # Player left clan

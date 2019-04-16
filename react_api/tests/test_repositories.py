@@ -65,15 +65,6 @@ class RepositoryTestCase(TestCase):
         pch_4 = ClanRepository.get_players_in_clan(self.clans[1]).count()
         self.assertEqual(pch_4, 1)
 
-        p_1 = ClanRepository.get_players_in_clan_2(self.clans[0]).count()
-        self.assertEqual(pch_1, p_1)
-        p_2 = ClanRepository.get_players_in_clan_2(self.clans[0], timezone.now() - datetime.timedelta(1)).count()
-        self.assertEqual(pch_2, p_2)
-        p_3 = ClanRepository.get_players_in_clan_2(self.clans[1], timezone.now() - datetime.timedelta(1)).count()
-        self.assertEqual(pch_3, p_3)
-        p_4 = ClanRepository.get_players_in_clan_2(self.clans[1]).count()
-        self.assertEqual(pch_4, p_4)
-
     def test_clan_for_player(self):
         now = timezone.now()
         clan = PlayerRepository.get_clan_for_player(self.players[0], now)

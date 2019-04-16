@@ -33,9 +33,6 @@ export default class PlayerDiffStatsChart extends React.Component {
         if (width <= 768) {
             mobile = true;
         }
-        if (width > 768) {
-            mobile = false;
-        }
         return (
             <div className="card">
                 {cardHeader && <div className="card-header">{cardHeader}</div>}

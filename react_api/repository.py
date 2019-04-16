@@ -7,21 +7,13 @@ from react_api.models import *
 
 class ClanRepository:
     @staticmethod
-    def get_players_in_clan_2(db_clan: Clan, date=timezone.now()):
+    def get_players_in_clan(db_clan: Clan, date=timezone.now()):
         return Player.objects.filter(
             Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__gte=date)
             | Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__isnull=True)
             | Q(playerclanhistory__joined_clan__lt=date, playerclanhistory__left_clan__gte=date)
             | Q(playerclanhistory__joined_clan__lt=date, playerclanhistory__left_clan__isnull=True),
             playerclanhistory__clan=db_clan)
-
-    @staticmethod
-    def get_players_in_clan(db_clan: Clan, date=timezone.now()):
-        return PlayerClanHistory.objects.filter((Q(joined_clan__isnull=True) & Q(left_clan__gt=date))
-                                                | (Q(joined_clan__isnull=True) & Q(left_clan__isnull=True))
-                                                | Q(joined_clan__lte=date, left_clan__gt=date)
-                                                | Q(joined_clan__lte=date, left_clan__isnull=True), clan=db_clan) \
-            .select_related('player')
 
     @staticmethod
     def get_war_for_collection_battle(db_clan: Clan, battle: Battle, prev_war=None):
