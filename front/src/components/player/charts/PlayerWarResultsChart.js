@@ -24,16 +24,6 @@ export default class PlayerWarResultsChart extends React.Component {
                           labels: ["Wins", "Losses", 'Misses'],
                       }}
                       options={{
-                          scales: {
-                              yAxes: [{
-                                  display: true,
-                                  beginAtZero: true,
-                                  stepSize: 1,
-                                  ticks: {
-                                      callback: val => val > 0 ? '+' + val : val
-                                  }
-                              }]
-                          },
                           title: {
                               display: title.length > 0,
                               text: title
@@ -45,7 +35,7 @@ export default class PlayerWarResultsChart extends React.Component {
     }
 }
 PlayerWarResultsChart.defaultProps = {
-    height: 100,
+    height: 120,
     title: "",
     cardHeader: undefined,
 };
