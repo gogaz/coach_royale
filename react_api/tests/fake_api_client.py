@@ -287,15 +287,15 @@ class FakeAPIClient:
             {
                 "tag": "ABCDEF",
                 "name": "Some clan name",
-                "score": 58471,
+                "score": 42000,
                 "memberCount": 45,
                 "rank": 3,
                 "previousRank": 42,
                 "badge": {
-                    "name": "flag_j_03",
-                    "category": "02_Flag",
-                    "id": 16000077,
-                    "image": "https://royaleapi.github.io/cr-api-assets/badges/flag_j_03.png"
+                    "name": "",
+                    "category": "",
+                    "id": 1,
+                    "image": "https://.png"
                 },
                 "location": {
                     "name": "France",

@@ -33,6 +33,8 @@ def run_refresh_method(cmd, options, func, iterable, depth=3, **kwargs):
                     cmd.stderr.write("#ERROR: Request timed out while fetching data for #" + str(i))
             failed.append(i)
         except clashroyale.NotFoundError:
+            if options['verbose']:
+                cmd.stderr.write("#ERROR: Request failed while fetching data for #" + str(i))
             if isinstance(i, Model):
                 failed.append(i)
         except clashroyale.ServerError:

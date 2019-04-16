@@ -19,7 +19,7 @@ class Command(BaseCommand):
         parser.add_argument('--battles', action='store_true', help="Refresh player war battles")
 
     def handle(self, *args, **options):
-        api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=30)
+        api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=45)
         now = timezone.now()
         time_delta = now - timezone.timedelta(minutes=60)
 

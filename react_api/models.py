@@ -77,7 +77,10 @@ class PlayerClanHistory(models.Model):
     left_clan = models.DateTimeField(null=True)
 
     def __str__(self):
-        return "{0.player} joined clan {0.clan}".format(self)
+        action = "joined"
+        if self.left_clan is not None:
+            action = "left"
+        return "{0.player} {1} clan {0.clan}".format(self, action)
 
 
 class PlayerClanStatsHistory(models.Model):
@@ -208,6 +211,10 @@ class ClanHistory(models.Model):
     local_rank = models.IntegerField(null=True)
     prev_global_rank = models.IntegerField(null=True)
     global_rank = models.IntegerField(null=True)
+    prev_local_war_rank = models.IntegerField(null=True)
+    local_war_rank = models.IntegerField(null=True)
+    prev_global_war_rank = models.IntegerField(null=True)
+    global_war_rank = models.IntegerField(null=True)
     # Wars
     war_state = models.CharField(max_length=512, null=True)
     # Synchronization configuration

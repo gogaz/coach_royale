@@ -102,7 +102,7 @@ def clan_weekly_season(request, tag):
         now = timezone.now()
 
     month = "%s-W%s-1 07:00" % (now.year, now.isocalendar()[1])
-    date = timezone.make_aware(timezone.datetime.strptime(month, "%Y-W%W-%w %H:%M"))
+    date = timezone.make_aware(timezone.datetime.strptime(month, "%Y-W%W-%w %H:%M")) - timezone.timedelta(weeks=1)
     players = ClanRepository.get_players_in_clan_2(clan, date).annotate(date=Value(date, output_field=DateTimeField()))
     serializer = PlayerWeeklyDonationsSerializer(players, many=True)
     return Response(serializer.data)

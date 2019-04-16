@@ -26,7 +26,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
     :return: False on APIError
     """
     if options['verbose']:
-        command_print(command, "#INFO: Refreshing player %s (#%s)", db_player.name if db_player.name else '', db_player.tag)
+        command_print(command, "#INFO: Refreshing player #%s", db_player.tag)
 
     player = api_client.get_player(db_player.tag)
 
@@ -54,7 +54,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
         elif db_player_clan.clan.tag != player.clan.tag:
             db_player_clan.left_clan = now
             db_player_clan.save()
-            db_player_clan = PlayerClanHistory(player=db_player, left_clan__isnull=True, clan=player_clan)
+            db_player_clan = PlayerClanHistory(player=db_player, left_clan=None, clan=player_clan)
             db_player_clan.clan = player_clan
             if clan_created:
                 db_player_clan.joined_clan = None
