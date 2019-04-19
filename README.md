@@ -9,12 +9,15 @@ Coach Royale
 #### Django + React + Docker
 Coach royale is a hobby project which consumes [RoyaleAPI](https://royaleapi.com) endpoints.
 
+[Demo](https://cycom.gogaz.org)
+
 Setup
 -----
 #### Using Docker
-First, you obviously need to [set up Docker on your system](https://docs.docker.com/install/).
+First, you need to [set up Docker on your system](https://docs.docker.com/install/).
 
-Second, you need to copy `coach_royale/settings.example.py` to `coach_royale/settings.py` and adapt it to your needs.
+Second, copy `coach_royale/settings.example.py` to `coach_royale/settings.py` and adapt it to your needs.
+
 
 Usage
 -----

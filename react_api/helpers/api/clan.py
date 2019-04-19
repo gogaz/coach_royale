@@ -1,6 +1,7 @@
 import datetime
 
 from clashroyale import RoyaleAPI
+from clashroyale.royaleapi import PartialClan
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
@@ -233,8 +234,8 @@ def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: Cl
         command_print(command, "Clan #%s is not in rankings", db_clan.tag)
 
     # Top clans by war trophies - FIXME: not available yet
-    '''
-    war_tops = read_top_ranks(api_client.get_top_clans('war/' + clan_stats.region_code), db_clan, clan_stats)
+
+    war_tops = read_top_ranks(api_client._get_model(api_client.api.TOP, PartialClan).get_top_clans('war/' + clan_stats.region_code), db_clan, clan_stats)
     if war_tops[0] is not None:
         clan_stats.local_war_rank = war_tops[0]
         clan_stats.prev_local_war_rank = tops[1]
@@ -244,7 +245,7 @@ def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: Cl
             clan_stats.prev_global_war_rank = g_tops[1]
     elif verbose:
         command_print(command, "Clan #%s is not in war rankings", db_clan.tag)
-    '''
+
     if clan_stats.local_war_rank or clan_stats.local_rank:
         clan_stats.save()
 

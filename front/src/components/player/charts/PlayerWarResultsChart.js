@@ -27,7 +27,21 @@ export default class PlayerWarResultsChart extends React.Component {
                           title: {
                               display: title.length > 0,
                               text: title
-                          }
+                          },
+                          tooltips: {
+                              callbacks: {
+                                  label: function (tooltipItem, data) {
+                                      const dataset = data.datasets[ tooltipItem.datasetIndex ];
+                                      const meta = dataset._meta[ Object.keys(dataset._meta)[ 0 ] ];
+                                      const currentValue = dataset.data[ tooltipItem.index ];
+                                      const percentage = parseFloat((currentValue / meta.total * 100).toFixed(1));
+                                      return currentValue + ' (' + percentage + '%)';
+                                  },
+                                  title: function (tooltipItem, data) {
+                                      return data.labels[ tooltipItem[ 0 ].index ];
+                                  }
+                              }
+                          },
                       }}
                 />
             </div>

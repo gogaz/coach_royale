@@ -122,6 +122,7 @@ export default class ClanMembersTable extends React.Component {
                     data={data}
                     hidden={loading}
                     resizable={resizable}
+                    showPagination={false}
                     defaultSorted={defaultSorted}
                     loading={loading}
                     pageSize={pageSize}

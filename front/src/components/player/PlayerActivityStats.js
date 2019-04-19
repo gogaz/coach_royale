@@ -42,25 +42,12 @@ export default class PlayerActivityStats extends React.Component {
         if (stats && stats.length > 0)
         {
             statsChart = <PlayerDiffStatsChart
-                data={stats} title="Player's stats"
+                data={stats} title="Trophies"
                 datasets={[
                     {
                         label: "Trophies",
                         id: "current_trophies",
-                        borderColor: "#F7CA18",
-                        fill: false,
-                    },
-                    {
-                        label: "Games",
-                        id: "total_games",
-                        borderColor: "#c45850",
-                        fill: false,
-                    },
-                    {
-                        label: "Total donations",
-                        id: "total_donations",
-                        borderColor: "#e8c3b9",
-                        fill: false,
+                        backgroundColor: "#ffb84d",
                     },
                 ]}/>;
             battlesChart = <PlayerRecentBattlesResultsChart

@@ -1,3 +1,4 @@
+import logging
 import sys
 
 import clashroyale
@@ -74,3 +75,11 @@ def command_print(command, string: str, *args):
             _args.append(args[i])
     output = string % tuple(_args)
     command.stdout.write(output)
+
+
+def create_logger():
+    logger = logging.getLogger('clashroyale')
+    logger.setLevel(logging.DEBUG)
+    handler = logging.FileHandler(filename='clashroyale.log', encoding='utf-8', mode='w')
+    handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+    logger.addHandler(handler)

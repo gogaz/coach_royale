@@ -21,7 +21,7 @@ export default class ClanSeasons extends React.Component {
                         <ClanMembersTable
                             endpoint={this.props.endpoint + '/weekly'}
                             columns={['name', 'trophies', 'given']}
-                            defaultSorted={[{id: "trophies", desc: true}]}
+                            defaultSorted={[{id: "given", desc: true}]}
                         />
                 </div>
                 <div className="col-md-6 mt-2">
