@@ -1,7 +1,9 @@
 import unittest
 from io import StringIO
 
+import clashroyale
 from clashroyale.errors import NotResponding
+from django.conf import settings
 from django.test import TestCase
 
 from react_api.helpers.api.clan import refresh_clan_details
@@ -13,7 +15,6 @@ from react_api.models import (Clan,
                               PlayerClanStatsHistory,
                               ClanWar,
                               PlayerClanWar)
-from react_api.tests.fake_api_client import FakeAPIClient
 
 
 class HelpersTestCase(unittest.TestCase):
@@ -57,7 +58,7 @@ class HelpersTestCase(unittest.TestCase):
 
 class ClanHelpersTestCase(TestCase):
     def setUp(self):
-        self.api_client = FakeAPIClient()
+        self.api_client = clashroyale.RoyaleAPI(token=settings.ROYALE_API_KEY, timeout=45)
 
     def test_refresh_clan_details(self):
         refresh_clan_details(None, {'verbose': False}, Clan(tag='ABCDEF'), self.api_client)
