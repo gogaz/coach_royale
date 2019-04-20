@@ -34,9 +34,8 @@ export default class PlayerActivityStats extends React.Component {
             });
     }
     render() {
-        const {data : {clan, stats, wars}} = this.state;
+        const {data : {stats, wars}} = this.state;
         let statsChart = "";
-        let clanChart = "";
         let battlesChart = "";
         let warsChart = "";
         if (stats && stats.length > 0)
@@ -71,19 +70,6 @@ export default class PlayerActivityStats extends React.Component {
                 ]} />
         }
 
-        if (stats && stats.length > 0)
-            clanChart = <PlayerDiffStatsChart
-                data={clan} title="Player's stats in clan"
-                datasets={[
-                    {
-                        label: "Clan rank",
-                        id: "current_clan_rank",
-                        borderColor: "#3e95cd",
-                        fill: false,
-                    },
-                ]} />;
-
-        console.log(wars);
         if (wars)
             warsChart = <PlayerWarResultsChart data={wars} title="Player's wars"/>;
 
@@ -97,9 +83,6 @@ export default class PlayerActivityStats extends React.Component {
                 </div>
                 <div className="col-12 col-xl-6 mt-2">
                     {statsChart}
-                </div>
-                <div className="col-12 col-xl-6 mt-2">
-                    {clanChart}
                 </div>
             </div>
         );

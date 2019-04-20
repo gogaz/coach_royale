@@ -30,16 +30,13 @@ export default class PlayerWarResultsChart extends React.Component {
                           },
                           tooltips: {
                               callbacks: {
-                                  label: function (tooltipItem, data) {
+                                  label: (tooltipItem, data) => {
                                       const dataset = data.datasets[ tooltipItem.datasetIndex ];
                                       const meta = dataset._meta[ Object.keys(dataset._meta)[ 0 ] ];
                                       const currentValue = dataset.data[ tooltipItem.index ];
-                                      const percentage = parseFloat((currentValue / meta.total * 100).toFixed(1));
-                                      return currentValue + ' (' + percentage + '%)';
+                                      return `${currentValue} (${Number(currentValue / meta.total * 100).toFixed(1)}%)`;
                                   },
-                                  title: function (tooltipItem, data) {
-                                      return data.labels[ tooltipItem[ 0 ].index ];
-                                  }
+                                  title: (tooltipItem, data) => data.labels[ tooltipItem[ 0 ].index ],
                               }
                           },
                       }}
