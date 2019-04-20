@@ -1,7 +1,6 @@
 import React from 'react'
 import ClanMembersTable from "./ClanMembersTable";
 import TrophiesCell from "./cells/TrophiesCell";
-import { playerLeagueFromTrophies } from "../../helpers/api";
 import moment from "moment";
 
 export default class ClanSeasons extends React.Component {
@@ -34,7 +33,7 @@ export default class ClanSeasons extends React.Component {
                                 Header: "Trophies",
                                 id:'trophies',
                                 accessor: "details.ending",
-                                width: 90, Cell: ({row, original}) => <TrophiesCell trophies={row.trophies} league={playerLeagueFromTrophies(original.details.ending)} />
+                                width: 90, Cell: ({row, original}) => <TrophiesCell trophies={row.trophies} arena={original.details.arena} />
                             },
                         ]}
                         defaultSorted={[{id: "trophies", desc: true}]}

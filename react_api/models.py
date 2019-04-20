@@ -305,7 +305,7 @@ class TournamentRefresh(models.Model):
     count = models.IntegerField(default=0)
 
     def __str__(self):
-        return "Refreshed {0.count} tournaments (success: {0.success}) {1}".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M:%S"))
+        return "[{1}] Refreshed {0.count} tournaments (success: {0.success})".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M"))
 
 
 class Tournament(models.Model):
@@ -326,3 +326,15 @@ class Tournament(models.Model):
 
     def __str__(self):
         return "Tournament {} started on {}".format(self.name, self.create_time.strftime("%Y-%m-%d"))
+
+
+class FullRefresh(models.Model):
+    timestamp = models.DateTimeField()
+    success = models.BooleanField()
+    error = models.TextField(null=True)
+    constants_updated = models.BooleanField()
+    clans_count = models.IntegerField()
+    players_count = models.IntegerField()
+
+    def __str__(self):
+        return "[{1}] Refreshed all clans & players (success: {0.success})".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M"))

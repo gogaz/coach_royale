@@ -7,3 +7,4 @@ gunicorn==19.9.0
 python-box==3.2.4
 requests==2.21.0
 codecov==2.0.15
+python-box==3.3.0
