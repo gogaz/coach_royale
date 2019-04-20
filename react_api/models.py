@@ -330,7 +330,6 @@ class Tournament(models.Model):
 
 class FullRefresh(models.Model):
     timestamp = models.DateTimeField()
-    success = models.BooleanField()
     error = models.TextField(null=True)
     constants_updated = models.BooleanField()
     clans_count = models.IntegerField()
