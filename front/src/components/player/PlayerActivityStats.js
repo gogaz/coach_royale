@@ -2,13 +2,23 @@ import React from 'react';
 import PlayerDiffStatsChart from "./charts/PlayerDiffStatsChart";
 import PlayerRecentBattlesResultsChart from "./charts/PlayerRecentBattlesResultsChart";
 import PlayerWarResultsChart from "./charts/PlayerWarResultsChart";
+import ReactTable from "react-table";
+import Loading from "../ui/Loading";
+import moment from "moment";
+import PlayerWarResultCell from "../clan/cells/PlayerWarResultCell";
 
 export default class PlayerActivityStats extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: {},
+            loading: true,
+            data: {
+                stats: [],
+                clan: [],
+                wars: {},
+                war_results: [],
+            },
         }
     }
     componentDidMount() {
@@ -24,7 +34,8 @@ export default class PlayerActivityStats extends React.Component {
                     data: {
                         stats: result.stats.reverse(),
                         clan: result.clan.reverse(),
-                        wars: result.wars,
+                        wars: result.war_stats,
+                        war_results: result.wars,
                     },
                     loading: false
                 });
@@ -34,44 +45,39 @@ export default class PlayerActivityStats extends React.Component {
             });
     }
     render() {
-        const {data : {stats, wars}} = this.state;
-        let statsChart = "";
-        let battlesChart = "";
-        let warsChart = "";
-        if (stats && stats.length > 0)
-        {
-            statsChart = <PlayerDiffStatsChart
-                data={stats} title="Trophies"
-                datasets={[
-                    {
-                        label: "Trophies",
-                        id: "current_trophies",
-                        backgroundColor: "#ffb84d",
-                    },
-                ]}/>;
-            battlesChart = <PlayerRecentBattlesResultsChart
-                data={stats} title="Player's battles"
-                datasets={[
-                    {
-                        label: "Draws + 2v2",
-                        id: "draws",
-                        backgroundColor: "#3e95cd",
-                    },
-                    {
-                        label: "Losses",
-                        id: "losses",
-                        backgroundColor: "#fd7e14",
-                    },
-                    {
-                        label: "Wins",
-                        id: "wins",
-                        backgroundColor: "#28a745",
-                    },
-                ]} />
-        }
+        const {loading, data: {stats, wars, war_results}} = this.state;
+        if (loading)
+            return <Loading/>;
 
-        if (wars)
-            warsChart = <PlayerWarResultsChart data={wars} title="Player's wars"/>;
+        const statsChart = <PlayerDiffStatsChart
+            data={stats} title="Trophies"
+            datasets={[
+                {
+                    label: "Trophies",
+                    id: "current_trophies",
+                    backgroundColor: "#ffb84d",
+                },
+            ]}/>;
+        const battlesChart = <PlayerRecentBattlesResultsChart
+            data={stats} title="Player's battles"
+            datasets={[
+                {
+                    label: "Draws + 2v2",
+                    id: "draws",
+                    backgroundColor: "#3e95cd",
+                },
+                {
+                    label: "Losses",
+                    id: "losses",
+                    backgroundColor: "#fd7e14",
+                },
+                {
+                    label: "Wins",
+                    id: "wins",
+                    backgroundColor: "#28a745",
+                },
+            ]} />;
+        const warsChart = <PlayerWarResultsChart data={wars} title="Player's wars"/>;
 
         return (
             <div className="row">
@@ -79,10 +85,35 @@ export default class PlayerActivityStats extends React.Component {
                     {warsChart}
                 </div>
                 <div className="col-12 col-xl-6 mt-2">
-                    {battlesChart}
+                    {statsChart}
                 </div>
                 <div className="col-12 col-xl-6 mt-2">
-                    {statsChart}
+                    <div className="card">
+                        <ReactTable
+                            data={war_results}
+                            resizable={false}
+                            pageSize={10}
+                            style={{height: '350px'}}
+                            defaultSorted={[{idk: 'fieldname', desc: false}]}
+                            className='-striped -highlight'
+                            bordered={false}
+                            columns={[
+                                {
+                                    Header: "War",
+                                    id: "war",
+                                    accessor: e => moment(e.date).fromNow(),
+                                },
+                                {
+                                    Header: "Result",
+                                    id: "result",
+                                    Cell: ({row, original}) => <PlayerWarResultCell war={original}/>,
+                                }
+                            ]}
+                        />
+                    </div>
+                </div>
+                <div className="col-12 col-xl-6 mt-2">
+                    {battlesChart}
                 </div>
             </div>
         );

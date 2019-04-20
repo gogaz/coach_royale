@@ -250,7 +250,6 @@ def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: Cl
         clan_stats.save()
 
 
-
 def read_top_ranks(tops, db_clan, clan_stats):
     if tops[-1].score > clan_stats.score:
         return None, None

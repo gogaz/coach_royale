@@ -45,14 +45,16 @@ def player_activity(request, tag):
         stats = ps.values('current_trophies', 'total_games', 'total_donations', 'timestamp', 'wins', 'losses', 'draws')[:30]
         clan = pcs.values('current_clan_rank', 'timestamp')[:30]
         wars = PlayerClanWar.objects.filter(player=player)\
-                            .aggregate(wins=Sum('final_battles_wins'),
-                                       availables=Sum(Greatest(F('final_battles_done'), Value(1))),
-                                       battles=Sum('final_battles_done'))
+                                    .annotate(date=F('clan_war__date_end'))
+        war_stats = wars.aggregate(wins=Sum('final_battles_wins'),
+                                   availables=Sum(Greatest(F('final_battles_done'), Value(1))),
+                                   battles=Sum('final_battles_done'))
 
         result = {
             "stats": stats,
             "clan": clan,
-            "wars": wars,
+            "wars": wars.order_by('-date').values('date', 'final_battles_done', 'final_battles_wins'),
+            "war_stats": war_stats,
         }
         return Response(result)
 
