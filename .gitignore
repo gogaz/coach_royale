@@ -4,7 +4,7 @@
 __pycache__
 *-lock.json
 !package-lock.json
-static/constants.json
+constants/*.json
 # External libraries
 venv
 front/node_modules

@@ -5,9 +5,12 @@ import TopBar from "./ui/TopBar";
 import TournamentsApp from "./tournaments/TournamentApp";
 import "../style/app.css"
 import { handleErrors } from "../helpers/api";
+import {loadConstants} from "../helpers/constants";
 import PlayerApp from "./player/PlayerApp";
 import CriticalError from "./errors/CriticalError";
 import Loading from "./ui/Loading";
+
+const ConstantsContext = React.createContext({});
 
 export default class App extends React.Component {
     constructor(props) {
@@ -18,7 +21,9 @@ export default class App extends React.Component {
             defaultUrl: '',
             error: null,
             mainClan: null,
-            loading: true,
+            loadingHome: true,
+            loadingConstants: true,
+            constants: {},
         }
     }
 
@@ -29,13 +34,16 @@ export default class App extends React.Component {
                 .then(res => this.setState({
                     defaultUrl: res.url,
                     mainClan: res.main_clan,
-                    loading: false,
+                    loadingHome: false,
                 }))
                 .catch(error => console.log(error));
         }
+        loadConstants().then()
     }
 
     render() {
+        const {loadingHome, loadingConstants} = this.state;
+        const loading = loadingHome && loadingConstants;
         if (this.state.error) return <CriticalError message={this.state.error.message} code={this.state.error.status}/>;
         return (
             <div>
@@ -43,8 +51,8 @@ export default class App extends React.Component {
                 <div className='app-body'>
                     <main className='main'>
                         <div className='container-fluid mt-3'>
-                            <Loading loading={this.state.loading}/>
-                            {!this.state.loading &&
+                            <Loading loading={loading}/>
+                            {!loading &&
                             <Switch>
                                 {this.state.defaultUrl && <Route exact path='/' component={() => <Redirect replace
                                                                                                            to={this.state.defaultUrl}/>}/>}

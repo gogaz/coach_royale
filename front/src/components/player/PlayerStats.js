@@ -3,6 +3,7 @@ import { images } from "../../helpers/assets";
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import Loading from "../ui/Loading";
 import { handleErrors, playerLeagueFromTrophies } from "../../helpers/api";
+import '../../helpers/constants'
 import PlayersClan from "./PlayersClan";
 import LastRefreshInfo from "../ui/LastRefreshInfo";
 import moment from 'moment'

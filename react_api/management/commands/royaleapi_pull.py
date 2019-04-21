@@ -50,11 +50,13 @@ class Command(BaseCommand):
             run_refresh_method(self, options, refresh_player_profile, [None], api_client=api_client)
 
         # Update constants & log the execution of this command
-        do_update_constants = FullRefresh.objects.filter(constants_updated=True, timestamp__gt=constants_time_delta).count() == 0
+        do_update_constants = True
+        if options['force']:
+            do_update_constants = FullRefresh.objects.filter(constants_updated=True, timestamp__gt=constants_time_delta).count() == 0
         if do_update_constants:
             refresh_constants(api_client)
             if options['verbose']:
-                self.stdout.write('constants.json has been updated')
+                self.stdout.write('Constants has been updated')
         last_full_refresh = FullRefresh(timestamp=now,
                                         clans_count=db_clans.count(),
                                         players_count=db_players.count(),

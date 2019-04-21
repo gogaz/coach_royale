@@ -25,6 +25,8 @@ SECRET_KEY = 'secret!'
 ROYALE_API_KEY = os.environ.get('ROYALE_API_KEY') or "YOUR_API_KEY"
 MAIN_CLAN = "2GJU9Y2G"
 
+CONSTANTS_DIR = os.path.join(BASE_DIR, 'constants')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -136,7 +138,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/api/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (os.path.join('static'),)
 
+# Production values, comment when in development
 X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
