@@ -137,7 +137,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/api/static/'
+STATIC_URL = '/static/'
 
 # Production values, comment when in development
 X_FRAME_OPTIONS = 'DENY'

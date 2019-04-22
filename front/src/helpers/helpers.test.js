@@ -1,4 +1,6 @@
-const { handleErrors, playerLeagueFromTrophies } = require('./api');
+import { playerArenaFromTrophies } from "./constants";
+
+const { handleErrors } = require('./api');
 const { images } = require('./assets');
 let { test, expect } = global;
 
@@ -15,10 +17,11 @@ test('handleErrors throws when request is invalid', () => {
     expect(() => handleErrors({ json: () => {}, ok: false, status: 404 })).toThrow();
 });
 
-test('playerLeagueFromTrophies computes the player league from trophies', () => {
-    expect(playerLeagueFromTrophies(1)).toBe(0);
-    expect(playerLeagueFromTrophies(4000)).toBe(1);
-    expect(playerLeagueFromTrophies(10000)).toBe(21)
+test('playerArenaFromTrophies computes the player league from trophies', () => {
+    const context = {arenas:[{},{trophy_limit:0, arena:0}, {trophy_limit:300, arena:42}]};
+    expect(playerArenaFromTrophies(context, 1)).toBe(0);
+    expect(playerArenaFromTrophies(context, 299)).toBe(0);
+    expect(playerArenaFromTrophies(context, 300)).toBe(42);
 });
 
 test('assets.image returns an image URL with https', () => {

@@ -29,7 +29,6 @@ export default class PlayerActivityStats extends React.Component {
         fetch(url)
             .then((res) => res.json())
             .then(result => {
-                console.log(result);
                 this.setState({
                     data: {
                         stats: result.stats.reverse(),
@@ -88,7 +87,6 @@ export default class PlayerActivityStats extends React.Component {
                     {statsChart}
                 </div>
                 <div className="col-12 col-xl-6 mt-2">
-                    <div className="card">
                         <ReactTable
                             data={war_results}
                             resizable={false}
@@ -110,7 +108,6 @@ export default class PlayerActivityStats extends React.Component {
                                 }
                             ]}
                         />
-                    </div>
                 </div>
                 <div className="col-12 col-xl-6 mt-2">
                     {battlesChart}

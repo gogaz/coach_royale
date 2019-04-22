@@ -21,7 +21,6 @@ export default class PlayersClan extends React.Component {
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
-                    console.log(result);
                     this.setState({ loading: false, player: result });
                 })
             .catch(error => console.log(error) );

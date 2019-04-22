@@ -9,6 +9,7 @@ urlpatterns = [
     path('home', home, name='home'),
     path('clan/', include([
         path('all', clans_list, name='clans_list'),
+#        path('<slug:tag>', clan_info, name='clan_info'),
         path('<slug:tag>/', include([
             path('', clan_info, name='clan_info'),
             path('members', clan_members, name='clan_members'),
@@ -18,6 +19,7 @@ urlpatterns = [
         ]))
     ])),
     path('player/', include([
+#        path(r'<slug:tag>', player_info, name="player_info"),
         path('<slug:tag>/', include([
             path('', player_info, name="player_info"),
             path('clan', player_clan, name="player_clan"),
@@ -25,6 +27,7 @@ urlpatterns = [
         ]))
     ])),
     path('tournaments/', include([
+#        path('playable',playable_tournaments, name="playable_tournaments"),
         path('playable/', include([
             path('', playable_tournaments, name="playable_tournaments"),
             path('refresh', refresh_playable_tournaments, name="refresh_playable_tournaments")

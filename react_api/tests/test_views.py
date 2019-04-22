@@ -34,7 +34,7 @@ class ViewsTestCase(TestCase):
     def test_home(self):
         data = self._test_route('home')
         self.assertIn('url', data)
-        self.assertNotEquals(data['url'][:3], '/api')
+        self.assertNotEquals(data['url'][:4], '/api')
         self.assertEqual(data['url'][0], '/')
 
     def test_clans_list_view(self):

@@ -19,7 +19,7 @@ export default class ClanDetails extends React.Component {
 
     componentDidMount() {
         setTitle("Clan overview");
-        fetch(this.props.endpoint)
+        fetch(this.props.endpoint + '/')
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
