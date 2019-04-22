@@ -35,9 +35,6 @@ export default class ClanWarMembers extends React.Component {
     render() {
         const { data: {wars, members}, loading } = this.state;
         if (wars === undefined || !wars.length) return <Loading/>;
-        /*
-         * TODO: toggle columns visibility
-         */
         let columns = [
             {
                 Header: <img src={images.static('trophy')} height={20}/>,
@@ -151,7 +148,7 @@ export default class ClanWarMembers extends React.Component {
                 Header: date,
                 id: 'war' + e.id,
                 width: 65,
-                Cell: ({row, original}) => <PlayerWarResultCell warId={e.id} wars={original.wars}/>,
+                Cell: ({row, original}) => <PlayerWarResultCell war={original.wars.find(value => value.clan_war_id === e.id)}/>,
                 sortable: false,
                 filterable: false,
             };

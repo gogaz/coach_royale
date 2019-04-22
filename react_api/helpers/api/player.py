@@ -103,7 +103,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
 
     # Player battles
     if options['battles']:
-        refresh_player_battles(command, options, api_client, db_player, False)
+        refresh_player_battles(command, api_client, db_player, **options)
 
     db_player.last_refresh = now
     db_player.save()
@@ -123,8 +123,9 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
     return True
 
 
-def refresh_player_battles(command, options, api_client, db_player, announce_player=True):
-    if announce_player:
+def refresh_player_battles(command, api_client, db_player, **kwargs):
+    verbose = kwargs.get('verbose')
+    if verbose:
         try:
             command_print(command, "#INFO: Refreshing battles for player (%s) %s", db_player.name, db_player.tag)
         except:
@@ -166,7 +167,7 @@ def refresh_player_battles(command, options, api_client, db_player, announce_pla
         db_battle.win = win
         db_battle.save()
 
-        if options['verbose']:
+        if verbose:
             command.stdout.write("     - Found %s battle ! %d-%d (%s)" % ("war" if mode.war_day else "collection " + b.mode.name,
                                                                           b.team_crowns,
                                                                           b.opponent_crowns,

@@ -49,9 +49,6 @@ export default class PlayerRecentBattlesResultsChart extends React.Component {
                                   display: true,
                                   stacked: true,
                                   stepSize: 1,
-                                  ticks: {
-                                      callback: val => val > 0 ? '+' + val : val
-                                  }
                               }],
                               xAxes: [{
                                   stacked: true,

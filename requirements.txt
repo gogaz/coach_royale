@@ -4,6 +4,6 @@ Django==2.2
 djangorestframework==3.9.2
 psycopg2-binary==2.8.2
 gunicorn==19.9.0
-python-box==3.2.4
+python-box==3.3.0
 requests==2.21.0
 codecov==2.0.15

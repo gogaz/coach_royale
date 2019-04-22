@@ -115,5 +115,7 @@ def clan_monthly_season(request, tag):
         return not_found_error("clan", tag)
 
     season = LeagueSeason.objects.order_by('-id').first()
-    players = ClanRepository.get_players_in_clan(clan).annotate(season_id=Value(season.id, output_field=IntegerField()))
+    month = "%s-1 07:00" % season.identifier
+    date = timezone.make_aware(timezone.datetime.strptime(month, "%Y-%W-%w %H:%M")) - timezone.timedelta(weeks=1)
+    players = ClanRepository.get_players_in_clan(clan, date).annotate(season_id=Value(season.id, output_field=IntegerField()))
     return Response(PlayerClanSeasonSerializer(players, many=True).data)

@@ -1,19 +1,21 @@
 import unittest
 from io import StringIO
 
+import clashroyale
 from clashroyale.errors import NotResponding
+from django.conf import settings
 from django.test import TestCase
 
 from react_api.helpers.api.clan import refresh_clan_details
 from react_api.helpers.api.helpers import command_print, run_refresh_method
+from react_api.helpers.api.player import refresh_player_profile
 from react_api.models import (Clan,
                               Player,
                               ClanHistory,
                               PlayerClanHistory,
                               PlayerClanStatsHistory,
                               ClanWar,
-                              PlayerClanWar)
-from react_api.tests.fake_api_client import FakeAPIClient
+                              PlayerClanWar, PlayerStatsHistory, Card, PlayerCardLevel)
 
 
 class HelpersTestCase(unittest.TestCase):
@@ -55,20 +57,38 @@ class HelpersTestCase(unittest.TestCase):
     # TODO: def test_store_battle_players(self):
 
 
-class ClanHelpersTestCase(TestCase):
+class TopLevelHelpersTestCase(TestCase):
     def setUp(self):
-        self.api_client = FakeAPIClient()
+        self.api_client = clashroyale.RoyaleAPI(token=settings.ROYALE_API_KEY, timeout=45)
 
-    def test_refresh_clan_details(self):
-        refresh_clan_details(None, {'verbose': False}, Clan(tag='ABCDEF'), self.api_client)
+    def _run_refresh_method(self, func, data):
+        try:
+            run_refresh_method(None, {'verbose': False, 'battles': True}, func, [data], depth=1, api_client=self.api_client)
+        except clashroyale.RequestError:
+            pass
+
+    def _test_refresh_clan_details(self):
+        self._run_refresh_method(refresh_clan_details, Clan(tag=settings.MAIN_CLAN))
+        clan = self.api_client.get_clan(settings.MAIN_CLAN)
         self.assertEqual(Clan.objects.count(), 1)
-        self.assertEqual(Player.objects.count(), 3)
+        self.assertGreaterEqual(Player.objects.count(), clan.member_count)
         self.assertEqual(ClanHistory.objects.count(), 1)
-        self.assertEqual(ClanHistory.objects.get().local_rank, 3)
-        self.assertEqual(PlayerClanHistory.objects.count(), 3)
-        self.assertEqual(PlayerClanStatsHistory.objects.count(), 3)
-        self.assertEqual(PlayerClanHistory.objects.filter(joined_clan__isnull=True).count(), 3)
-        self.assertEqual(ClanWar.objects.count(), 2)
-        self.assertEqual(PlayerClanWar.objects.count(), 5)
-        self.assertEqual(PlayerClanWar.objects.filter(player__tag='ABCDEF02').count(), 2)
-        self.assertEqual(PlayerClanWar.objects.filter(player__tag='ABCDEF03').count(), 1)
+        self.assertEqual(PlayerClanHistory.objects.count(), clan.member_count)
+        self.assertEqual(PlayerClanStatsHistory.objects.count(), clan.member_count)
+        self.assertEqual(PlayerClanHistory.objects.filter(joined_clan__isnull=True).count(), clan.member_count)
+        self.assertEqual(ClanWar.objects.count(), 10)
+        self.assertGreaterEqual(PlayerClanWar.objects.count(), 1)
+        self.assertEqual(Player.objects.filter(playerclanstatshistory__clan_role='leader').count(), 1)
+
+    def _test_refresh_player_details(self):
+        leader = Player.objects.get(playerclanstatshistory__clan_role='leader')
+        self._run_refresh_method(refresh_player_profile, leader)
+        self.assertTrue(Clan.objects.count(), 1)
+        self.assertEqual(PlayerClanHistory.objects.filter(player=leader).count(), 1)
+        self.assertEqual(PlayerStatsHistory.objects.count(), 1)
+        self.assertGreaterEqual(Card.objects.count(), 8)
+        self.assertGreaterEqual(PlayerCardLevel.objects.count(), 8)
+
+    def test_clan_details_then_player_profile(self):
+        self._test_refresh_clan_details()
+        self._test_refresh_player_details()

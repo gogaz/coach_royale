@@ -19,7 +19,13 @@ codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else Non
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 's3cr3t'
+SECRET_KEY = 'secret!'
+
+# Royale API configuration
+ROYALE_API_KEY = os.environ.get('ROYALE_API_KEY') or "YOUR_API_KEY"
+MAIN_CLAN = "2GJU9Y2G"
+
+CONSTANTS_DIR = os.path.join(BASE_DIR, 'constants')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -96,10 +102,6 @@ DATABASES = {
     }
 }
 
-# Royale API configuration
-ROYALE_API_KEY = "YOUR_API_KEY"
-MAIN_CLAN = "YOUR_CLAN_TAG"
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -136,4 +138,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Production values, comment when in development
 X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

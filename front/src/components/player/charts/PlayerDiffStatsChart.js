@@ -27,10 +27,6 @@ export default class PlayerDiffStatsChart extends React.Component {
                               yAxes: [{
                                   display: true,
                                   beginAtZero: true,
-                                  stepSize: 1,
-                                  ticks: {
-                                      callback: val => val > 0 ? '+' + val : val
-                                  }
                               }]
                           },
                           title: {

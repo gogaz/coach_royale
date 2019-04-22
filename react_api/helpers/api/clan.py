@@ -1,7 +1,6 @@
 import datetime
 
 from clashroyale import RoyaleAPI
-from clashroyale.royaleapi import PartialClan
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
@@ -112,7 +111,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
     if read_players:
         for p in actual_players:
             if p.tag not in read_players:  # Player left clan
-                pch = PlayerClanHistory.objects.get(player=p)
+                pch = PlayerClanHistory.objects.get(player=p, clan=db_clan, left_clan__isnull=True)
                 pch.left_clan = now
                 pch.save()
                 if verbose:
@@ -234,21 +233,19 @@ def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: Cl
         command_print(command, "Clan #%s is not in rankings", db_clan.tag)
 
     # Top clans by war trophies - FIXME: not available yet
-
-    war_tops = read_top_ranks(api_client._get_model(api_client.api.TOP, PartialClan).get_top_clans('war/' + clan_stats.region_code), db_clan, clan_stats)
-    if war_tops[0] is not None:
-        clan_stats.local_war_rank = war_tops[0]
-        clan_stats.prev_local_war_rank = tops[1]
-        g_tops = read_top_ranks(api_client.get_top_clans('war'), db_clan, clan_stats)
-        if g_tops[0] is not None:
-            clan_stats.global_war_rank = g_tops[0]
-            clan_stats.prev_global_war_rank = g_tops[1]
-    elif verbose:
-        command_print(command, "Clan #%s is not in war rankings", db_clan.tag)
-
-    if clan_stats.local_war_rank or clan_stats.local_rank:
-        clan_stats.save()
-
+    # war_tops = read_top_ranks(api_client.get_top_war_clans(clan_stats.region_code), db_clan, clan_stats)
+    # if war_tops[0] is not None:
+    #     clan_stats.local_war_rank = war_tops[0]
+    #     clan_stats.prev_local_war_rank = tops[1]
+    #     g_tops = read_top_ranks(api_client.get_top_war_clans(), db_clan, clan_stats)
+    #     if g_tops[0] is not None:
+    #         clan_stats.global_war_rank = g_tops[0]
+    #         clan_stats.prev_global_war_rank = g_tops[1]
+    # elif verbose:
+    #     command_print(command, "Clan #%s is not in war rankings", db_clan.tag)
+    #
+    # if clan_stats.local_war_rank or clan_stats.local_rank:
+    #     clan_stats.save()
 
 
 def read_top_ranks(tops, db_clan, clan_stats):
