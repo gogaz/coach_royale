@@ -16,29 +16,26 @@ export default class ClanMembersTable extends React.Component {
             data: [],
             loading: true,
             endpoint: props.endpoint,
+            error: null,
         };
     }
 
     componentDidMount() {
         fetch(this.state.endpoint)
-            .then((res) => res.json())
-            .then(
-                (result) => {
-                    this.setState({data: result});
-                    this.props.onFetchData(result);
-                })
-            .then(() => this.setState({loading: false}))
-            .catch((error) => {
-                console.log(error)
-            });
+            .then(res => res.json())
+            .then(result => this.setState({data: result, loading: false}))
+            .catch(error => console.log(error))
+            .then(result => this.props.onFetchData(result))
+            .catch(error => this.setState({error: error}))
+        ;
     }
 
     render() {
         const {data, loading} = this.state;
         if (!data && !loading)
-            return null;
+            return <Loading/>;
         const _cols = this.props.columns;
-        const {resizable, pageSize, defaultSorted} = this.props;
+        const {resizable, pageSize, defaultSorted, showPagination} = this.props;
         const roles = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
         const base_columns = [
             {
@@ -48,7 +45,7 @@ export default class ClanMembersTable extends React.Component {
                 width: 45
             },
             {
-                Header: "Name",
+                Header: "Player",
                 id: 'name',
                 accessor: "name",
                 Cell: ({row, original}) => {
@@ -122,22 +119,28 @@ export default class ClanMembersTable extends React.Component {
                     data={data}
                     hidden={loading}
                     resizable={resizable}
-                    showPagination={false}
+                    showPagination={showPagination}
                     defaultSorted={defaultSorted}
                     loading={loading}
                     pageSize={pageSize}
-                    className='-striped -highlight'
+                    className='-loading -striped -highlight'
                     columns={columns}
+                    noDataText="No data available for the moment."
                 />
             </div>
         );
     }
 }
 ClanMembersTable.propTypes = {
-    columns: PropTypes.arrayOf(PropTypes.oneOf(['rank', 'name', 'trophies', 'level', 'role', 'given', 'received', 'total', PropTypes.object])),
+    resizable: PropTypes.bool.isRequired,
+    showPagination: PropTypes.bool.isRequired,
+    pageSize: PropTypes.number.isRequired,
+    defaultSorted: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onFetchData: PropTypes.func.isRequired,
 };
 ClanMembersTable.defaultProps = {
     resizable: false,
+    showPagination: false,
     pageSize: 10,
     defaultSorted: [{id: "rank"}],
     onFetchData: () => {}
