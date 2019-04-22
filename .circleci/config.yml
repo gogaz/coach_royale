@@ -35,7 +35,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            sleep 2 # Wait for postgres to finish startup
+            . venv/bin/activate
             coverage run manage.py test --noinput
             coverage report
       - store_artifacts:
