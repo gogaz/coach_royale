@@ -35,9 +35,6 @@ export default class ClanWarMembers extends React.Component {
     render() {
         const { data: {wars, members}, loading } = this.state;
         if (wars === undefined || !wars.length) return <Loading/>;
-        /*
-         * TODO: toggle columns visibility
-         */
         let columns = [
             {
                 Header: <img src={images.static('trophy')} height={20}/>,
@@ -84,7 +81,7 @@ export default class ClanWarMembers extends React.Component {
                 width: 70,
                 accessor: (data) => {
                     const wins = data.wars.reduce((acc, elem) => acc + elem.final_battles_wins, 0);
-                    const battles = data.wars.length;
+                    const battles = data.wars.reduce((acc, elem) => acc + (elem.final_battles_done || 1), 0);
                     return battles > 0 ? (wins / battles) * 100 : -1;
                 },
                 Cell: ({row}) => {
@@ -97,16 +94,16 @@ export default class ClanWarMembers extends React.Component {
                     if (row.winrate > 50)
                         color = {g: 230 + (100 - row.winrate) / 3, r: 250 - 2.5 * (row.winrate - 50), b: 255 - 2.5 * (row.winrate - 50)};
                     return (
-                    <div style={{padding: 'inherit'}}>
-                        <div className="indicator" style={{backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, 1)`}} />
-                        <div className="indicator-data text-right">
-                            {row.winrate !== null && Number(row.winrate).toLocaleString(locale, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            }) + '%'}
+                        <div style={{padding: 'inherit'}}>
+                            <div className="indicator" style={{backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, 1)`}} />
+                            <div className="indicator-data text-right">
+                                {row.winrate !== null && Number(row.winrate).toLocaleString(locale, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }) + '%'}
+                            </div>
                         </div>
-                    </div>
-                )},
+                    )},
                 filterMethod: (filter, row) => {
                     if (filter.value === "all")
                         return true;
@@ -151,7 +148,7 @@ export default class ClanWarMembers extends React.Component {
                 Header: date,
                 id: 'war' + e.id,
                 width: 65,
-                Cell: ({row, original}) => <PlayerWarResultCell warId={e.id} wars={original.wars}/>,
+                Cell: ({row, original}) => <PlayerWarResultCell war={original.wars.find(value => value.clan_war_id === e.id)}/>,
                 sortable: false,
                 filterable: false,
             };
@@ -167,6 +164,7 @@ export default class ClanWarMembers extends React.Component {
                 />
                 <Loading loading={loading}/>
                 <ReactTable
+                    className='-striped -highlight'
                     data={members}
                     columns={columns}
                     resizable={false}

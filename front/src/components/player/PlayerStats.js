@@ -2,9 +2,12 @@ import React from 'react';
 import { images } from "../../helpers/assets";
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import Loading from "../ui/Loading";
-import { handleErrors, playerLeagueFromTrophies } from "../../helpers/api";
+import { handleErrors } from "../../helpers/api";
+import '../../helpers/constants'
 import PlayersClan from "./PlayersClan";
 import LastRefreshInfo from "../ui/LastRefreshInfo";
+import moment from 'moment'
+import { ConstantsContext, playerArenaFromTrophies } from "../../helpers/constants";
 
 export default class PlayerStats extends React.Component {
     constructor(props) {
@@ -18,7 +21,7 @@ export default class PlayerStats extends React.Component {
         this.fetchData = this.fetchData.bind(this);
     }
     fetchData() {
-        fetch(this.props.endpoint)
+        fetch(this.props.endpoint + '/')
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
@@ -50,12 +53,12 @@ export default class PlayerStats extends React.Component {
                     No more information available {/*<a className="btn" onClick={() => this.forceRefresh()}><FontAwesomeIcon icon={"sync"}/> Refresh</a>*/}
                 </div>
                 <div className="row mt-1" hidden={player.details.last_refresh === null}>
+                    <ClashRoyaleStat title="Last seen" image={images.static('activity')} value={moment(player.details.last_refresh).fromNow()}/>
                     <ClashRoyaleStat title="Trophies"
                                      image={player.details.current_trophies > 4000 ? images.arena(player.details.arena) : images.static('trophy')}
                                      value={player.details.current_trophies} />
                     <ClashRoyaleStat title="Highest"
-                                     image={player.details.highest_trophies > 4000 ?
-                                         images.league(playerLeagueFromTrophies(player.details.highest_trophies)) : images.static('trophyRibbon')}
+                                     image={images.arena(playerArenaFromTrophies(this.context, player.details.current_trophies))}
                                      value={player.details.highest_trophies} />
                     <ClashRoyaleStat title="War wins" image={images.static('warWon')} value={player.details.war_day_wins}/>
                     <ClashRoyaleStat title="Cards found" image={images.static('cards')} value={player.details.cards_found}/>
@@ -64,3 +67,4 @@ export default class PlayerStats extends React.Component {
         );
     }
 }
+PlayerStats.contextType = ConstantsContext;

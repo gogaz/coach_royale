@@ -1,3 +1,4 @@
+import logging
 import sys
 
 import clashroyale
@@ -33,6 +34,8 @@ def run_refresh_method(cmd, options, func, iterable, depth=3, **kwargs):
                     cmd.stderr.write("#ERROR: Request timed out while fetching data for #" + str(i))
             failed.append(i)
         except clashroyale.NotFoundError:
+            if options['verbose']:
+                cmd.stderr.write("#ERROR: Request failed while fetching data for #" + str(i))
             if isinstance(i, Model):
                 failed.append(i)
         except clashroyale.ServerError:
@@ -72,3 +75,11 @@ def command_print(command, string: str, *args):
             _args.append(args[i])
     output = string % tuple(_args)
     command.stdout.write(output)
+
+
+def create_logger():
+    logger = logging.getLogger('clashroyale')
+    logger.setLevel(logging.DEBUG)
+    handler = logging.FileHandler(filename='clashroyale.log', encoding='utf-8', mode='w')
+    handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+    logger.addHandler(handler)

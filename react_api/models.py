@@ -77,7 +77,10 @@ class PlayerClanHistory(models.Model):
     left_clan = models.DateTimeField(null=True)
 
     def __str__(self):
-        return "{0.player} joined clan {0.clan}".format(self)
+        action = "joined"
+        if self.left_clan is not None:
+            action = "left"
+        return "{0.player} {1} clan {0.clan}".format(self, action)
 
 
 class PlayerClanStatsHistory(models.Model):
@@ -135,10 +138,16 @@ class PlayerStatsHistory(models.Model):
         return "Stats history for player {0.player} ({0.last_refresh})".format(self)
 
 
+class LeagueSeason(models.Model):
+    id = models.AutoField(primary_key=True)
+    identifier = models.CharField(max_length=32)
+    timestamp = models.DateTimeField()
+
+
 class PlayerSeason(models.Model):
     id = models.AutoField(primary_key=True)
     player = models.ForeignKey('Player', null=True, on_delete=models.CASCADE)
-    identifier = models.IntegerField(null=True)
+    season = models.ForeignKey(LeagueSeason, null=True, on_delete=models.CASCADE)
     highest = models.IntegerField(null=True)
     ending = models.IntegerField(null=True)
     ending_rank = models.IntegerField(null=True)
@@ -198,6 +207,14 @@ class ClanHistory(models.Model):
     region_code = models.CharField(max_length=2)
     badge = models.CharField(max_length=512)
     trophies = models.IntegerField(null=True)
+    prev_local_rank = models.IntegerField(null=True)
+    local_rank = models.IntegerField(null=True)
+    prev_global_rank = models.IntegerField(null=True)
+    global_rank = models.IntegerField(null=True)
+    prev_local_war_rank = models.IntegerField(null=True)
+    local_war_rank = models.IntegerField(null=True)
+    prev_global_war_rank = models.IntegerField(null=True)
+    global_war_rank = models.IntegerField(null=True)
     # Wars
     war_state = models.CharField(max_length=512, null=True)
     # Synchronization configuration
@@ -288,7 +305,7 @@ class TournamentRefresh(models.Model):
     count = models.IntegerField(default=0)
 
     def __str__(self):
-        return "Refreshed {0.count} tournaments (success: {0.success}) {1}".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M:%S"))
+        return "[{1}] Refreshed {0.count} tournaments (success: {0.success})".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M"))
 
 
 class Tournament(models.Model):
@@ -309,3 +326,14 @@ class Tournament(models.Model):
 
     def __str__(self):
         return "Tournament {} started on {}".format(self.name, self.create_time.strftime("%Y-%m-%d"))
+
+
+class FullRefresh(models.Model):
+    timestamp = models.DateTimeField()
+    error = models.TextField(null=True)
+    constants_updated = models.BooleanField()
+    clans_count = models.IntegerField()
+    players_count = models.IntegerField()
+
+    def __str__(self):
+        return "[{1}] Refreshed all clans & players (success: {0.success})".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M"))

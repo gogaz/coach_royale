@@ -22,11 +22,19 @@ class PlayerStatsSerializer(HyperlinkedModelSerializer):
 
 
 class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
+    joined = SerializerMethodField()
+
+    def get_joined(self, obj: PlayerClanStatsHistory):
+        return PlayerClanHistory.objects.filter(player=obj.player, clan=obj.clan) \
+                                        .order_by('-id') \
+                                        .values('joined_clan') \
+                                        .first()['joined_clan']
+
     class Meta:
         model = PlayerClanStatsHistory
         fields = ('timestamp', 'last_refresh',
                   'clan_role', 'current_clan_rank',
-                  'donations', 'donations_received')
+                  'donations', 'donations_received', 'joined')
 
 
 class PlayerStatsHistorySerializer(HyperlinkedModelSerializer):

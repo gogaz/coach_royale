@@ -1,5 +1,6 @@
 import datetime
 
+from clashroyale import RoyaleAPI
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
@@ -26,7 +27,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
     """
 
     if options['verbose']:
-        command_print(command, "#INFO: Refreshing clan %s (%s)", db_clan.name, db_clan.tag)
+        command_print(command, "#INFO: Refreshing clan %s", db_clan.tag)
 
     clan = api_client.get_clan(db_clan.tag)
 
@@ -67,6 +68,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
 
     db_clan_history.save()
 
+    read_clan_rank(command, db_clan, api_client, db_clan_history, verbose=options['verbose'])
     read_clan_members(clan, db_clan, command, now, options['verbose'], clan_created)
     read_war_log(command, db_clan, api_client, options['verbose'])
 
@@ -85,7 +87,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
             db_player.name = player.name
             db_player.save()
 
-        read_players.append(db_player)
+        read_players.append(db_player.tag)
         db_player_clanstats, created = \
             PlayerClanStatsHistory.objects.get_or_create(clan=db_clan,
                                                          player=db_player,
@@ -105,19 +107,19 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
         db_player_clanstats.save()
 
     # Refresh clan members
-    actual_members = ClanRepository.get_players_in_clan(db_clan)
-    actual_players = [p.player for p in actual_members]
+    actual_players = ClanRepository.get_players_in_clan(db_clan, now)
     if read_players:
-        for i in range(len(actual_players)):
-            pch = actual_members[i]
-            p = actual_players[i]
-            if p not in read_players:
+        for p in actual_players:
+            if p.tag not in read_players:  # Player left clan
+                pch = PlayerClanHistory.objects.get(player=p, clan=db_clan, left_clan__isnull=True)
                 pch.left_clan = now
                 pch.save()
                 if verbose:
-                    command_print(command, "#INFO: Player %s (%s) left clan", p.name, p.tag)
-        for p in read_players:
-            if p not in actual_players:
+                    command_print(command, "#INFO: Player #%s left clan", p.tag)
+        for tag in read_players:
+            _p = [x for x in actual_players if x.tag == tag]
+            if len(_p) == 0:  # Player joined clan
+                p = Player.objects.get(tag=tag)
                 db_player_clan, created = PlayerClanHistory.objects.get_or_create(player=p, left_clan__isnull=True)
                 if created:
                     db_player_clan.clan = db_clan
@@ -134,7 +136,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
                     db_player_clan.joined_clan = now
                 db_player_clan.save()
                 if verbose:
-                    command_print(command, "#INFO: Player %s (%s) joined clan", p.name, p.tag)
+                    command_print(command, "#INFO: Player #%s joined clan", p.tag)
 
 
 def read_war_log(command, db_clan: Clan, api_client, verbose=False):
@@ -215,3 +217,41 @@ def update_war_status(command, options, db_clan):
                 if options['verbose']:
                     command.stdout.write("found war for orphan battle")
                 break
+
+
+def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: ClanHistory, verbose=False):
+    # Top clans by trophies
+    tops = read_top_ranks(api_client.get_top_clans(clan_stats.region_code), db_clan, clan_stats)
+    if tops[0] is not None:
+        clan_stats.local_rank = tops[0]
+        clan_stats.prev_local_rank = tops[1]
+        g_tops = read_top_ranks(api_client.get_top_clans(), db_clan, clan_stats)
+        if g_tops[0] is not None:
+            clan_stats.global_rank = g_tops[0]
+            clan_stats.prev_global_rank = g_tops[1]
+    elif verbose:
+        command_print(command, "Clan #%s is not in rankings", db_clan.tag)
+
+    # Top clans by war trophies - FIXME: not available yet
+    # war_tops = read_top_ranks(api_client.get_top_war_clans(clan_stats.region_code), db_clan, clan_stats)
+    # if war_tops[0] is not None:
+    #     clan_stats.local_war_rank = war_tops[0]
+    #     clan_stats.prev_local_war_rank = tops[1]
+    #     g_tops = read_top_ranks(api_client.get_top_war_clans(), db_clan, clan_stats)
+    #     if g_tops[0] is not None:
+    #         clan_stats.global_war_rank = g_tops[0]
+    #         clan_stats.prev_global_war_rank = g_tops[1]
+    # elif verbose:
+    #     command_print(command, "Clan #%s is not in war rankings", db_clan.tag)
+    #
+    # if clan_stats.local_war_rank or clan_stats.local_rank:
+    #     clan_stats.save()
+
+
+def read_top_ranks(tops, db_clan, clan_stats):
+    if tops[-1].score > clan_stats.score:
+        return None, None
+    for top in tops:
+        if top.tag == db_clan.tag:
+            return top.rank, top.previous_rank
+    return None, None

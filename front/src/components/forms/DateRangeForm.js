@@ -72,7 +72,7 @@ export default class DateRangeForm extends React.Component {
         const {loading, error, changed, start, end} = this.state;
         return (
             <form onSubmit={this.handleSubmit} className="input-group date-range">
-                <input type="hidden" name="csrfmiddlewaretoken" value={cookies.csrf} />
+                <input type="hidden" name="csrfmiddlewaretoken" value={cookies.csrf() || ''} />
                 <DatePicker
                     className="form-control"
                     selected={start}

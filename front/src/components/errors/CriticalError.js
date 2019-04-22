@@ -18,7 +18,12 @@ export default class CriticalError extends React.Component {
         )
     }
 }
-CriticalError.defaultProps = {code: 500, message:"Oops, something went terribly wrong!", description: "Internal Server Error"};
+CriticalError.defaultProps = {
+    code: 500,
+    message:"Oops, something went terribly wrong!",
+    description: "Internal Server Error"
+};
+
 CriticalError.propTypes = {
     code: PropTypes.number,
     message: PropTypes.node,

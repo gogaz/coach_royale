@@ -19,7 +19,7 @@ export function getCookie(name) {
 }
 
 export const cookies = {
-    csrf: getCookie('csrftoken'),
+    csrf: () => getCookie('csrftoken'),
 };
 
 export const locale = window.navigator.userLanguage || window.navigator.language;

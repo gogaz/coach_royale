@@ -69,7 +69,7 @@ export default class LastRefreshInfo extends React.Component {
                     Last refresh {now && last_refresh.fromNow()}
                 </span>
                 <ReactTooltip place="bottom" type="dark" effect="solid">
-                    {last_refresh.format('L') + ' ' + last_refresh.format('LTS')}
+                    {last_refresh.format('L')} {last_refresh.format('LTS')}
                 </ReactTooltip>
                 <button className="btn btn-xs ml-1"
                         hidden={!refreshable || error !== undefined || now.diff(last_refresh) < allowRefreshAfter}
@@ -90,7 +90,7 @@ LastRefreshInfo.defaultProps = {
     refreshable: false,
     update: 15,
     handleData: d => {},
-    allowRefreshAfter: 15 * 60 * 1000,
+    allowRefreshAfter: 15 * 60 * 1000, // 15 minutes
     url: '',
     time: moment().subtract(100, 'year').format(),
 };

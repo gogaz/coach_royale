@@ -1,11 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
-export default class PlayerDiffStatsChart extends React.Component {
+export default class PlayerRecentBattlesResultsChart extends React.Component {
+
+    getLabels() {
+        return this.props.data.reduce((result, elem, i) => {
+            if (i > 0)
+                result.push(moment(elem.timestamp).short());
+            return result;
+        }, []);
+    }
+    getData(field) {
+        return this.props.data.reduce((result, elem, i, data) => {
+            if (i > 0) {
+                if (isNaN(elem[field])) {
+                    result.push(elem[field]);
+                }
+                else {
+                    let diff = Number(elem[field]) - Number(data[i - 1][field]);
+                    result.push(diff)
+                }
+            }
+            return result;
+        }, []);
+    }
     render() {
-        const {height, datasets, title, cardHeader, data, legend} = this.props;
+        const {height, datasets, title, cardHeader} = this.props;
         const width = window.innerWidth;
         let mobile = false;
         if (width <= 768) {
@@ -14,19 +36,22 @@ export default class PlayerDiffStatsChart extends React.Component {
         return (
             <div className="card">
                 {cardHeader && <div className="card-header">{cardHeader}</div>}
-                <Line height={height + (mobile ? 80 : 0)}
+                <Bar height={height + (mobile ? 80 : 0)}
                       data={{
                           datasets: datasets.map(e => {
-                              return {...e, data: data.map(x => x[e.id])}
+                              return {...e, data: this.getData(e.id)}
                           }),
-                          labels: data.map(e => moment(e.timestamp).short()),
+                          labels: this.getLabels(),
                       }}
                       options={{
-                          legend: legend,
                           scales: {
                               yAxes: [{
                                   display: true,
-                                  beginAtZero: true,
+                                  stacked: true,
+                                  stepSize: 1,
+                              }],
+                              xAxes: [{
+                                  stacked: true,
                               }]
                           },
                           title: {
@@ -39,18 +64,16 @@ export default class PlayerDiffStatsChart extends React.Component {
         );
     }
 }
-PlayerDiffStatsChart.defaultProps = {
+PlayerRecentBattlesResultsChart.defaultProps = {
     height: 120,
     title: "",
     cardHeader: undefined,
-    legend: {display: false},
 };
-PlayerDiffStatsChart.propTypes = {
+PlayerRecentBattlesResultsChart.propTypes = {
     height: PropTypes.number,
     datasets: PropTypes.arrayOf(PropTypes.object), // an extra `id` field MUST be added
     data: PropTypes.arrayOf(PropTypes.object),
     options: PropTypes.object,
     title: PropTypes.string,
-    legend: PropTypes.object,
     cardHeader: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };

@@ -44,13 +44,6 @@ export default class ToggleSwitch extends Component {
     render() {
         const {checked} = this.getCheckedState();
 
-        // Isolate special props and store the remaining as restProps
-        const {theme, className, ...restProps} = this.props;
-
-        // Use default as a fallback theme if valid theme is not passed
-        const switchTheme = (theme && _.isString(theme)) ? theme : 'default';
-
-        const switchClasses = classnames("switch", "switch-wrapper", className);
         const togglerClasses = classnames(
             'switch-toggle',
             `${checked ? 'on' : 'off'}`

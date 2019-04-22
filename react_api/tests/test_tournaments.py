@@ -1,13 +1,14 @@
+import clashroyale
+from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 
 from react_api.helpers.api.tournament import refresh_open_tournaments
-from react_api.tests.fake_api_client import FakeAPIClient
 
 
 class TournamentsTestCase(TestCase):
     def setUp(self):
-        self.api_client = FakeAPIClient()
+        self.api_client = clashroyale.RoyaleAPI(token=settings.ROYALE_API_KEY, timeout=45)
 
     def _test_route(self, route, status_code=200, **kwargs):
         response = self.client.get(reverse(route, **kwargs), format='json')

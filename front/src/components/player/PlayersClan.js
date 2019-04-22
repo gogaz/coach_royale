@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Loading from "../ui/Loading";
 import { handleErrors } from "../../helpers/api";
 import DonationCell from "../clan/cells/DonationCell";
+import moment from 'moment'
 
 export default class PlayersClan extends React.Component {
     constructor(props) {
@@ -20,7 +21,6 @@ export default class PlayersClan extends React.Component {
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
-                    console.log(result);
                     this.setState({ loading: false, player: result });
                 })
             .catch(error => console.log(error) );
@@ -44,6 +44,9 @@ export default class PlayersClan extends React.Component {
                     <span className="text-muted">
                         <DonationCell row={player} icon="arrow-down" color="danger" column="donations_received"/>
                     </span>
+                    {player.joined &&
+                        <span className="text-muted">Joined {moment(player.joined).calendar()}</span>
+                    }
                 </div>
             </div>
         );

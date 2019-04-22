@@ -10,7 +10,7 @@ from react_api.models import (Player,
                               Card,
                               PlayerCardLevel,
                               Battle,
-                              BattleMode)
+                              BattleMode, PlayerSeason, LeagueSeason)
 from react_api.repository import PlayerRepository
 from .helpers import command_print, store_battle_players
 
@@ -26,7 +26,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
     :return: False on APIError
     """
     if options['verbose']:
-        command_print(command, "#INFO: Refreshing player #%s", db_player.name, db_player.tag)
+        command_print(command, "#INFO: Refreshing player #%s", db_player.tag)
 
     player = api_client.get_player(db_player.tag)
 
@@ -54,7 +54,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
         elif db_player_clan.clan.tag != player.clan.tag:
             db_player_clan.left_clan = now
             db_player_clan.save()
-            db_player_clan = PlayerClanHistory(player=db_player, left_clan__isnull=True, clan=player_clan)
+            db_player_clan = PlayerClanHistory(player=db_player, left_clan=None, clan=player_clan)
             db_player_clan.clan = player_clan
             if clan_created:
                 db_player_clan.joined_clan = None
@@ -103,19 +103,33 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
 
     # Player battles
     if options['battles']:
-        refresh_player_battles(command, options, api_client, db_player, False)
+        refresh_player_battles(command, api_client, db_player, **options)
 
     db_player.last_refresh = now
     db_player.save()
+
+    # Player seasons (current & best seasons skipped)
+    if player.league_statistics is not None and 'previousSeason' in player.league_statistics.keys():
+        prev_season = player.league_statistics.previous_season
+        db_season, s_created = LeagueSeason.objects.get_or_create(identifier=prev_season.id, defaults={'timestamp': now})
+
+        db_season, created = PlayerSeason.objects.get_or_create(player=db_player,
+                                                                season=db_season,
+                                                                defaults={
+                                                                    'ending_rank': prev_season.rank if 'rank' in prev_season.keys() else None,
+                                                                    'highest': prev_season.best_trophies if 'bestTrophies' in prev_season.keys() else prev_season.trophies,
+                                                                    'ending': prev_season.trophies}
+                                                                )
     return True
 
 
-def refresh_player_battles(command, options, api_client, db_player, announce_player=True):
-    if announce_player:
+def refresh_player_battles(command, api_client, db_player, **kwargs):
+    verbose = kwargs.get('verbose')
+    if verbose:
         try:
             command_print(command, "#INFO: Refreshing battles for player (%s) %s", db_player.name, db_player.tag)
         except:
-            command.stdout.write("#INFO: Refreshing battles for player %s" % db_player.tag)
+            command_print(command, "#INFO: Refreshing battles for player %s", db_player.tag)
     battles = api_client.get_player_battles(db_player.tag)
     latest_battle = None
     try:
@@ -153,7 +167,7 @@ def refresh_player_battles(command, options, api_client, db_player, announce_pla
         db_battle.win = win
         db_battle.save()
 
-        if options['verbose']:
+        if verbose:
             command.stdout.write("     - Found %s battle ! %d-%d (%s)" % ("war" if mode.war_day else "collection " + b.mode.name,
                                                                           b.team_crowns,
                                                                           b.opponent_crowns,

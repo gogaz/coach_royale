@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 
 export default class PlayerWarResultCell extends React.Component {
     render() {
-        const {warId, wars} = this.props;
+        const {war} = this.props;
         /* FIXME: This is a workaround for issue RoyaleAPI#333 */
-        const war = wars.find(value => value.clan_war_id === warId);
         if (!war)
-            return <div className="war-result sideline"/>;
+            return <div className="war-result"/>;
         let result = [];
         const wins = war.final_battles_wins;
         const lose = war.final_battles_done - war.final_battles_wins;
@@ -24,6 +23,5 @@ export default class PlayerWarResultCell extends React.Component {
 }
 
 PlayerWarResultCell.propTypes = {
-    warId: PropTypes.number,
-    wars: PropTypes.arrayOf(PropTypes.object),
+    war: PropTypes.object,
 };
