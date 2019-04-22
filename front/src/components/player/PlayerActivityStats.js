@@ -99,7 +99,7 @@ export default class PlayerActivityStats extends React.Component {
                                 {
                                     Header: "War",
                                     id: "war",
-                                    accessor: e => moment(e.date).fromNow(),
+                                    accessor: e => moment(e.date).calendar(),
                                 },
                                 {
                                     Header: "Result",

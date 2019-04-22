@@ -55,8 +55,8 @@ class ClanWarSerializer(HyperlinkedModelSerializer):
             'final_position',
             'trophies', 'total_trophies', 'season',
         )
-        
-        
+
+
 class PlayerClanWarSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = PlayerClanWar

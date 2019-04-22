@@ -34,5 +34,3 @@ class CardSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Card
         fields = ('key', 'name', 'rarity', 'arena', 'elixir', 'type', 'image')
-
-

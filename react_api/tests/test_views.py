@@ -12,7 +12,8 @@ class ViewsTestCase(TestCase):
     def setUp(self):
         self.clans = [Clan(name="Clan " + str(i), tag=settings.MAIN_CLAN + (str(i + 1) if i else '')) for i in range(2)]
         self.players = [Player(name="Player " + str(i), tag="ABC" + str(i)) for i in range(3)]
-        for c in self.clans: c.save()
+        for c in self.clans:
+            c.save()
         for p in self.players:
             p.save()
             pch = PlayerClanHistory(joined_clan=None, left_clan=None, player=p, clan=self.clans[0])
@@ -90,6 +91,6 @@ class ViewsTestCase(TestCase):
         self.assertGreaterEqual(len(data), 2)
         self.assertIn('clan', data)
         self.assertIn('stats', data)
-        #self.assertIn('war', data)
+        # self.assertIn('war', data)
 
         self._test_route('player_activity', args=['A'], status_code=404)

@@ -34,4 +34,3 @@ class Command(BaseCommand):
             run_refresh_method(self, options, refresh_clan_details, db_clans, api_client=api_client)
         if options['clan']:
             refresh_clan_details(self, options, None, api_client=api_client)
-

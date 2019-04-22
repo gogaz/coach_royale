@@ -98,7 +98,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
                 db_pcl.count = card.count
             db_pcl.level = card.level
             db_pcl.save()
-        except:
+        except Exception:
             pass
 
     # Player battles
@@ -126,10 +126,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
 def refresh_player_battles(command, api_client, db_player, **kwargs):
     verbose = kwargs.get('verbose')
     if verbose:
-        try:
-            command_print(command, "#INFO: Refreshing battles for player (%s) %s", db_player.name, db_player.tag)
-        except:
-            command_print(command, "#INFO: Refreshing battles for player %s", db_player.tag)
+        command_print(command, "#INFO: Refreshing battles for player #%s", db_player.tag)
     battles = api_client.get_player_battles(db_player.tag)
     latest_battle = None
     try:

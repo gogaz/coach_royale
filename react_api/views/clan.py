@@ -95,13 +95,13 @@ def clan_weekly_season(request, tag):
         return not_found_error("clan", tag)
 
     form = WeekForm(request.POST)
-    if form.is_valid(): # TODO: make this available from front-end
+    if form.is_valid():  # TODO: make this available from front-end
         now = form.cleaned_data['week']
     else:
         now = timezone.now()
 
-    month = "%s-W%s-1 07:00" % (now.year, now.isocalendar()[1])
-    date = timezone.make_aware(timezone.datetime.strptime(month, "%Y-W%W-%w %H:%M")) - timezone.timedelta(weeks=1)
+    month = timezone.datetime.strptime("%s-W%s-1 03:00" % (now.year, now.isocalendar()[1]), "%Y-W%W-%w %H:%M")
+    date = timezone.make_aware(month) - timezone.timedelta(weeks=1)
     players = ClanRepository.get_players_in_clan(clan, date).annotate(date=Value(date, output_field=DateTimeField()))
     serializer = PlayerWeeklyDonationsSerializer(players, many=True)
     return Response(serializer.data)

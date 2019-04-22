@@ -1,7 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-from react_api.models import *
+from react_api.models import (Clan, ClanHistory, ClanWar,
+                              Player, PlayerClanStatsHistory, PlayerStatsHistory, PlayerClanWar,
+                              Card, Arena, BattleMode,
+                              Tournament, TournamentRefresh)
 
 admin.site.register(Clan)
 admin.site.register(ClanHistory)

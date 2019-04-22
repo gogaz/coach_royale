@@ -33,16 +33,13 @@ class Command(BaseCommand):
         # Refresh clans
         db_clans = Clan.objects.filter(refresh=True)
         if not options['force']:
-            db_clans = db_clans.filter(Q(last_refresh__lte=time_delta) |
-                                       Q(last_refresh__isnull=True))
+            db_clans = db_clans.filter(Q(last_refresh__lte=time_delta) | Q(last_refresh__isnull=True))
         run_refresh_method(self, options, refresh_clan_details, db_clans, api_client=api_client)
         if options['clan']:
             run_refresh_method(self, options, refresh_clan_details, [None], api_client=api_client)
 
         # Refresh players
-        db_players = Player.objects.filter((Q(refresh=True) |
-                                            Q(playerclanhistory__clan__refresh=True,
-                                              playerclanhistory__left_clan__isnull=True)))
+        db_players = Player.objects.filter((Q(refresh=True) | Q(playerclanhistory__clan__refresh=True, playerclanhistory__left_clan__isnull=True)))
         if not options['force']:
             db_players = db_players.filter(Q(last_refresh__lte=time_delta) | Q(last_refresh__isnull=True))
         run_refresh_method(self, options, refresh_player_profile, db_players.order_by('last_refresh'), api_client=api_client)

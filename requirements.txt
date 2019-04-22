@@ -1,9 +1,10 @@
 chardet==3.0.4
 clashroyale==4.0.1
+codecov
 Django==2.2
 djangorestframework==3.9.2
-psycopg2-binary==2.8.2
+flake8
 gunicorn==19.9.0
-python-box==3.3.0
-requests==2.21.0
-codecov==2.0.15
+psycopg2-binary
+python-box
+requests

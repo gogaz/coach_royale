@@ -11,8 +11,10 @@ class RepositoryTestCase(TestCase):
     def setUp(self):
         self.players = [Player(name="Player " + str(i), tag='ABCD' + str(i)) for i in range(3)]
         self.clans = [Clan(name="Clan " + str(i), tag="ABCD" + str(i)) for i in range(2)]
-        for p in self.players: p.save()
-        for c in self.clans: c.save()
+        for p in self.players:
+            p.save()
+        for c in self.clans:
+            c.save()
 
         self.clan_history = {p: [] for p in self.players}
         self._setUpClanHistory()

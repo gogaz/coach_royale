@@ -39,6 +39,12 @@ export default class ClanSeasons extends React.Component {
                                     width: 90,
                                     Cell: ({row, original}) => <TrophiesCell trophies={original.details.ending} arena={original.details.arena} />
                                 },
+                                {
+                                    Header: "Highest",
+                                    accessor: "details.highest",
+                                    width: 90,
+                                    Cell: ({row, original}) => <TrophiesCell trophies={original.details.highest} />
+                                },
                             ]}
                             defaultSorted={[{id: "details.ending", desc: true}]}
                             onFetchData={(data) => this.setState({previousSeason: moment(data[0].details.season__identifier + '-01', 'YYYY-MM-DD')})}
