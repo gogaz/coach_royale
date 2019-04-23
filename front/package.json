@@ -27,7 +27,7 @@
     "react-router-config": "^4.4.0-beta.8",
     "react-router-dom": "4.3.0",
     "react-router-tabs": "^1.2.0",
-    "react-scripts": "^2.1.8",
+    "react-scripts": "^3.0.0",
     "react-table": "^6.9.0",
     "react-tooltip": "^3.6.1",
     "underscore": "^1.9.1",
