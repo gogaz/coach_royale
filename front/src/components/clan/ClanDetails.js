@@ -57,7 +57,7 @@ export default class ClanDetails extends React.Component {
                                 <ClashRoyaleStat image={images.static('trophyRibbon')} title="Global rank" value={clan.details.global_rank}/>
                             }
                             {clan.details.local_rank &&
-                                <ClashRoyaleStat image={images.static('trophyRibbon')} title="Local rank" value={clan.details.local_rank} compareTo={clan.details.prev_local_rank}/>
+                                <ClashRoyaleStat image={images.static('trophyRibbon')} title={clan.details.region} value={clan.details.local_rank} compareTo={clan.details.prev_local_rank}/>
                             }
                             <ClashRoyaleStat title="Score"
                                              image={images.static('trophy')}

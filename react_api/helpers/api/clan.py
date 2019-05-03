@@ -144,11 +144,14 @@ def read_war_log(command, db_clan: Clan, api_client, verbose=False):
         command.stdout.write("Refreshing ended wars")
     wars = api_client.get_clan_war_log(db_clan.tag)
     for war in wars:
+        # created_date is actually the end date
         time = datetime.datetime.fromtimestamp(war.created_date, tz=datetime.timezone.utc)
-        db_war, created = ClanWar.objects.get_or_create(clan=db_clan,
-                                                        date_start__range=(time, time + timezone.timedelta(hours=24)),
-                                                        defaults={'date_start': time})
-        if created or db_war.date_end is None or PlayerClanWar.objects.filter(clan_war=db_war).count() == 0:
+        db_war, created = ClanWar.objects.get_or_create(
+            clan=db_clan,
+            date_end__range=(time, time + timezone.timedelta(hours=24)),
+            defaults={'date_end': time}
+        )
+        if created or db_war.date_start is None or PlayerClanWar.objects.filter(clan_war=db_war).count() == 0:
             db_war.participants = len(war.participants)
             for p in war.participants:
                 db_p, created = Player.objects.get_or_create(tag=p.tag, defaults={'name': p.name})
@@ -170,7 +173,7 @@ def read_war_log(command, db_clan: Clan, api_client, verbose=False):
             db_war.final_battles = war_results.battles_played
             db_war.losses = war_results.battles_played - war_results.wins
             db_war.season = war.season_number
-            db_war.date_end = db_war.date_start + timezone.timedelta(hours=48)
+            db_war.date_start = db_war.date_end - timezone.timedelta(days=2)
             db_war.save()
 
 
