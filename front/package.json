@@ -57,7 +57,7 @@
     "mini-css-extract-plugin": "^0.6.0",
     "nock": "^10.0.6",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "react-svg-loader": "^2.1.0",
+    "react-svg-loader": "^3.0.0",
     "react-test-renderer": "^16.8.6",
     "style-loader": "^0.23.0",
     "uglifyjs-webpack-plugin": "^2.0.0",
