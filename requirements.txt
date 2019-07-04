@@ -1,7 +1,7 @@
 chardet==3.0.4
 clashroyale==4.0.1
 codecov
-Django==2.2.2
+Django==2.2.3
 djangorestframework==3.9.4
 flake8
 gunicorn==19.9.0
