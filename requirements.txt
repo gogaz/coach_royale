@@ -1,8 +1,8 @@
 chardet==3.0.4
 clashroyale==4.0.1
 codecov
-Django==2.2.3
-djangorestframework==3.9.4
+Django==2.2.4
+djangorestframework==3.10.2
 flake8
 gunicorn==19.9.0
 psycopg2-binary
