@@ -59,7 +59,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "react-svg-loader": "^3.0.0",
     "react-test-renderer": "^16.8.6",
-    "style-loader": "^0.23.0",
+    "style-loader": "^1.0.0",
     "uglifyjs-webpack-plugin": "^2.0.0",
     "url-loader": "^2.0.0",
     "webpack": "^4.38.0",
