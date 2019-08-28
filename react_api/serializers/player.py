@@ -57,7 +57,7 @@ class PlayerSerializer(HyperlinkedModelSerializer):
     clan = SerializerMethodField()
 
     def get_details(self, obj):
-        return PlayerStatsSerializer(PlayerStatsHistory.objects.filter(player=obj).order_by('-timestamp').first()).data
+        return PlayerStatsSerializer(PlayerStatsHistory.objects.filter(player=obj).order_by('-id').first()).data
 
     def get_clan(self, obj):
         return ClanWithDetailsSerializer(PlayerRepository.get_clan_for_player(obj)).data

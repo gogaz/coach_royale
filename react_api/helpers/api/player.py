@@ -28,7 +28,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
     if options['verbose']:
         command_print(command, "#INFO: Refreshing player #%s", db_player.tag)
 
-    player = api_client.get_player(db_player.tag)
+    player = api_client.get_player(db_player.tag)[0]
 
     now = timezone.now()
 
@@ -63,6 +63,12 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
             db_player_clan.save()
         else:
             pass
+    from box import BoxKeyError
+    try:
+        test = player.arena.id
+    except BoxKeyError:
+        print(player)
+
 
     db_player_stats, created = PlayerStatsHistory.objects.get_or_create(player=db_player,
                                                                         level=player.stats.level,
@@ -71,7 +77,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
                                                                         current_trophies=player.trophies,
                                                                         cards_found=player.stats.cards_found,
                                                                         total_games=player.games.total,
-                                                                        arena=player.arena.arena_id)
+                                                                        arena=player.arena.id)
     db_player_stats.tourney_cards_won = player.stats.tournament_cards_won
     db_player_stats.challenge_cards_won = player.stats.challenge_cards_won
     Card.instance_from_data(player.stats.favorite_card)
@@ -109,7 +115,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
     db_player.save()
 
     # Player seasons (current & best seasons skipped)
-    if player.league_statistics is not None and 'previousSeason' in player.league_statistics.keys():
+    if player.league_statistics is not None and 'previousSeason' in player.league_statistics.keys() and 'id' in player.league_statistics.previous_season:
         prev_season = player.league_statistics.previous_season
         db_season, s_created = LeagueSeason.objects.get_or_create(identifier=prev_season.id, defaults={'timestamp': now})
 

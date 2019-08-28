@@ -13,6 +13,8 @@ import codecs
 import os
 
 # Hack to handle emojis
+from django.utils import timezone
+
 codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else None)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -23,6 +25,7 @@ SECRET_KEY = 'secret!'
 
 # Royale API configuration
 ROYALE_API_KEY = os.environ.get('ROYALE_API_KEY') or "YOUR_API_KEY"
+REFRESH_RATE = timezone.timedelta(minutes=5)
 MAIN_CLAN = "2GJU9Y2G"
 
 CONSTANTS_DIR = os.path.join(BASE_DIR, 'constants')

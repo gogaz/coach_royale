@@ -29,7 +29,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
     if options['verbose']:
         command_print(command, "#INFO: Refreshing clan %s", db_clan.tag)
 
-    clan = api_client.get_clan(db_clan.tag)
+    clan = api_client.get_clan(db_clan.tag)[0]
 
     clan_created = False
     if not db_clan.name:

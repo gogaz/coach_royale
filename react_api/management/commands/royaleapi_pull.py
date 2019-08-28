@@ -22,7 +22,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=60)
         now = timezone.now()
-        time_delta = now - timezone.timedelta(minutes=45)
+        time_delta = now - settings.REFRESH_RATE
         constants_time_delta = now - timezone.timedelta(days=1)
 
         if not Clan.objects.filter(tag=settings.MAIN_CLAN).count() and options['clan'] != settings.MAIN_CLAN:
@@ -48,7 +48,7 @@ class Command(BaseCommand):
 
         # Update constants & log the execution of this command
         do_update_constants = True
-        if options['force']:
+        if not options['force']:
             do_update_constants = FullRefresh.objects.filter(constants_updated=True, timestamp__gt=constants_time_delta).count() == 0
         if do_update_constants:
             refresh_constants(api_client)

@@ -30,11 +30,11 @@ export default class ClanDetails extends React.Component {
     }
 
     render() {
-        let {clan, loading} = this.state;
+        const {clan, loading} = this.state;
 
         if (loading) return <div className="card-header"><Loading/></div>;
 
-        let country_icon = images.region(clan.details.region_code.toLowerCase());
+        const country_icon = images.region(clan.details.region_code.toLowerCase());
 
         return (
             <div>

@@ -15,7 +15,7 @@ from react_api.serializers.tournaments import TournamentSerializer, TournamentRe
 def playable_tournaments(request):
     if request.method == 'GET':
         tournaments = TournamentSerializer(TournamentRepository.get_playable_tournaments(), many=True).data
-        refresh = TournamentRefresh.objects.filter(success=True).order_by('-timestamp').first()
+        refresh = TournamentRefresh.objects.filter(success=True).order_by('-id').first()
         j = TournamentRefreshSerializer(refresh, tournaments=tournaments)
         return Response(j.data)
 
@@ -23,8 +23,8 @@ def playable_tournaments(request):
 @api_view(['POST'])
 def refresh_playable_tournaments(request):
     if request.method == 'POST':
-        refresh = TournamentRefresh.objects.order_by('-timestamp').first()
-        refresh_s = TournamentRefresh.objects.filter(success=True).order_by('-timestamp').first()
+        refresh = TournamentRefresh.objects.order_by('-id').first()
+        refresh_s = TournamentRefresh.objects.filter(success=True).order_by('-id').first()
         if (refresh == refresh_s) and refresh.timestamp > timezone.now() - timezone.timedelta(minutes=15):
             return refresh_error("please try again later.")
         elif refresh != refresh_s and not refresh.success and refresh.timestamp > timezone.now() - timezone.timedelta(seconds=15):
