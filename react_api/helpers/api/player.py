@@ -63,12 +63,6 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
             db_player_clan.save()
         else:
             pass
-    from box import BoxKeyError
-    try:
-        test = player.arena.id
-    except BoxKeyError:
-        print(player)
-
 
     db_player_stats, created = PlayerStatsHistory.objects.get_or_create(player=db_player,
                                                                         level=player.stats.level,
