@@ -69,7 +69,7 @@ class TopLevelHelpersTestCase(TestCase):
 
     def _test_refresh_clan_details(self):
         self._run_refresh_method(refresh_clan_details, Clan(tag=settings.MAIN_CLAN))
-        clan = self.api_client.get_clan(settings.MAIN_CLAN)
+        clan = self.api_client.get_clan(settings.MAIN_CLAN)[0]
         self.assertEqual(Clan.objects.count(), 1)
         self.assertGreaterEqual(Player.objects.count(), clan.member_count)
         self.assertEqual(ClanHistory.objects.count(), 1)

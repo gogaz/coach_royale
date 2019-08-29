@@ -2,7 +2,6 @@ import React from 'react'
 import { Redirect, Route, Switch } from "react-router-dom"
 import ClanApp from "./clan/ClanApp";
 import TopBar from "./ui/TopBar";
-import TournamentsApp from "./tournaments/TournamentApp";
 import "../style/app.css"
 import { handleErrors } from "../helpers/api";
 import { ConstantsContext, loadConstants } from "../helpers/constants";
@@ -62,7 +61,6 @@ export default class App extends React.Component {
                                 {this.state.defaultUrl && <Route exact path='/' component={() => <Redirect replace to={this.state.defaultUrl}/>}/>}
                                 <Route path='/clan' render={(props) => <ClanApp {...props} mainClan={this.state.mainClan}/>}/>
                                 <Route path='/player' component={PlayerApp}/>
-                                <Route path='/tournaments' component={TournamentsApp}/>
                                 <Route render={routeProps => <CriticalError {...routeProps}
                                                                             code={404} description="Not found"
                                                                             message="We're sorry, we cannot find what you are looking for :("/>}/>
