@@ -40,7 +40,7 @@
     "coverage": "codecov --root=.."
   },
   "devDependencies": {
-    "@babel/core": "^7.4.0",
+    "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-react": "^7.0.0",
     "async-wait-until": "^1.2.4",
