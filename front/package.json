@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
     "async-wait-until": "^1.2.4",
     "babel-jest": "^23.6.0",
