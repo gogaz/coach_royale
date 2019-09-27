@@ -58,7 +58,7 @@
     "nock": "^11.1.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "react-svg-loader": "^3.0.0",
-    "react-test-renderer": "^16.9.0",
+    "react-test-renderer": "^16.10.0",
     "style-loader": "^1.0.0",
     "uglifyjs-webpack-plugin": "^2.0.0",
     "url-loader": "^2.0.0",
