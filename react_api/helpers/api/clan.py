@@ -45,17 +45,19 @@ def refresh_clan_details(command, options, db_clan, api_client):
     except IndexError:
         previous_history = None
 
-    db_clan_history, created = ClanHistory.objects.get_or_create(clan=db_clan,
-                                                                 score=clan.score,
-                                                                 trophies=clan.war_trophies,
-                                                                 required_trophies=clan.required_score,
-                                                                 type=clan.type,
-                                                                 description=clan.description,
-                                                                 member_count=clan.member_count,
-                                                                 donations=clan.donations,
-                                                                 region=clan.location.name,
-                                                                 region_code=clan.location.code,
-                                                                 badge=clan.badge.image)
+    db_clan_history, created = ClanHistory.objects.get_or_create(
+        clan=db_clan,
+        score=clan.score,
+        trophies=clan.war_trophies,
+        required_trophies=clan.required_score,
+        type=clan.type,
+        description=clan.description,
+        member_count=clan.member_count,
+        donations=clan.donations,
+        region=clan.location.name,
+        region_code=clan.location.code,
+        badge=clan.badge.image
+    )
     db_clan_history.last_refresh = now
     if created:
         db_clan_history.timestamp = now
@@ -67,10 +69,9 @@ def refresh_clan_details(command, options, db_clan, api_client):
         db_clan_history.highest_score = previous_history.highest_score
 
     db_clan_history.save()
-
-    read_clan_rank(command, db_clan, api_client, db_clan_history, verbose=options['verbose'])
     read_clan_members(clan, db_clan, command, now, options['verbose'], clan_created)
     read_war_log(command, db_clan, api_client, options['verbose'])
+    read_clan_rank(command, db_clan, api_client, db_clan_history, verbose=options['verbose'])
 
 
 def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False, clan_created=False):
@@ -78,13 +79,10 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
     read_players = []
     for player in clan.members:
         now = timezone.now()
-
         try:
             db_player = Player.objects.get(tag=player.tag)
         except ObjectDoesNotExist:
-            db_player = Player()
-            db_player.tag = player.tag
-            db_player.name = player.name
+            db_player = Player(tag=player.tag, name=player.name)
             db_player.save()
 
         read_players.append(db_player.tag)
@@ -108,7 +106,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
 
     # Refresh clan members
     actual_players = ClanRepository.get_players_in_clan(db_clan, now)
-    if read_players:
+    if read_players or actual_players:
         for p in actual_players:
             if p.tag not in read_players:  # Player left clan
                 pch = PlayerClanHistory.objects.get(player=p, clan=db_clan, left_clan__isnull=True)
@@ -119,29 +117,14 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
         for tag in read_players:
             _p = [x for x in actual_players if x.tag == tag]
             if len(_p) == 0:  # Player joined clan
-                p = Player.objects.get(tag=tag)
-                db_player_clan, created = PlayerClanHistory.objects.get_or_create(player=p, left_clan__isnull=True)
-                if created:
-                    db_player_clan.clan = db_clan
-                    db_player_clan.joined_clan = now
-                else:
-                    db_player_clan.left_clan = now
-                    db_player_clan.save()
-                    db_player_clan, created = PlayerClanHistory.objects.get_or_create(player=p, left_clan__isnull=True)
-                    db_player_clan.clan = db_clan
-
-                if clan_created:
-                    db_player_clan.joined_clan = None
-                else:
-                    db_player_clan.joined_clan = now
-                db_player_clan.save()
+                player = Player.create_clan_history(tag, db_clan, clan_created, now=now)
                 if verbose:
-                    command_print(command, "#INFO: Player #%s joined clan", p.tag)
+                    command_print(command, "#INFO: Player #%s joined clan", player.tag)
 
 
 def read_war_log(command, db_clan: Clan, api_client, verbose=False):
     if verbose:
-        command.stdout.write("Refreshing ended wars")
+        command_print(command, "Refreshing ended wars")
     wars = api_client.get_clan_war_log(db_clan.tag)
     for war in wars:
         # created_date is actually the end date

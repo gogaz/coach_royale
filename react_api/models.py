@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 def int_difference_instances(obj1, obj2, excluded_keys=()):
@@ -43,8 +44,8 @@ class Card(models.Model):
     def __str__(self):
         return self.name
 
-    @staticmethod
-    def instance_from_data(data):
+    @classmethod
+    def instance_from_data(cls, data):
         fc, created = Card.objects.get_or_create(key=data.key)
         if created:
             fc.name = data.name
@@ -178,6 +179,30 @@ class Player(models.Model):
 
     def __str__(self):
         return "{} (#{})".format(self.name, self.tag)
+
+    @classmethod
+    def create_clan_history(cls, tag, new_clan, clan_created, now=None):
+        if now is None:
+            now = timezone.now()
+
+        p = cls.objects.get(tag=tag)
+        db_player_clan, created = PlayerClanHistory.objects.get_or_create(player=p, left_clan__isnull=True)
+        if created:
+            db_player_clan.clan = new_clan
+            db_player_clan.joined_clan = now
+        else:
+            db_player_clan.left_clan = now
+            db_player_clan.save()
+            db_player_clan, _ = PlayerClanHistory.objects.get_or_create(player=p, left_clan__isnull=True)
+            db_player_clan.clan = new_clan
+
+        if clan_created:
+            db_player_clan.joined_clan = None
+        else:
+            db_player_clan.joined_clan = now
+        db_player_clan.save()
+
+        return p
 
 
 class Clan(models.Model):

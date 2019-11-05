@@ -76,9 +76,12 @@ class TopLevelHelpersTestCase(TestCase):
         self.assertEqual(PlayerClanHistory.objects.count(), clan.member_count)
         self.assertEqual(PlayerClanStatsHistory.objects.count(), clan.member_count)
         self.assertEqual(PlayerClanHistory.objects.filter(joined_clan__isnull=True).count(), clan.member_count)
-        self.assertEqual(ClanWar.objects.count(), 10)
-        self.assertGreaterEqual(PlayerClanWar.objects.count(), 1)
-        self.assertEqual(Player.objects.filter(playerclanstatshistory__clan_role='leader').count(), 1)
+        try:
+            wars = self.api_client.get_clan_war_log(settings.MAIN_CLAN)
+            self.assertEqual(ClanWar.objects.count(), len(wars))
+            self.assertGreaterEqual(PlayerClanWar.objects.count(), len(wars) * 15)
+        except clashroyale.errors.StatusError:
+            pass
 
     def _test_refresh_player_details(self):
         leader = Player.objects.get(playerclanstatshistory__clan_role='leader')
