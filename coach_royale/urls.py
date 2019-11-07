@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-import react_api.urls
+import backend.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-] + react_api.urls.urlpatterns
+] + backend.urls.urlpatterns

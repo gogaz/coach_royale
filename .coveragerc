@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = react_api
+source = backend
 
 [report]
 exclude_lines =
