@@ -28,7 +28,7 @@
     "react-router-dom": "5.1.0",
     "react-router-tabs": "^1.2.0",
     "react-scripts": "^3.1.2",
-    "react-table": "^6.9.0",
+    "react-table": "^6.10.1",
     "react-tooltip": "^3.10.1",
     "underscore": "^1.9.1",
     "whatwg-fetch": "^3.0.0"
