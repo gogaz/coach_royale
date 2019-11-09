@@ -147,6 +147,7 @@ class PlayerStatsHistory(models.Model):
             instance.delete()
         return instances[0]
 
+
 class LeagueSeason(models.Model):
     id = models.AutoField(primary_key=True)
     identifier = models.CharField(max_length=32)
