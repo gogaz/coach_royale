@@ -16,12 +16,12 @@ Setup
 #### Using Docker
 First, you need to [set up Docker on your system](https://docs.docker.com/install/).
 
-Second, copy `coach_royale/settings.example.py` to `coach_royale/settings.py` and adapt it to your needs.
+Second, clone the project, copy `coach_royale/settings.example.py` to `coach_royale/settings.py` and adapt it to your needs.
 
 
 Usage
 -----
-When Docker and Django are properly set up, all you have to do is
+When both Docker and Django are properly set up, all you have to do is run the following command in the root directory of the project
 ```
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build
 ```

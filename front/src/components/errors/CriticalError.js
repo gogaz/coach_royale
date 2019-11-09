@@ -25,7 +25,7 @@ CriticalError.defaultProps = {
 };
 
 CriticalError.propTypes = {
-    code: PropTypes.number,
+    code: PropTypes.node,
     message: PropTypes.node,
     description: PropTypes.node,
 };
