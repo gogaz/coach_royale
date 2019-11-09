@@ -2,7 +2,7 @@ FROM debian:stable
 
 # Install global dependencies
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip build-essential gunicorn3 cron systemd
+RUN apt-get install -y python3-pip build-essential gunicorn3 cron systemd git
 ENV PYTHONUNBUFFERED 1
 
 # Install python dependencies
