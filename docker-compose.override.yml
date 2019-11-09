@@ -3,7 +3,7 @@ version: '3'
 services:
   front:
     command: npm run build-dev
-  web:
+  backend:
     command: >
         bash -c "cron && python3 manage.py makemigrations && python3 manage.py migrate
         && python3 manage.py runserver 0.0.0.0:8000"

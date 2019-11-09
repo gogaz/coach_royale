@@ -29,7 +29,7 @@ services:
       - "127.0.0.1:8000:80"
     depends_on:
       - front
-  web:
+  backend:
     build: .
     user: root
     volumes:
