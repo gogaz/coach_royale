@@ -1,8 +1,6 @@
-import datetime
-
 from clashroyale import RoyaleAPI
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils import timezone
+from django.utils import timezone, dateparse
 
 from backend.helpers.api.helpers import command_print
 from backend.models import (Battle,
@@ -29,7 +27,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
     if options['verbose']:
         command_print(command, "#INFO: Refreshing clan %s", db_clan.tag)
 
-    clan = api_client.get_clan(db_clan.tag)[0]
+    clan = api_client.get_clan(db_clan.tag)
 
     clan_created = False
     if not db_clan.name:
@@ -127,8 +125,7 @@ def read_war_log(command, db_clan: Clan, api_client, verbose=False):
         command_print(command, "Refreshing ended wars")
     wars = api_client.get_clan_war_log(db_clan.tag)
     for war in wars:
-        # created_date is actually the end date
-        time = datetime.datetime.fromtimestamp(war.created_date, tz=datetime.timezone.utc)
+        time = dateparse.parse_datetime(war.war_end_time)
         db_war, created = ClanWar.objects.get_or_create(
             clan=db_clan,
             date_end__range=(time, time + timezone.timedelta(hours=24)),
@@ -137,7 +134,7 @@ def read_war_log(command, db_clan: Clan, api_client, verbose=False):
         if created or db_war.date_start is None or PlayerClanWar.objects.filter(clan_war=db_war).count() == 0:
             db_war.participants = len(war.participants)
             for p in war.participants:
-                db_p, created = Player.objects.get_or_create(tag=p.tag, defaults={'name': p.name})
+                db_p, _ = Player.objects.get_or_create(tag=p.tag, defaults={'name': p.name})
                 pcw, cpcw = PlayerClanWar.objects.get_or_create(clan_war=db_war, player=db_p)
                 if cpcw:
                     pcw.final_battles_done = p.battles_played
@@ -192,7 +189,7 @@ def update_war_status(command, options, db_clan):
 
     orphan_battles = Battle.objects.filter(war__isnull=True).order_by('time')
     if options['verbose']:
-        command.stdout.write("%d orphan battles found" % orphan_battles.count())
+        command_print("%d orphan battles found", orphan_battles.count())
     for b in orphan_battles.select_related('mode'):
         for p in b.team.all():
             clan = PlayerRepository.get_clan_for_player(p, b.time)
@@ -218,20 +215,20 @@ def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: Cl
     elif verbose:
         command_print(command, "Clan #%s is not in rankings", db_clan.tag)
 
-    # Top clans by war trophies - FIXME: not available yet
-    # war_tops = read_top_ranks(api_client.get_top_war_clans(clan_stats.region_code), db_clan, clan_stats)
-    # if war_tops[0] is not None:
-    #     clan_stats.local_war_rank = war_tops[0]
-    #     clan_stats.prev_local_war_rank = tops[1]
-    #     g_tops = read_top_ranks(api_client.get_top_war_clans(), db_clan, clan_stats)
-    #     if g_tops[0] is not None:
-    #         clan_stats.global_war_rank = g_tops[0]
-    #         clan_stats.prev_global_war_rank = g_tops[1]
-    # elif verbose:
-    #     command_print(command, "Clan #%s is not in war rankings", db_clan.tag)
-    #
-    # if clan_stats.local_war_rank or clan_stats.local_rank:
-    #     clan_stats.save()
+    # Top clans by war trophies
+    war_tops = read_top_ranks(api_client.get_top_war_clans(clan_stats.region_code), db_clan, clan_stats)
+    if war_tops[0] is not None:
+        clan_stats.local_war_rank = war_tops[0]
+        clan_stats.prev_local_war_rank = tops[1]
+        g_tops = read_top_ranks(api_client.get_top_war_clans(), db_clan, clan_stats)
+        if g_tops[0] is not None:
+            clan_stats.global_war_rank = g_tops[0]
+            clan_stats.prev_global_war_rank = g_tops[1]
+    elif verbose:
+        command_print(command, "Clan #%s is not in war rankings", db_clan.tag)
+
+    if clan_stats.local_war_rank or clan_stats.local_rank:
+        clan_stats.save()
 
 
 def read_top_ranks(tops, db_clan, clan_stats):

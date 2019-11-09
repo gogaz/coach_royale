@@ -138,6 +138,14 @@ class PlayerStatsHistory(models.Model):
     def __str__(self):
         return "Stats history for player {0.player} ({0.last_refresh})".format(self)
 
+    @classmethod
+    def merge_identical_histories(cls, instances):
+        if len(instances) == 0:
+            return
+
+        for instance in instances[1:]:
+            instance.delete()
+        return instances[0]
 
 class LeagueSeason(models.Model):
     id = models.AutoField(primary_key=True)
