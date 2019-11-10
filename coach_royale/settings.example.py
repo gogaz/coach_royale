@@ -26,7 +26,7 @@ SECRET_KEY = 'secret!'
 # Royale API configuration
 ROYALE_API_KEY = os.environ.get('ROYALE_API_KEY') or "YOUR_API_KEY"
 REFRESH_RATE = timezone.timedelta(minutes=5)
-MAIN_CLAN = "2GJU9Y2G"
+MAIN_CLAN = "2GJU9Y2G"  # omit the '#'
 
 CONSTANTS_DIR = os.path.join(BASE_DIR, 'constants')
 

@@ -9,6 +9,7 @@
 - [ ] Show last changes on a player
 - [ ] Embed constants.js in index.html ?
 - [ ] Add a db lock for sync with RoyaleAPI
+- [ ] Make all refrashable components to be actually refreshable (front)
 
 - [ ] Authentication
 

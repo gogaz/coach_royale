@@ -1,5 +1,5 @@
 chardet==3.0.4
-git+git://github.com/cgrok/clashroyale.git@master#egg=clashroyale
+git+git://github.com/gogaz/clashroyale.git@master#egg=clashroyale
 codecov
 Django==2.2.7
 djangorestframework==3.10.3

@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 
 export default class CriticalError extends React.Component {
     render() {
+        const { code, description, message} = this.props;
         return (
             <div className="container">
                 <div className="row justify-content-center mt-5">
                     <div className="col-md-6">
                         <div className="clearfix">
-                            <h1 className="float-left display-3 mr-4">{this.props.code}</h1>
-                            <h4 className="pt-3">{this.props.description}</h4>
-                            {this.props.description && <p className="text-muted">{this.props.message}</p>}
+                            {code && <h1 className="float-left display-3 mr-4">{code}</h1>}
+                            {description && <h4 className="pt-3">{description}</h4>}
+                            {message && <p className="text-muted">{message}</p>}
                         </div>
                     </div>
                 </div>

@@ -10,6 +10,8 @@ export default class DonationCell extends React.Component {
         let result = row[column];
         let icon = this.props.icon;
         let color = this.props.color;
+        if (!result && !compareTo)
+            return null;
         if (compareTo) {
             result = row[compareTo] - row[column];
             icon = isPositive(result, 'arrow-up', 'equals', 'arrow-down');

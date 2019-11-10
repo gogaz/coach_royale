@@ -95,10 +95,12 @@ class PlayerWeeklyDonationsSerializer(HyperlinkedModelSerializer):
     details = SerializerMethodField()
 
     def get_details(self, obj):
+        values = ('timestamp', 'donations', 'donations_received', 'trophies', 'arena', 'level')
+        fallback = {v: None for v in ClanDetailsSerializer.Meta.fields}
         return PlayerClanStatsHistory.objects.filter(player=obj, timestamp__lte=obj.date) \
                                      .order_by('-id') \
-                                     .values('timestamp', 'donations', 'donations_received', 'trophies', 'arena', 'level') \
-                                     .first()
+                                     .values(*values) \
+                                     .first() or fallback
 
     class Meta:
         model = Player
@@ -109,7 +111,9 @@ class PlayerClanSeasonSerializer(HyperlinkedModelSerializer):
     details = SerializerMethodField()
 
     def get_details(self, obj):
-        return PlayerSeason.objects.filter(player=obj, season__id=obj.season_id).values('ending', 'highest', 'season__identifier').first()
+        values = ('ending', 'highest', 'season__identifier')
+        fallback = {v: None for v in values}
+        return PlayerSeason.objects.filter(player=obj, season__id=obj.season_id).values(*values).first() or fallback
 
     class Meta:
         model = Player
@@ -118,14 +122,15 @@ class PlayerClanSeasonSerializer(HyperlinkedModelSerializer):
 
 class ClanWithDetailsSerializer(HyperlinkedModelSerializer):
     details = SerializerMethodField()
-    # war = SerializerMethodField()
+    war = SerializerMethodField()
 
     def get_details(self, obj):
-        return ClanDetailsSerializer(ClanHistory.objects.filter(clan=obj).order_by('-id').first()).data
+        fallback = {v: None for v in ClanDetailsSerializer.Meta.fields}
+        return ClanDetailsSerializer(ClanHistory.objects.filter(clan=obj).order_by('-id').first()).data or fallback
 
-    # def get_war(self, obj):
-    #     return ClanWarSerializer(ClanWar.objects.filter(clan=obj).order_by('-date_start').first()).data
+    def get_war(self, obj):
+        return ClanWarSerializer(ClanWar.objects.filter(clan=obj).order_by('-date_start').first()).data
 
     class Meta:
         model = Clan
-        fields = ('tag', 'name', 'details')
+        fields = ('tag', 'name', 'details', 'war')

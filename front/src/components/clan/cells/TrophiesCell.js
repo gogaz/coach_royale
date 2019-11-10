@@ -7,6 +7,8 @@ export default class TrophiesCell extends React.Component {
     render() {
         const { arena, trophies } = this.props;
         const _arena = arena ? arena : playerArenaFromTrophies(this.context, trophies);
+        if (!arena && !trophies)
+            return null;
         return (
             <span className="trophy-td">
                 <img src={images.arena(_arena)} />
