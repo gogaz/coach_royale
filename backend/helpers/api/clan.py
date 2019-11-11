@@ -94,7 +94,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
         db_player_clanstats.previous_clan_rank = player.get('previousRank')
         db_player_clanstats.trophies = player.trophies
         db_player_clanstats.level = player.exp_level
-        db_player_clanstats.arena = player.arena.get('arenaID')
+        db_player_clanstats.arena = player.arena.id
 
         db_player_clanstats.last_refresh = now
         if created:

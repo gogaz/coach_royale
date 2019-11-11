@@ -124,7 +124,7 @@ export default class ClanMembersTable extends React.Component {
         }
         columns = [...columns, ...this.props.columns];
 
-        if (!columns) {
+        if (!columns.length) {
             columns = BASE_COLUMNS;
         }
 
@@ -158,6 +158,7 @@ ClanMembersTable.propTypes = {
 };
 ClanMembersTable.defaultProps = {
     columns: [],
+    baseColumns: [],
     resizable: false,
     showPagination: false,
     pageSize: 10,
