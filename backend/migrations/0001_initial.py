@@ -13,16 +13,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Arena',
-            fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('tag', models.CharField(max_length=255)),
-                ('name', models.CharField(max_length=255)),
-                ('icon', models.CharField(max_length=255)),
-                ('number', models.IntegerField()),
-            ],
-        ),
-        migrations.CreateModel(
             name='Battle',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),

@@ -22,14 +22,6 @@ def int_difference_instances(obj1, obj2, excluded_keys=()):
     return res
 
 
-class Arena(models.Model):
-    id = models.AutoField(primary_key=True)
-    tag = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    icon = models.CharField(max_length=255)
-    number = models.IntegerField()
-
-
 class Card(models.Model):
     id = models.AutoField(primary_key=True)
     key = models.CharField(max_length=64)

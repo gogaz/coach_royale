@@ -2,7 +2,7 @@ from django.forms import Form
 from rest_framework.response import Response
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from backend.models import Arena, Card
+from backend.models import Card
 
 
 def raise_error(message, status=500):
@@ -22,12 +22,6 @@ def form_error(form: Form, status=403):
         'success': False,
         'errors': dict(form.errors.items()),
     }, status=status)
-
-
-class ArenaSerializer(HyperlinkedModelSerializer):
-    class Meta:
-        model = Arena
-        fields = ('tag', 'name', 'icon', 'number')
 
 
 class CardSerializer(HyperlinkedModelSerializer):
