@@ -11,7 +11,6 @@ from backend.models import (Battle,
                             PlayerClanStatsHistory,
                             ClanHistory,
                             Clan)
-from backend.repository import PlayerRepository, ClanRepository
 
 
 def refresh_clan_details(command, options, db_clan, api_client):
@@ -103,7 +102,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
         db_player_clanstats.save()
 
     # Refresh clan members
-    actual_players = ClanRepository.get_players_in_clan(db_clan, now)
+    actual_players = db_clan.get_players(now)
     if read_players or actual_players:
         for p in actual_players:
             if p.tag not in read_players:  # Player left clan
@@ -158,30 +157,27 @@ def read_war_log(command, db_clan: Clan, api_client, verbose=False):
 
 
 def update_war_status(command, options, db_clan):
-    war_col_battles = ClanRepository.get_players_battles_in_clan(db_clan).filter(war__isnull=True,
-                                                                                 mode__collection_day=True) \
-                                                                         .order_by('time')
+    war_col_battles = db_clan.get_players_battles(db_clan).filter(war__isnull=True, mode__collection_day=True).order_by('time')
     if options['verbose']:
-        command.stdout.write("Found %d collection battles to sort" % war_col_battles.count())
+        command_print(command, "Found %d collection battles to sort", war_col_battles.count())
 
     if war_col_battles.count():
         war = None
         for battle in war_col_battles:
-            war = ClanRepository.get_war_for_collection_battle(db_clan, battle, war)
+            war = battle.get_war_for_collection_day(db_clan, war)
             if war is None:
                 continue
             battle.war = war
             battle.save()
 
-    war_final_battles = ClanRepository.get_players_battles_in_clan(db_clan).filter(war__isnull=True,
-                                                                                   mode__war_day=True).order_by('time')
+    war_final_battles = db_clan.get_players_battles().filter(war__isnull=True, mode__war_day=True).order_by('time')
     if options['verbose']:
         command.stdout.write("Found %d war battles to sort" % war_final_battles.count())
 
     if war_final_battles.count():
         war = None
         for battle in war_final_battles:
-            war = ClanRepository.get_war_for_final_battle(db_clan, battle, war)
+            war = db_clan.get_war_for_final_day(battle, war)
             if war is None:
                 continue
             battle.war = war
@@ -189,12 +185,12 @@ def update_war_status(command, options, db_clan):
 
     orphan_battles = Battle.objects.filter(war__isnull=True).order_by('time')
     if options['verbose']:
-        command_print("%d orphan battles found", orphan_battles.count())
+        command_print(command, "%d orphan battles found", orphan_battles.count())
     for b in orphan_battles.select_related('mode'):
         for p in b.team.all():
-            clan = PlayerRepository.get_clan_for_player(p, b.time)
+            clan = p.get_clan(b.time)
             if clan:
-                war = ClanRepository.get_war_for_collection_battle(clan, b)
+                war = b.get_war_for_collection_day(clan)
                 b.war = war
                 b.save()
                 if options['verbose']:

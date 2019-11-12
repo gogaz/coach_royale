@@ -2,7 +2,6 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
 from backend.models import Player, PlayerCardLevel, PlayerClanHistory, PlayerStatsHistory, PlayerClanStatsHistory
-from backend.repository import PlayerRepository
 from backend.serializers.clan import ClanWithDetailsSerializer
 from backend.serializers.misc import CardSerializer
 
@@ -10,15 +9,17 @@ from backend.serializers.misc import CardSerializer
 class PlayerStatsSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = PlayerStatsHistory
-        fields = ('timestamp', 'last_refresh',
-                  'level',
-                  'total_donations',
-                  'highest_trophies', 'current_trophies',
-                  'challenge_cards_won', 'tourney_cards_won', 'cards_found',
-                  'favorite_card', 'arena',
-                  'total_games', 'tournament_games',
-                  'wins', 'losses', 'draws', 'win_3_crowns',
-                  'clan_cards_collected', 'war_day_wins')
+        fields = (
+            'timestamp', 'last_refresh',
+            'level',
+            'total_donations',
+            'highest_trophies', 'current_trophies',
+            'challenge_cards_won', 'tourney_cards_won', 'cards_found',
+            'favorite_card', 'arena',
+            'total_games', 'tournament_games',
+            'wins', 'losses', 'draws', 'win_3_crowns',
+            'clan_cards_collected', 'war_day_wins',
+        )
 
 
 class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
@@ -60,7 +61,7 @@ class PlayerSerializer(HyperlinkedModelSerializer):
         return PlayerStatsSerializer(PlayerStatsHistory.objects.filter(player=obj).order_by('-id').first()).data
 
     def get_clan(self, obj):
-        return ClanWithDetailsSerializer(PlayerRepository.get_clan_for_player(obj)).data
+        return ClanWithDetailsSerializer(obj.get_clan()).data
 
     class Meta:
         model = Player

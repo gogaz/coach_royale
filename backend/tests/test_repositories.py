@@ -4,7 +4,6 @@ from django.test import TestCase
 from django.utils import timezone
 
 from backend.models import Player, PlayerClanHistory, Clan
-from backend.repository import ClanRepository, PlayerRepository
 
 
 class RepositoryTestCase(TestCase):
@@ -58,23 +57,23 @@ class RepositoryTestCase(TestCase):
                 pch.save()
 
     def test_player_in_clan(self):
-        pch_1 = ClanRepository.get_players_in_clan(self.clans[0]).count()
+        pch_1 = self.clans[0].get_players().count()
         self.assertEqual(pch_1, 2)
-        pch_2 = ClanRepository.get_players_in_clan(self.clans[0], timezone.now() - datetime.timedelta(1)).count()
+        pch_2 = self.clans[0].get_players(timezone.now() - datetime.timedelta(1)).count()
         self.assertEqual(pch_2, 2)
-        pch_3 = ClanRepository.get_players_in_clan(self.clans[1], timezone.now() - datetime.timedelta(1)).count()
+        pch_3 = self.clans[1].get_players(timezone.now() - datetime.timedelta(1)).count()
         self.assertEqual(pch_3, 1)
-        pch_4 = ClanRepository.get_players_in_clan(self.clans[1]).count()
+        pch_4 = self.clans[1].get_players().count()
         self.assertEqual(pch_4, 1)
 
     def test_clan_for_player(self):
         now = timezone.now()
-        clan = PlayerRepository.get_clan_for_player(self.players[0], now)
+        clan = self.players[0].get_clan(now)
         self.assertEqual('Clan 0', clan.name)
-        clan = PlayerRepository.get_clan_for_player(self.players[1], now)
+        clan = self.players[1].get_clan(now)
         self.assertEqual('Clan 1', clan.name)
-        clan = PlayerRepository.get_clan_for_player(self.players[2], now)
+        clan = self.players[2].get_clan(now)
         self.assertEqual('Clan 0', clan.name)
 
-        clan = PlayerRepository.get_clan_for_player(self.players[2], now - datetime.timedelta(11))
+        clan = self.players[2].get_clan(now - datetime.timedelta(11))
         self.assertEqual(None, clan)

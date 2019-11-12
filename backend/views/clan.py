@@ -7,7 +7,6 @@ from rest_framework.response import Response
 
 from backend.forms import DateRangeForm, WeekForm
 from backend.models import Clan, PlayerClanStatsHistory, ClanWar, LeagueSeason
-from backend.repository import ClanRepository
 from backend.serializers.clan import (ClanWithDetailsSerializer,
                                       PlayerClanDetailsSerializer,
                                       PlayerInClanWarSerializer,
@@ -52,7 +51,7 @@ def clan_members(request, tag):
     if request.method == 'GET':
         latest_stats_history_pks = PlayerClanStatsHistory.objects.values('player')\
             .annotate(max_id=models.Max('id')).values_list('max_id', flat=True)
-        players = ClanRepository.get_players_in_clan(clan)\
+        players = clan.get_players()\
             .prefetch_related(models.Prefetch('playerstatshistory_set',
                                               queryset=PlayerClanStatsHistory.objects.filter(pk__in=latest_stats_history_pks),
                                               to_attr='last_stat_list'))
@@ -68,7 +67,7 @@ def clan_wars(request, tag):
         return not_found_error("clan", tag)
 
     wars = ClanWar.objects.filter(clan=clan).order_by('-date_start')
-    players = ClanRepository.get_players_in_clan(clan)
+    players = clan.get_players()
 
     form = DateRangeForm(request.POST)
     if form.is_valid():
@@ -102,7 +101,7 @@ def clan_weekly_season(request, tag):
 
     month = timezone.datetime.strptime("%s-W%s-1 03:00" % (now.year, now.isocalendar()[1]), "%Y-W%W-%w %H:%M")
     date = timezone.make_aware(month) - timezone.timedelta(weeks=1)
-    players = ClanRepository.get_players_in_clan(clan, date).annotate(date=Value(date, output_field=DateTimeField()))
+    players = clan.get_players(date).annotate(date=Value(date, output_field=DateTimeField()))
     serializer = PlayerWeeklyDonationsSerializer(players, many=True)
     return Response(serializer.data)
 
@@ -117,5 +116,5 @@ def clan_monthly_season(request, tag):
     season = LeagueSeason.objects.order_by('-id').first()
     month = "%s-1 07:00" % season.identifier
     date = timezone.make_aware(timezone.datetime.strptime(month, "%Y-%W-%w %H:%M")) - timezone.timedelta(weeks=1)
-    players = ClanRepository.get_players_in_clan(clan, date).annotate(season_id=Value(season.id, output_field=IntegerField()))
+    players = clan.get_players(date).annotate(season_id=Value(season.id, output_field=IntegerField()))
     return Response(PlayerClanSeasonSerializer(players, many=True).data)

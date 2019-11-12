@@ -9,7 +9,6 @@ from backend.models import (Player,
                             PlayerCardLevel,
                             Battle,
                             BattleMode, PlayerSeason, LeagueSeason)
-from backend.repository import PlayerRepository
 from .helpers import command_print, store_battle_players
 
 
@@ -35,7 +34,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
     db_player.name = player.name
 
     if player.clan is not None:
-        player_clan = PlayerRepository.get_clan_for_player(db_player)
+        player_clan = db_player.get_clan()
         # The following line avoids dealing with multiple clans in db when players leave focused clan
         # But this avoid fully refreshing a player who has refresh to True
         clan_created = player_clan is None
@@ -176,6 +175,7 @@ def refresh_player_battles(command, api_client, db_player, **kwargs):
 
         if verbose:
             command_print(
+                command,
                 "     - Found %s battle ! %d-%d (%s)",
                 "war" if mode.war_day else "collection " + b.mode.name,
                 b.team_crowns,

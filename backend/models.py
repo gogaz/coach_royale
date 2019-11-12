@@ -1,25 +1,6 @@
 from django.db import models
+from django.db.models import Q, F
 from django.utils import timezone
-
-
-def int_difference_instances(obj1, obj2, excluded_keys=()):
-    d1 = obj1.__dict__
-    d2 = {}
-    if obj2 is not None:
-        d2 = obj2.__dict__
-
-    res = {}
-    for k, v in d1.items():
-        if k in excluded_keys:
-            continue
-        if isinstance(v, int):
-            try:
-                if v != d2[k] and d2[k] is not None:
-                    res.update({k: v - d2[k]})
-            except KeyError:
-                res.update({k: v})
-
-    return res
 
 
 class Card(models.Model):
@@ -181,6 +162,21 @@ class Player(models.Model):
     def __str__(self):
         return "{} (#{})".format(self.name, self.tag)
 
+    def get_clan(self, date=None):
+        if date is None:
+            date = timezone.now()
+        clan = Clan.objects.filter(
+            (Q(playerclanhistory__joined_clan__isnull=True) & Q(playerclanhistory__left_clan__gte=date)) |
+            (Q(playerclanhistory__joined_clan__isnull=True) & Q(playerclanhistory__left_clan__isnull=True)) |
+            Q(playerclanhistory__joined_clan__lt=date, playerclanhistory__left_clan__gte=date) |
+            Q(playerclanhistory__joined_clan__lt=date, playerclanhistory__left_clan__isnull=True),
+            playerclanhistory__player=self
+        )
+        try:
+            return clan.get()
+        except Clan.DoesNotExist:
+            return None
+
     @classmethod
     def create_clan_history(cls, tag, new_clan, clan_created, now=None):
         if now is None:
@@ -215,6 +211,36 @@ class Clan(models.Model):
 
     def __str__(self):
         return "{0.name} (#{0.tag})".format(self)
+
+    def get_players(self, date=None):
+        if date is None:
+            date = timezone.now()
+
+        return Player.objects.filter(
+            Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__gte=date) |
+            Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__isnull=True) |
+            Q(playerclanhistory__joined_clan__lt=date, playerclanhistory__left_clan__gte=date) |
+            Q(playerclanhistory__joined_clan__lt=date, playerclanhistory__left_clan__isnull=True),
+            playerclanhistory__clan=self
+        )
+
+    def get_players_battles(self):
+        return Battle.objects.filter(
+            (
+                Q(team__playerclanhistory__joined_clan__isnull=True) &
+                Q(team__playerclanhistory__left_clan__gte=F('time'))
+            ) |
+            (
+                Q(team__playerclanhistory__joined_clan__isnull=True) &
+                Q(team__playerclanhistory__left_clan__isnull=True)
+            ) |
+            Q(team__playerclanhistory__joined_clan__lte=F('time'), team__playerclanhistory__left_clan__gte=F('time')) |
+            Q(
+                team__playerclanhistory__joined_clan__lte=F('time'),
+                team__playerclanhistory__left_clan__isnull=True
+            ),
+            team__playerclanhistory__clan=self
+        )
 
 
 class ClanHistory(models.Model):
@@ -284,6 +310,33 @@ class Battle(models.Model):
     war = models.ForeignKey('ClanWar', null=True, on_delete=models.SET_NULL)
     win = models.BooleanField(default=False)
 
+    def get_war_for_collection_day(self, clan, war=None):
+        # if a war was given and is valid for our time, let's just return it
+        if war and war.is_battle_during_collection_day(self):
+            return war
+        # search for matching war within last 24 hours
+        try:
+            return ClanWar.objects.get(
+                clan=clan,
+                date_start__lte=self.time,
+                date_end__gte=self.time
+            )
+        except ClanWar.DoesNotExist:
+            return None
+
+    def get_war_for_final_day(self, clan, war=None):
+        if war and war.is_battle_during_collection_day(self):
+            return war
+        # search for matching war within last 48 hours
+        try:
+            return ClanWar.objects.get(
+                clan=clan,
+                date_start__lte=self.time,
+                date_end__gte=self.time
+            )
+        except ClanWar.DoesNotExist:
+            return None
+
 
 class ClanWar(models.Model):
     id = models.AutoField(primary_key=True)
@@ -304,6 +357,11 @@ class ClanWar(models.Model):
 
     def __str__(self):
         return "Clan {} started war on {}".format(self.clan, self.date_start.strftime("%Y-%m-%d"))
+
+    def is_battle_during_collection_day(self, battle: Battle):
+        date_start = self.date_start - timezone.timedelta(hours=1)
+        date_end = self.date_start + timezone.timedelta(hours=25)  # 1 day plus 1 hour delay
+        return date_start <= battle.time <= date_end
 
 
 class PlayerClanWar(models.Model):

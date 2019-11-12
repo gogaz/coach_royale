@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from backend.models import (Clan, ClanHistory, ClanWar,
                             Player, PlayerClanStatsHistory, PlayerStatsHistory, PlayerClanWar,
-                            Card, Arena, BattleMode,
+                            Card, BattleMode,
                             Tournament, TournamentRefresh)
 
 admin.site.register(Clan)
@@ -16,7 +16,6 @@ admin.site.register(PlayerStatsHistory)
 admin.site.register(PlayerClanWar)
 
 admin.site.register(Card)
-admin.site.register(Arena)
 admin.site.register(BattleMode)
 
 admin.site.register(Tournament)
