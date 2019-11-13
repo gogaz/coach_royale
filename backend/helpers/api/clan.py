@@ -138,6 +138,7 @@ def read_war_log(command, db_clan: Clan, api_client, verbose=False):
                 if cpcw:
                     pcw.final_battles_done = p.battles_played
                     pcw.final_battles_wins = p.wins
+                    pcw.final_battles_misses = p.battles_missed
                     pcw.collections_cards_earned = p.cards_earned
                     pcw.save()
             position = 0

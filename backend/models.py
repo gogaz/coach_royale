@@ -371,6 +371,7 @@ class PlayerClanWar(models.Model):
     final_battles = models.IntegerField(null=True)
     final_battles_done = models.IntegerField(null=True)
     final_battles_wins = models.IntegerField(null=True)
+    final_battles_misses = models.IntegerField(null=True)
     crowns = models.IntegerField(null=True)
     collections_cards_earned = models.IntegerField(null=True)
     collections_battles = models.IntegerField(null=True, default=0)
