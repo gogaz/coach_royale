@@ -26,12 +26,12 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
       - run:
-          name: before tests
+          name: Linter
           command: |
             . venv/bin/activate
             python3 -m flake8
       - run:
-          name: run tests
+          name: Run tests
           command: |
             . venv/bin/activate
             coverage run manage.py test --noinput

@@ -64,6 +64,7 @@ class PlayerClanWarSerializer(HyperlinkedModelSerializer):
                   'final_battles',
                   'final_battles_done',
                   'final_battles_wins',
+                  'final_battles_misses',
                   'crowns',
                   'collections_cards_earned',
                   'collections_battles',
