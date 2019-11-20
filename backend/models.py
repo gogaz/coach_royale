@@ -421,4 +421,4 @@ class FullRefresh(models.Model):
     players_count = models.IntegerField()
 
     def __str__(self):
-        return "[{1}] Refreshed all clans & players (success: {0.success})".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M"))
+        return "[{0}] Refreshed all clans & players (success: {1})".format(self.timestamp.strftime("%Y-%m-%d %H:%M"), self.error is None)

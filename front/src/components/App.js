@@ -3,7 +3,6 @@ import { Redirect, Route, Switch } from "react-router-dom"
 import ClanApp from "./clan/ClanApp";
 import TopBar from "./ui/TopBar";
 import "../style/app.css"
-import { handleErrors } from "../helpers/api";
 import { ConstantsContext, loadConstants } from "../helpers/constants";
 import PlayerApp from "./player/PlayerApp";
 import CriticalError from "./errors/CriticalError";
@@ -15,34 +14,22 @@ export default class App extends React.Component {
 
         this.state = {
             user: null,
-            defaultUrl: '',
-            error: null,
-            mainClan: null,
-            loadingHome: true,
             loadingConstants: true,
             constants: {},
         }
     }
 
     componentDidMount() {
-        if (this.props.match.path === '/') {
-            fetch('/api/home')
-                .then(res => handleErrors(res))
-                .then(res => this.setState({
-                    defaultUrl: res.url,
-                    mainClan: res.main_clan,
-                    loadingHome: false,
-                }))
-                .catch(error => console.log(error));
-        }
-        loadConstants().then((results) => {
-            this.setState({
-                loadingConstants: false,
-                constants: {
-                    arenas: results[0]
-                }
-            });
-        })
+        loadConstants()
+            .then((results) => {
+                this.setState({
+                    loadingConstants: false,
+                    constants: {
+                        arenas: results[0]
+                    }
+                });
+            })
+            .catch(error => console.log(error))
     }
 
     render() {
@@ -58,8 +45,8 @@ export default class App extends React.Component {
                     <main className='main'>
                         <div className='container-fluid mt-3'>
                             <Switch>
-                                {this.state.defaultUrl && <Route exact path='/' component={() => <Redirect replace to={this.state.defaultUrl}/>}/>}
-                                <Route path='/clan' render={(props) => <ClanApp {...props} mainClan={this.state.mainClan}/>}/>
+                                <Route exact path='/' component={() => <Redirect replace to={GLOBAL_rootURL}/>}/>}
+                                <Route path='/clan' render={(props) => <ClanApp {...props} mainClan={GLOBAL_mainClan}/>}/>
                                 <Route path='/player' component={PlayerApp}/>
                                 <Route render={routeProps => <CriticalError {...routeProps}
                                                                             code={404} description="Not found"
