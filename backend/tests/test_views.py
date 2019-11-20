@@ -32,12 +32,6 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, status_code)
         return response.data
 
-    def test_home(self):
-        data = self._test_route('home')
-        self.assertIn('url', data)
-        self.assertNotEquals(data['url'][:4], '/api')
-        self.assertEqual(data['url'][0], '/')
-
     def test_clans_list_view(self):
         data = self._test_route('clans_list')
         self.assertEqual(len(data), 2)
