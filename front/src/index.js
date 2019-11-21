@@ -3,7 +3,9 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { locale } from "./helpers/browser";
 import App from "./components/App"
+
 import "react-table/react-table.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 let moment = require("moment-shortformat");
 let momentDurationFormatSetup = require("moment-duration-format");
