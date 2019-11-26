@@ -1,3 +1,5 @@
+import traceback
+
 from django.db import models
 from django.db.models import Q, F
 from django.utils import timezone
@@ -422,3 +424,33 @@ class FullRefresh(models.Model):
 
     def __str__(self):
         return "[{0}] Refreshed all clans & players (success: {1})".format(self.timestamp.strftime("%Y-%m-%d %H:%M"), self.error is None)
+
+
+class BaseError(models.Model):
+    clazz = models.CharField(max_length=256, null=True)
+    traceback = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
+class RoyaleAPIError(BaseError):
+    method = models.CharField(max_length=128, null=True)
+    refresh_method = models.CharField(max_length=256, null=True)
+    data = models.TextField(null=True)
+    code = models.CharField(max_length=64, null=True)
+    reason = models.CharField(max_length=256, null=True)
+
+    @classmethod
+    def create_and_save(cls, exception, func):
+        error = RoyaleAPIError(
+                clazz=exception.__class__,
+                traceback=traceback.format_exc(),
+                method=getattr(exception, 'method', None),
+                refresh_method=func.__name__,
+                data=getattr(exception, 'data', None),
+                code=getattr(exception, 'code', None),
+                reason=getattr(exception, 'reason', None)
+        )
+        error.save()

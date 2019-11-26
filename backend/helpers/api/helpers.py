@@ -4,11 +4,11 @@ import sys
 import clashroyale
 from django.db.models import Model
 
-from backend.models import Clan, Player, Card
+from backend.models import Clan, Player, Card, RoyaleAPIError
 
 
-def run_refresh_method(cmd, options, func, iterable, depth=3, **kwargs):
-    if depth <= 0:
+def run_refresh_method(cmd, options, func, iterable, tries=3, **kwargs):
+    if tries <= 0:
         return
     failed = []
     for i in iterable:
@@ -24,24 +24,25 @@ def run_refresh_method(cmd, options, func, iterable, depth=3, **kwargs):
             i.refresh = True
         try:
             func(cmd, options, i, **kwargs)
-        except clashroyale.NotResponding:
+        except clashroyale.ServerError as e:
+            if tries == 1:
+                RoyaleAPIError.create_and_save(e, func)
+        except clashroyale.RequestError as e:
             if options['verbose']:
                 if isinstance(i, Clan):
-                    cmd.stderr.write("#ERROR: Request timed out while fetching data for clan %s (#%s)" % (i.name, i.tag))
+                    cmd.stderr.write("#Error while fetching data for clan #%s" % i.tag)
                 elif isinstance(i, Player):
-                    cmd.stderr.write("#ERROR: Request timed out while fetching data for player %s (#%s)" % (i.name, i.tag))
+                    cmd.stderr.write("#Error while fetching data for player #%s" % i.tag)
                 else:
-                    cmd.stderr.write("#ERROR: Request timed out while fetching data for #" + str(i))
-            failed.append(i)
-        except clashroyale.NotFoundError:
-            if options['verbose']:
-                cmd.stderr.write("#ERROR: Request failed while fetching data for #" + str(i))
+                    cmd.stderr.write("#Error while fetching data for #" + str(i))
             if isinstance(i, Model):
                 failed.append(i)
-        except clashroyale.ServerError:
-            pass
+            elif isinstance(e, clashroyale.NotResponding):
+                failed.append(i)
+            if tries == 1:
+                RoyaleAPIError.create_and_save(e, func)
 
-    run_refresh_method(cmd, options, func, failed, depth - 1, **kwargs)
+    run_refresh_method(cmd, options, func, failed, tries - 1, **kwargs)
 
 
 def store_battle_players(db_player, team, players, save_decks=True):

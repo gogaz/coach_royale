@@ -28,15 +28,25 @@ ROYALE_API_KEY = os.environ.get('ROYALE_API_KEY') or "YOUR_API_KEY"
 REFRESH_RATE = timezone.timedelta(minutes=5)
 MAIN_CLAN = "2GJU9Y2G"  # omit the '#'
 
-CONSTANTS_DIR = os.path.join(BASE_DIR, 'constants')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'coach_royale',
+        'USER': 'coach_royale',
+        'PASSWORD': '',
+        'HOST': 'localhost',  # FIXME: change this to 'postgres', localhost is a hack for circleci
+        'PORT': '5432',
+    }
+}
 
-# Application definition
+# Application definition - do not change anything under this line
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -67,20 +77,6 @@ REST_FRAMEWORK = {
 ROOT_URLCONF = 'coach_royale.urls'
 
 WSGI_APPLICATION = 'coach_royale.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'coach_royale',
-        'USER': 'coach_royale',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 TEMPLATES = [
     {
@@ -139,6 +135,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CONSTANTS_DIR = os.path.join(BASE_DIR, 'constants')
 
 # Production values, comment when in development
 X_FRAME_OPTIONS = 'DENY'

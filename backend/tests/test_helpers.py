@@ -18,7 +18,7 @@ from backend.models import (Clan,
                             PlayerClanHistory,
                             PlayerClanStatsHistory,
                             ClanWar,
-                            PlayerClanWar, PlayerStatsHistory, Card, PlayerCardLevel)
+                            PlayerClanWar, PlayerStatsHistory, Card, PlayerCardLevel, RoyaleAPIError)
 
 
 class HelpersTestCase(unittest.TestCase):
@@ -47,10 +47,13 @@ class HelpersTestCase(unittest.TestCase):
         run_refresh_method(self, options, func, [42])
 
         # test not responding
+        api_errors_count = RoyaleAPIError.objects.count()
         func = lambda x, y, z: (_ for _ in ()).throw(NotResponding)
         run_refresh_method(self, options, func, [42])
         output = self._get_stream('stderr')
+        self.assertRegexpMatches()
         self.assertNotEqual('', output)
+        self.assertEqual(RoyaleAPIError.objects.count(), api_errors_count + 1)
 
         options.update(clan="a")
         options.update(player="b")
@@ -68,7 +71,7 @@ class TopLevelHelpersTestCase(TestCase):
 
     def _run_refresh_method(self, func, data):
         try:
-            run_refresh_method(self, {'verbose': True, 'battles': True}, func, [data], depth=1, api_client=self.api_client)
+            run_refresh_method(self, {'verbose': True, 'battles': True}, func, [data], tries=1, api_client=self.api_client)
         except clashroyale.RequestError:
             pass
 
