@@ -1,10 +1,30 @@
 import React from "react";
+import styled from 'styled-components'
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
-import { images } from "../../helpers/assets";
-import { handleErrors } from "../../helpers/api";
-import { setTitle } from "../../helpers/browser";
+import {images} from "../../helpers/assets";
+import {handleErrors} from "../../helpers/api";
+import {setTitle} from "../../helpers/browser";
 import Loading from "../ui/Loading";
 import LastRefreshInfo from "../ui/LastRefreshInfo";
+
+const CardContainer = styled.div`
+    margin-top: .5rem;
+    display: grid;
+    row-gap: 10px;
+    
+    @media (max-width: 425px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 425px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 750px) {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    @media (min-width: 1170px) {
+        grid-template-columns: repeat(8, minmax(125px, 1fr));
+    }
+`;
 
 export default class ClanDetails extends React.Component {
     constructor(props) {
@@ -12,7 +32,7 @@ export default class ClanDetails extends React.Component {
 
         this.state = {
             loading: true,
-            clan: {details:{}},
+            clan: {details: {}},
             error: {}
         }
     }
@@ -23,10 +43,10 @@ export default class ClanDetails extends React.Component {
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
-                    this.setState({ loading: false, clan: result });
+                    this.setState({loading: false, clan: result});
                     setTitle(`${result.name} (${result.tag})`);
                 })
-            .catch(error => console.log(error) );
+            .catch(error => console.log(error));
     }
 
     render() {
@@ -37,44 +57,84 @@ export default class ClanDetails extends React.Component {
         const country_icon = images.region(clan.details.region_code.toLowerCase());
 
         return (
-            <div>
+            <React.Fragment>
                 <div className="card-header">
                     <div className="row">
                         <div className="col-9">
-                            <h3 className="d-inline mr-2">{ clan.name }</h3><LastRefreshInfo time={clan.details.last_refresh}/>
+                            <h3 className="d-inline mr-2">{clan.name}</h3><LastRefreshInfo
+                            time={clan.details.last_refresh}/>
                             <span className="d-block">{clan.details.description}</span>
                         </div>
                         <div className="col-3">
-                            <img src={ clan.details.badge }
-                                 style={ { float: 'right', height: '52px' } } />
+                            <img src={clan.details.badge}
+                                 style={{float: 'right', height: '52px'}}/>
                         </div>
                     </div>
                 </div>
                 <ul className="list-group">
                     <li className="list-group-item">
-                        <div className="row mt-2">
+                        <CardContainer>
                             {clan.details.global_rank &&
-                                <ClashRoyaleStat image={images.static('trophyRibbon')} title="Global rank" value={clan.details.global_rank}/>
+                            <ClashRoyaleStat
+                                image={images.static('trophyRibbon')}
+                                title="Global"
+                                value={clan.details.global_rank}
+                            />
                             }
                             {clan.details.local_rank &&
-                                <ClashRoyaleStat image={images.static('trophyRibbon')} title={clan.details.region} value={clan.details.local_rank} compareTo={clan.details.prev_local_rank}/>
+                            <ClashRoyaleStat
+                                image={images.static('trophyRibbon')}
+                                title={clan.details.region}
+                                value={clan.details.local_rank}
+                                compareTo={clan.details.prev_local_rank}
+                            />
                             }
-                            <ClashRoyaleStat title="Score"
-                                             image={images.static('trophy')}
-                                             value={clan.details.score}/>
+                            {clan.details.global_war_rank &&
+                            <ClashRoyaleStat
+                                image={images.static('clanWarTrophy')}
+                                title="Global"
+                                value={clan.details.global_war_rank}
+                            />
+                            }
+                            {clan.details.local_war_rank &&
+                            <ClashRoyaleStat
+                                image={images.static('clanWarTrophy')}
+                                title={clan.details.region}
+                                value={clan.details.local_war_rank}
+                                compareTo={clan.details.prev_local_rank}
+                            />
+                            }
+                            <ClashRoyaleStat
+                                title="Score"
+                                image={images.static('trophy')}
+                                value={clan.details.score}
+                            />
                             {clan.details.trophies &&
-                                <ClashRoyaleStat image={images.static('clanWarTrophy')} title="Trophies" value={clan.details.trophies}/>
+                            <ClashRoyaleStat
+                                image={images.static('clanWarTrophy')}
+                                title="Trophies"
+                                value={clan.details.trophies}
+                            />
                             }
-                            <ClashRoyaleStat title="Members"
-                                             image={images.static('members')}
-                                             value={clan.details.member_count + " / 50"}/>
-                            <ClashRoyaleStat image={country_icon} style={{backgroundSize: '2.5rem'}}
-                                title="Region" value={clan.details.region} />
-                            <ClashRoyaleStat image={images.static('cards')} title="Donations" value={clan.details.donations}/>
-                        </div>
+                            <ClashRoyaleStat
+                                title="Members"
+                                image={images.static('members')}
+                                value={clan.details.member_count + " / 50"}
+                            />
+                            <ClashRoyaleStat
+                                image={country_icon} style={{backgroundSize: '2.5rem'}}
+                                title="Region"
+                                value={clan.details.region}
+                            />
+                            <ClashRoyaleStat
+                                image={images.static('cards')}
+                                title="Donations"
+                                value={clan.details.donations}
+                            />
+                        </CardContainer>
                     </li>
                 </ul>
-            </div>
+            </React.Fragment>
         );
     }
 }

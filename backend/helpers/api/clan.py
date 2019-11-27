@@ -224,6 +224,7 @@ def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: Cl
     elif verbose:
         command_print(command, "Clan #%s is not in war rankings", db_clan.tag)
 
+    # If we have a global rank, we do have a local rank
     if clan_stats.local_war_rank or clan_stats.local_rank:
         clan_stats.save()
 

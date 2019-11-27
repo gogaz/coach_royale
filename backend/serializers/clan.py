@@ -13,7 +13,11 @@ class ClanDetailsSerializer(HyperlinkedModelSerializer):
                   'donations',
                   'region', 'region_code',
                   'badge', 'description',
-                  'prev_local_rank', 'local_rank', 'prev_global_rank', 'global_rank')
+                  'prev_local_rank', 'local_rank',
+                  'prev_global_rank', 'global_rank',
+                  'prev_global_war_rank', 'global_war_rank',
+                  'prev_local_war_rank', 'local_war_rank'
+                  )
 
 
 class ClanSerializer(HyperlinkedModelSerializer):

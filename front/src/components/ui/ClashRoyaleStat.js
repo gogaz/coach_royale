@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
 import { locale } from "../../helpers/browser";
-import {FontAwesomeIcon} from "./FontAwesome";
+import { FontAwesomeIcon } from "./FontAwesome";
 
 export default class ClashRoyaleStat extends React.Component {
     render () {
@@ -22,7 +23,7 @@ export default class ClashRoyaleStat extends React.Component {
         }
 
         return (
-            <div className="col-6 col-md-3 col-lg-2 clan_stats">
+            <div className="mini-stats">
                 <div className="content" style={{backgroundImage: "url(" + this.props.image + ")", ...this.props.style}}>
                     <div className="title">{title && title}</div>
                     <div className="value"> {value} {compare_result && compare_result}</div>

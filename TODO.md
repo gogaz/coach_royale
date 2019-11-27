@@ -10,6 +10,8 @@
 - [ ] Embed constants.js in index.html ?
 - [ ] Add a db lock for sync with RoyaleAPI
 - [ ] Make all refrashable components to be actually refreshable (front)
+- [ ] Migrate all CSS to styled components
+- [ ] define donation reset time as a setting (should be every Sunday at 8AM UTC)
 
 - [ ] Authentication
 

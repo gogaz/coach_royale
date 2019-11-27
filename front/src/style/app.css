@@ -11,7 +11,7 @@ body {
     background-color: #f0f3f5;
 }
 
-.clan_stats .content {
+.mini-stats .content {
     background: no-repeat center left;
     background-size: auto 46px;
     padding-left: 3rem;
@@ -20,7 +20,7 @@ body {
 .card-body:not(:last-child) {
     border-bottom: 1px solid #c2cfd6;
 }
-.clan_stats .title {
+.mini-stats .title {
   font-weight: bold;
 }
 i.donations-icons .text-warning .fa, i.donations-icons .text-warning .fas, i.donations-icons .text-warning .fal {
