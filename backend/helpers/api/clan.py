@@ -68,6 +68,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
     db_clan_history.save()
     read_clan_members(clan, db_clan, command, now, options['verbose'], clan_created)
     read_war_log(command, db_clan, api_client, options['verbose'])
+    update_war_status(command, options, db_clan)
     read_clan_rank(command, db_clan, api_client, db_clan_history, verbose=options['verbose'])
 
 
@@ -158,7 +159,7 @@ def read_war_log(command, db_clan: Clan, api_client, verbose=False):
 
 
 def update_war_status(command, options, db_clan):
-    war_col_battles = db_clan.get_players_battles(db_clan).filter(war__isnull=True, mode__collection_day=True).order_by('time')
+    war_col_battles = db_clan.get_players_battles().filter(war__isnull=True, mode__collection_day=True).order_by('time')
     if options['verbose']:
         command_print(command, "Found %d collection battles to sort", war_col_battles.count())
 
