@@ -5,8 +5,29 @@ from django.db.models import Q, F
 from django.utils import timezone
 
 
-class Card(models.Model):
+class BaseModel(models.Model):
     id = models.AutoField(primary_key=True)
+
+    class Meta:
+        abstract = True
+
+
+class HistoryModel(BaseModel):
+    timestamp = models.DateTimeField(null=True)
+    last_refresh = models.DateTimeField(null=True)
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def create_or_find(cls, **kwargs):
+        try:
+            return cls.objects.get_or_create(**kwargs)
+        except cls.MultipleObjectsReturned:
+            return cls.objects.filter(**kwargs).order_by('-timestamp')[0], False
+
+
+class Card(BaseModel):
     key = models.CharField(max_length=64)
     name = models.CharField(max_length=255)
     rarity = models.CharField(max_length=64)
@@ -34,8 +55,7 @@ class Card(models.Model):
         return fc
 
 
-class PlayerCardLevel(models.Model):
-    id = models.AutoField(primary_key=True)
+class PlayerCardLevel(BaseModel):
     player = models.ForeignKey("Player", related_name='card_level', on_delete=models.CASCADE)
     card = models.ForeignKey(Card, related_name='player', on_delete=models.CASCADE)
     count = models.IntegerField(null=True)
@@ -43,8 +63,7 @@ class PlayerCardLevel(models.Model):
 
 
 # PLAYER / CLAN
-class PlayerClanHistory(models.Model):
-    id = models.AutoField(primary_key=True)
+class PlayerClanHistory(BaseModel):
     clan = models.ForeignKey('Clan', null=True, on_delete=models.CASCADE)
     player = models.ForeignKey('Player', null=True, on_delete=models.CASCADE)
     # Used internally to detect when a user joins a clan
@@ -59,12 +78,9 @@ class PlayerClanHistory(models.Model):
         return "{0.player} {1} clan {0.clan}".format(self, action)
 
 
-class PlayerClanStatsHistory(models.Model):
-    id = models.AutoField(primary_key=True)
+class PlayerClanStatsHistory(HistoryModel):
     clan = models.ForeignKey('Clan', null=True, on_delete=models.CASCADE)
     player = models.ForeignKey('Player', null=True, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(null=True)
-    last_refresh = models.DateTimeField(null=True)
 
     clan_role = models.CharField(max_length=255)
     current_clan_rank = models.IntegerField(null=True)
@@ -81,11 +97,8 @@ class PlayerClanStatsHistory(models.Model):
         return "{0.player}'s activity in clan {0.clan} ({0.last_refresh})".format(self)
 
 
-class PlayerStatsHistory(models.Model):
-    id = models.AutoField(primary_key=True)
+class PlayerStatsHistory(HistoryModel):
     player = models.ForeignKey('Player', null=True, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(null=True)
-    last_refresh = models.DateTimeField(null=True)
 
     # Player stats
     level = models.IntegerField()
@@ -113,24 +126,13 @@ class PlayerStatsHistory(models.Model):
     def __str__(self):
         return "Stats history for player {0.player} ({0.last_refresh})".format(self)
 
-    @classmethod
-    def merge_identical_histories(cls, instances):
-        if len(instances) == 0:
-            return
 
-        for instance in instances[1:]:
-            instance.delete()
-        return instances[0]
-
-
-class LeagueSeason(models.Model):
-    id = models.AutoField(primary_key=True)
+class LeagueSeason(BaseModel):
     identifier = models.CharField(max_length=32)
     timestamp = models.DateTimeField()
 
 
-class PlayerSeason(models.Model):
-    id = models.AutoField(primary_key=True)
+class PlayerSeason(BaseModel):
     player = models.ForeignKey('Player', null=True, on_delete=models.CASCADE)
     season = models.ForeignKey(LeagueSeason, null=True, on_delete=models.CASCADE)
     highest = models.IntegerField(null=True)
@@ -141,8 +143,7 @@ class PlayerSeason(models.Model):
         return "Season {0.identifier} - {0.player}".format(self)
 
 
-class Player(models.Model):
-    id = models.AutoField(primary_key=True)
+class Player(BaseModel):
     tag = models.CharField(max_length=32)
     name = models.CharField(max_length=255)
 
@@ -204,8 +205,7 @@ class Player(models.Model):
         return p
 
 
-class Clan(models.Model):
-    id = models.AutoField(primary_key=True)
+class Clan(BaseModel):
     name = models.CharField(max_length=255)
     tag = models.CharField(max_length=32)
     last_refresh = models.DateTimeField(null=True)
@@ -245,10 +245,8 @@ class Clan(models.Model):
         )
 
 
-class ClanHistory(models.Model):
-    id = models.AutoField(primary_key=True)
+class ClanHistory(HistoryModel):
     clan = models.ForeignKey(Clan, null=True, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(null=True)
     score = models.IntegerField(null=True)
     highest_score = models.IntegerField(null=True)
     required_trophies = models.IntegerField(null=True)
@@ -272,14 +270,12 @@ class ClanHistory(models.Model):
     # Wars
     war_state = models.CharField(max_length=512, null=True)
     # Synchronization configuration
-    last_refresh = models.DateTimeField(null=True)
 
     def __str__(self):
         return "History for clan {0.clan} ({0.last_refresh})".format(self)
 
 
-class BattleMode(models.Model):
-    id = models.AutoField(primary_key=True)
+class BattleMode(BaseModel):
     name = models.CharField(max_length=64)
     card_levels = models.CharField(max_length=64)
     overtime = models.IntegerField(null=True)
@@ -291,8 +287,7 @@ class BattleMode(models.Model):
         return self.name
 
 
-class Battle(models.Model):
-    id = models.AutoField(primary_key=True)
+class Battle(BaseModel):
     mode = models.ForeignKey(BattleMode, related_name='mode', on_delete=models.CASCADE)
     arena = models.CharField(max_length=64)
     time = models.DateTimeField(null=True)
@@ -340,8 +335,7 @@ class Battle(models.Model):
             return None
 
 
-class ClanWar(models.Model):
-    id = models.AutoField(primary_key=True)
+class ClanWar(BaseModel):
     clan = models.ForeignKey(Clan, null=True, on_delete=models.CASCADE)
     date_start = models.DateTimeField(null=True)
     date_end = models.DateTimeField(null=True)
@@ -366,8 +360,7 @@ class ClanWar(models.Model):
         return date_start <= battle.time <= date_end
 
 
-class PlayerClanWar(models.Model):
-    id = models.AutoField(primary_key=True)
+class PlayerClanWar(BaseModel):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     clan_war = models.ForeignKey(ClanWar, on_delete=models.CASCADE)
     final_battles = models.IntegerField(null=True)

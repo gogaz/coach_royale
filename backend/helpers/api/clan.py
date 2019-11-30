@@ -42,7 +42,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
     except IndexError:
         previous_history = None
 
-    db_clan_history, created = ClanHistory.objects.get_or_create(
+    db_clan_history, created = ClanHistory.create_or_find(
         clan=db_clan,
         score=clan.score,
         trophies=clan.war_trophies,
@@ -84,12 +84,14 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
             db_player.save()
 
         read_players.append(db_player.tag)
-        db_player_clanstats, created = \
-            PlayerClanStatsHistory.objects.get_or_create(clan=db_clan,
-                                                         player=db_player,
-                                                         clan_role=player.role,
-                                                         donations=player.donations,
-                                                         donations_received=player.donations_received)
+        history_args = {
+            "clan": db_clan,
+            "player": db_player,
+            "clan_role": player.role,
+            "donations": player.donations,
+            "donations_received": player.donations_received,
+        }
+        db_player_clanstats, created = PlayerClanStatsHistory.create_or_find(**history_args)
         db_player_clanstats.current_clan_rank = player.rank
         db_player_clanstats.previous_clan_rank = player.get('previousRank')
         db_player_clanstats.trophies = player.trophies
@@ -166,7 +168,7 @@ def update_war_status(command, options, db_clan):
     if war_col_battles.count():
         war = None
         for battle in war_col_battles:
-            war = battle.get_war_for_collection_day(db_clan, war)
+            war = ClanWar.get_war_for_collection_day_battle(db_clan, battle, war)
             if war is None:
                 continue
             battle.war = war
@@ -179,7 +181,7 @@ def update_war_status(command, options, db_clan):
     if war_final_battles.count():
         war = None
         for battle in war_final_battles:
-            war = db_clan.get_war_for_final_day(battle, war)
+            war = ClanWar.get_war_for_final_day_battle(db_clan, battle, war)
             if war is None:
                 continue
             battle.war = war
@@ -192,7 +194,7 @@ def update_war_status(command, options, db_clan):
         for p in b.team.all():
             clan = p.get_clan(b.time)
             if clan:
-                war = b.get_war_for_collection_day(clan)
+                war = ClanWar.get_war_for_collection_day_battle(clan, b)
                 b.war = war
                 b.save()
                 if options['verbose']:

@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone, dateparse
 
 from backend.models import (Player,
@@ -74,13 +74,7 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
         'arena': player.arena.id,
         'tournament_games': player.games.tournament_games,
     }
-    try:
-        db_player_stats, created = PlayerStatsHistory.objects.get_or_create(**query_fields)
-    except MultipleObjectsReturned:
-        # We don't want to add uniqueness constraints to the PlayerStatsHistory so we need to recover from the
-        # race condition that may occur when using get_or_create
-        created = False
-        db_player_stats = PlayerStatsHistory.merge_identical_histories(PlayerStatsHistory.objects.filter(**query_fields).order_by('id'))
+    db_player_stats, created = PlayerStatsHistory.create_or_find(**query_fields)
 
     db_player_stats.tourney_cards_won = player.stats.tournament_cards_won
     Card.instance_from_data(player.stats.favorite_card)
