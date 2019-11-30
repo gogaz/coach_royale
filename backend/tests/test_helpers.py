@@ -51,7 +51,6 @@ class HelpersTestCase(unittest.TestCase):
         func = lambda x, y, z: (_ for _ in ()).throw(NotResponding)
         run_refresh_method(self, options, func, [42])
         output = self._get_stream('stderr')
-        self.assertRegexpMatches()
         self.assertNotEqual('', output)
         self.assertEqual(RoyaleAPIError.objects.count(), api_errors_count + 1)
 

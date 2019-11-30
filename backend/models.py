@@ -438,12 +438,12 @@ class RoyaleAPIError(BaseError):
     @classmethod
     def create_and_save(cls, exception, func):
         error = RoyaleAPIError(
-                clazz=exception.__class__,
-                traceback=traceback.format_exc(),
-                method=getattr(exception, 'method', None),
-                refresh_method=func.__name__,
-                data=getattr(exception, 'data', None),
-                code=getattr(exception, 'code', None),
-                reason=getattr(exception, 'reason', None)
+            clazz=exception.__class__,
+            traceback=traceback.format_exc(),
+            method=getattr(exception, 'method', None),
+            refresh_method=func.__name__,
+            data=getattr(exception, 'data', None),
+            code=getattr(exception, 'code', None),
+            reason=getattr(exception, 'reason', None)
         )
         error.save()
