@@ -69,7 +69,7 @@ def exit_with_failure(command):
 def command_print(command, string: str, *args):
     _args = []
     for i in range(len(args)):
-        if not args[i]:
+        if args[i] is None:
             _args.append('???')
         else:
             _args.append(args[i])

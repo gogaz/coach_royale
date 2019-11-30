@@ -1,5 +1,7 @@
+import os
 import unittest
 from io import StringIO
+from box import Box
 
 import clashroyale
 from clashroyale.errors import NotResponding
@@ -7,6 +9,7 @@ from django.conf import settings
 from django.test import TestCase
 
 from backend.helpers.api.clan import refresh_clan_details
+from backend.helpers.api.constants import refresh_constants
 from backend.helpers.api.helpers import command_print, run_refresh_method
 from backend.helpers.api.player import refresh_player_profile
 from backend.models import (Clan,
@@ -29,9 +32,9 @@ class HelpersTestCase(unittest.TestCase):
         return value
 
     def test_command_print(self):
-        command_print(self, "True is %s and False is %s", True, False)
+        command_print(self, "True is %s and None is %s", True, None)
         output = self._get_stream('stdout')
-        self.assertEqual(output, "True is True and False is ???")
+        self.assertEqual(output, "True is True and None is ???")
 
     def test_run_refresh_method(self):
         output = []
@@ -60,10 +63,12 @@ class HelpersTestCase(unittest.TestCase):
 class TopLevelHelpersTestCase(TestCase):
     def setUp(self):
         self.api_client = clashroyale.RoyaleAPI(token=settings.ROYALE_API_KEY, timeout=45)
+        self.stdout = StringIO()
+        self.stderr = StringIO()
 
     def _run_refresh_method(self, func, data):
         try:
-            run_refresh_method(None, {'verbose': False, 'battles': True}, func, [data], depth=1, api_client=self.api_client)
+            run_refresh_method(self, {'verbose': True, 'battles': True}, func, [data], depth=1, api_client=self.api_client)
         except clashroyale.RequestError:
             pass
 
@@ -76,17 +81,14 @@ class TopLevelHelpersTestCase(TestCase):
         self.assertEqual(PlayerClanHistory.objects.count(), clan.member_count)
         self.assertEqual(PlayerClanStatsHistory.objects.count(), clan.member_count)
         self.assertEqual(PlayerClanHistory.objects.filter(joined_clan__isnull=True).count(), clan.member_count)
-        try:
-            wars = self.api_client.get_clan_war_log(settings.MAIN_CLAN)
-            self.assertEqual(ClanWar.objects.count(), len(wars))
-            self.assertGreaterEqual(PlayerClanWar.objects.count(), len(wars) * 15)
-        except clashroyale.errors.StatusError:
-            pass
+        wars = self.api_client.get_clan_war_log(settings.MAIN_CLAN)
+        self.assertEqual(ClanWar.objects.count(), len(wars))
+        self.assertGreaterEqual(PlayerClanWar.objects.count(), len(wars) * 15)
 
     def _test_refresh_player_details(self):
         leader = Player.objects.get(playerclanstatshistory__clan_role='leader')
         self._run_refresh_method(refresh_player_profile, leader)
-        self.assertTrue(Clan.objects.count(), 1)
+        self.assertEqual(Clan.objects.count(), 1)
         self.assertEqual(PlayerClanHistory.objects.filter(player=leader).count(), 1)
         self.assertEqual(PlayerStatsHistory.objects.count(), 1)
         self.assertGreaterEqual(Card.objects.count(), 8)
@@ -95,3 +97,11 @@ class TopLevelHelpersTestCase(TestCase):
     def test_clan_details_then_player_profile(self):
         self._test_refresh_clan_details()
         self._test_refresh_player_details()
+
+    def test_refresh_constants(self):
+        refresh_constants(self.api_client)
+        constants = self.api_client.get_constants()
+        constants = Box(constants.raw_data)
+        for key in constants:
+            path = os.path.join(settings.CONSTANTS_DIR, key + '.json')
+            self.assertTrue(os.path.isfile(path))

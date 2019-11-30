@@ -11,7 +11,7 @@
 - [ ] Add a db lock for sync with RoyaleAPI
 - [ ] Make all refrashable components to be actually refreshable (front)
 - [ ] Migrate all CSS to styled components
-- [ ] define donation reset time as a setting (should be every Sunday at 8AM UTC)
+- [ ] define donation reset time as a setting (should be every Monday at 00:00 UTC)
 
 - [ ] Authentication
 
