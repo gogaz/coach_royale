@@ -90,6 +90,7 @@ def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False,
             "clan_role": player.role,
             "donations": player.donations,
             "donations_received": player.donations_received,
+            "last_seen": player.last_seen,
         }
         db_player_clanstats, created = PlayerClanStatsHistory.create_or_find(**history_args)
         db_player_clanstats.current_clan_rank = player.rank

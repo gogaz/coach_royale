@@ -35,7 +35,7 @@ class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
         model = PlayerClanStatsHistory
         fields = ('timestamp', 'last_refresh',
                   'clan_role', 'current_clan_rank',
-                  'donations', 'donations_received', 'joined')
+                  'donations', 'donations_received', 'joined', 'last_seen')
 
 
 class PlayerStatsHistorySerializer(HyperlinkedModelSerializer):

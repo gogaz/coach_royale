@@ -84,6 +84,13 @@ export default class PlayerStats extends React.Component {
 
         if (loadingPlayer || loadingClan) return <Loading/>;
 
+        const lastSeen = moment(player.clanDetails.last_seen);
+        const LastSeen = (...args) => (
+            <React.Fragment>
+                <span data-tip data-for="lastSeen"><TimeFromNow time={lastSeen}/></span>
+                <ReactTooltip type="dark" effect="solid" id="lastSeen">{lastSeen.format('L')} {lastSeen.format('LTS')}</ReactTooltip>
+            </React.Fragment>
+        );
 
         return (
             <React.Fragment>
@@ -104,7 +111,7 @@ export default class PlayerStats extends React.Component {
                 </div>
                 <CardContainer>
                     <ClashRoyaleStat title="Last seen" image={images.static('activity')}
-                                     value={moment(player.details.last_refresh).fromNow()}/>
+                                     value={<LastSeen/>}/>
                     <ClashRoyaleStat title="Trophies"
                                      image={player.details.current_trophies > 4000 ? images.arena(player.details.arena) : images.static('trophy')}
                                      value={player.details.current_trophies}/>

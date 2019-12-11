@@ -87,6 +87,7 @@ class PlayerClanStatsHistory(HistoryModel):
     previous_clan_rank = models.IntegerField(null=True)
     donations = models.IntegerField(null=True)
     donations_received = models.IntegerField(null=True)
+    last_seen = models.DateTimeField(null=True)
 
     # duplication to allow easy use
     level = models.IntegerField(null=True)
