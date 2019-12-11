@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import ReactTable from "react-table";
-import styled from "styled-components";
+import styled, {withTheme} from "styled-components";
 import { images } from "../../helpers/assets"
 import { Link } from "react-router-dom";
 import DonationCell from "./cells/DonationCell";
@@ -28,7 +28,7 @@ const PlayerLevelCell = styled.span`
     padding-top: .4rem;
 `;
 
-const BASE_COLUMNS = [
+const getBaseColumns = (theme) => [
     {
         Header: "Rank",
         id: "rank",
@@ -77,14 +77,14 @@ const BASE_COLUMNS = [
         id: "received",
         accessor: "details.donations_received",
         width: 80,
-        Cell: ({row}) => <DonationCell color='warning' column='received' row={row} icon='arrow-down' />
+        Cell: ({row}) => <DonationCell color={theme.colors.orange} column='received' row={row} icon='arrow-down' />
     },
     {
         Header: "Donated",
         id: "given",
         accessor: "details.donations",
         width: 80,
-        Cell: ({row}) => <DonationCell color='primary' column='given' row={row} icon='arrow-up' />
+        Cell: ({row}) => <DonationCell color={theme.colors.green} column='given' row={row} icon='arrow-up' />
     },
     {
         Header: "Total",
@@ -95,7 +95,7 @@ const BASE_COLUMNS = [
     }
 ];
 
-export default class ClanMembersTable extends React.Component {
+class ClanMembersTable extends React.Component {
     constructor(props) {
         super(props);
 
@@ -124,11 +124,11 @@ export default class ClanMembersTable extends React.Component {
         if (!data.length)
             return null;
 
-        const {baseColumns, resizable, pageSize, defaultSorted, showPagination} = this.props;
+        const {theme, baseColumns, resizable, pageSize, defaultSorted, showPagination} = this.props;
 
         // Check if we were given some columns to show instead of the default columns
         let columns = [];
-        for (const col of BASE_COLUMNS) {
+        for (const col of getBaseColumns(theme)) {
             const correspondingBaseColumn = baseColumns.find(value => col.id === value);
             if (correspondingBaseColumn) {
                 columns = [...columns, col]
@@ -137,7 +137,7 @@ export default class ClanMembersTable extends React.Component {
         columns = [...columns, ...this.props.columns];
 
         if (!columns.length) {
-            columns = BASE_COLUMNS;
+            columns = getBaseColumns(theme);
         }
 
         return (
@@ -177,3 +177,5 @@ ClanMembersTable.defaultProps = {
     defaultSorted: [{id: "rank"}],
     onFetchData: () => {}
 };
+
+export default withTheme(ClanMembersTable);

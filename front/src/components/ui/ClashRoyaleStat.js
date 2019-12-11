@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled, {withTheme} from "styled-components"
 
 import { locale } from "../../helpers/browser";
-import {FontAwesomeIcon} from "./FontAwesome";
+import FontAwesomeIcon from "./FontAwesome";
 
 const CardContent = styled.div`
     background: url("${({image}) => image}") no-repeat center left;
@@ -47,7 +47,7 @@ class ClashRoyaleStat extends React.Component {
                     <Icon><FontAwesomeIcon icon="arrow-down" color={theme.colors.red}/></Icon>
                 )}
                 { result === 0 && (
-                    <Icon><FontAwesomeIcon icon="equals" color={theme.colors.dark}/></Icon>
+                    <Icon><FontAwesomeIcon icon="equals" color={theme.colors.blue}/></Icon>
                 )}
                 <CardContentTitle>{title && title}</CardContentTitle>
                 {value}

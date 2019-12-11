@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {withTheme} from "styled-components";
 
 class FontAwesomeIcon extends React.Component {
     render() {
-        const {library, icon, spin, pulse, rotate, flip, scale, color} = this.props;
+        const {theme, library, icon, spin, pulse, rotate, flip, scale, color, style} = this.props;
         let classNames = [ library, 'fa-' + icon ];
         if (spin) classNames = [ ...classNames, 'fa-spin' ];
         if (pulse) classNames = [ ...classNames, 'fa-pulse' ];
@@ -11,10 +12,14 @@ class FontAwesomeIcon extends React.Component {
         if (flip) classNames = [ ...classNames, 'fa-flip-' + flip ];
         if (scale > 1) classNames = [ ...classNames, 'fa-' + Number(scale).toString() + 'x' ];
 
-        let props = {};
-        if (color) props = { ...props, style: {color} };
+        const iconProps = {
+            style: {
+                color: color || theme.colors.black,
+                ...style
+            }
+        };
 
-        return <i className={classNames.join(' ')} {...props} />
+        return <i className={classNames.join(' ')} {...iconProps} />
     }
 }
 
@@ -34,7 +39,8 @@ FontAwesomeIcon.propTypes = {
     flip: PropTypes.oneOf([ false, 'vertical', 'horizontal' ]),
     scale: PropTypes.oneOf([...Array(5).keys()]),
     library: PropTypes.oneOf([ 'fa', 'fas', 'fal' ]),
-    color: PropTypes.oneOf(['danger', 'success', 'warning', 'primary', 'secondary', 'info', 'muted', 'light', 'white'])
+    color: PropTypes.string,
+    style: PropTypes.object,
 };
 
-export { FontAwesomeIcon };
+export default withTheme(FontAwesomeIcon);

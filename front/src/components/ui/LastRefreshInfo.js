@@ -6,7 +6,7 @@ import {withTheme} from "styled-components";
 
 import { handleErrors } from "../../helpers/api";
 
-import { FontAwesomeIcon } from './FontAwesome';
+import FontAwesomeIcon from './FontAwesome';
 import TimeFromNow from "./TimeFromNow";
 
 class LastRefreshInfo extends React.Component {

@@ -6,7 +6,7 @@ import { handleErrors } from "../../helpers/api";
 import { cookies, getLocaleDateString } from "../../helpers/browser";
 
 // import 'react-datepicker/dist/react-datepicker.css';
-import { FontAwesomeIcon } from "../ui/FontAwesome";
+import FontAwesomeIcon from "../ui/FontAwesome";
 
 export default class DateRangeForm extends React.Component {
     constructor(props) {

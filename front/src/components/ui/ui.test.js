@@ -3,7 +3,7 @@ import { shallow } from '../../enzyme';
 import nock from 'nock';
 import Loading from './Loading';
 import ClashRoyaleStat from './ClashRoyaleStat';
-import { FontAwesomeIcon } from "./FontAwesome";
+import FontAwesomeIcon from "./FontAwesome";
 import LastRefreshInfo from "./LastRefreshInfo";
 
 let { describe, it, expect } = global;
