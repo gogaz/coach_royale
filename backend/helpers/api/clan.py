@@ -169,7 +169,7 @@ def update_war_status(command, options, db_clan):
     if war_col_battles.count():
         war = None
         for battle in war_col_battles:
-            war = ClanWar.get_war_for_collection_day_battle(db_clan, battle, war)
+            war = battle.get_war_for_collection_day(war)
             if war is None:
                 continue
             battle.war = war
@@ -182,7 +182,7 @@ def update_war_status(command, options, db_clan):
     if war_final_battles.count():
         war = None
         for battle in war_final_battles:
-            war = ClanWar.get_war_for_final_day_battle(db_clan, battle, war)
+            war = battle.get_war_for_final_day(db_clan, war)
             if war is None:
                 continue
             battle.war = war
@@ -195,7 +195,7 @@ def update_war_status(command, options, db_clan):
         for p in b.team.all():
             clan = p.get_clan(b.time)
             if clan:
-                war = ClanWar.get_war_for_collection_day_battle(clan, b)
+                war = b.get_war_for_collection_day(clan)
                 b.war = war
                 b.save()
                 if options['verbose']:
