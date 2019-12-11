@@ -11,6 +11,9 @@ import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import Loading from "../ui/Loading";
 import PlayersClan from "./PlayersClan";
 import LastRefreshInfo from "../ui/LastRefreshInfo";
+import {setTitle} from "../../helpers/browser";
+import ReactTooltip from "react-tooltip";
+import TimeFromNow from "../ui/TimeFromNow";
 
 const CardContainer = styled.div`
     margin-top: .75rem;
@@ -38,31 +41,49 @@ export default class PlayerStats extends React.Component {
         super(props);
 
         this.state = {
-            loading: true,
+            loadingPlayer: true,
+            loadingClan: true,
             player: {details: {}}
         };
 
-        this.fetchData = this.fetchData.bind(this);
+        this.fetchPlayerData = this.fetchPlayerData.bind(this);
+        this.fetchClanData = this.fetchClanData.bind(this)
     }
 
-    fetchData() {
+    fetchPlayerData() {
+        setTitle("Player's profile");
         fetch(this.props.endpoint + '/')
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
-                    this.setState({loading: false, player: result});
+                    console.log(result);
+                    this.setState({loadingPlayer: false, player: result});
+                    setTitle(`${result.name} (#${result.tag})`);
+                    this.fetchClanData();
+                })
+            .catch(error => console.log(error));
+    }
+
+    fetchClanData() {
+        fetch(this.props.endpoint + '/clan')
+            .then((res) => handleErrors(res))
+            .then(
+                (result) => {
+                    console.log(result);
+                    this.setState({loadingClan: false, player: {...this.state.player, clanDetails: result}});
                 })
             .catch(error => console.log(error));
     }
 
     componentDidMount() {
-        this.fetchData();
+        this.fetchPlayerData();
     }
 
     render() {
-        const {loading, player} = this.state;
+        const {loadingPlayer, loadingClan, player} = this.state;
 
-        if (loading) return <Loading/>;
+        if (loadingPlayer || loadingClan) return <Loading/>;
+
 
         return (
             <React.Fragment>
@@ -71,7 +92,7 @@ export default class PlayerStats extends React.Component {
                         <div className="col-7">
                             <h3 className="d-inline mr-2">{player.name}</h3>
                             <LastRefreshInfo time={player.details.last_refresh}/>
-                            <PlayersClan clan={player.clan} endpoint={this.props.endpoint}/>
+                            <PlayersClan player={player}/>
                         </div>
                         <div className="col-5">
                             <img src={player.clan.details.badge} style={{float: 'right', height: '5pc'}}/>
@@ -95,7 +116,7 @@ export default class PlayerStats extends React.Component {
                     <ClashRoyaleStat title="Cards found" image={images.static('cards')}
                                      value={player.details.cards_found}/>
                 </CardContainer>
-                <hr/>
+                <hr style={{marginBottom: 0}}/>
             </React.Fragment>
         );
     }

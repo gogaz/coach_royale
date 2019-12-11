@@ -1,36 +1,24 @@
 import React from 'react';
-import { FontAwesomeIcon } from './FontAwesome';
-import ReactTooltip from 'react-tooltip';
 import moment from 'moment'
-import { handleErrors } from "../../helpers/api";
 import PropTypes from 'prop-types';
+import ReactTooltip from 'react-tooltip';
+import {withTheme} from "styled-components";
 
-export default class LastRefreshInfo extends React.Component {
+import { handleErrors } from "../../helpers/api";
+
+import { FontAwesomeIcon } from './FontAwesome';
+import TimeFromNow from "./TimeFromNow";
+
+class LastRefreshInfo extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             now: moment(),
-            intervalID: undefined,
             error: undefined,
             refreshing: false,
         };
-        this.updateComponent = this.updateComponent.bind(this);
         this.catchErrors = this.catchErrors.bind(this);
-    }
-
-    updateComponent() {
-        this.setState({now: moment()});
-    }
-
-    componentDidMount() {
-        if (this.props.update > 0) {
-            this.setState({intervalID: setInterval(this.updateComponent, this.props.update * 1000)})
-        }
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.state.intervalID);
     }
 
     refreshData(url) {
@@ -59,27 +47,27 @@ export default class LastRefreshInfo extends React.Component {
     }
 
     render() {
-        const { refreshable, time, url, allowRefreshAfter } = this.props;
+        const { refreshable, time, url, allowRefreshAfter, theme } = this.props;
         const { refreshing, error, now } = this.state;
-        const last_refresh = moment(time);
+        const lastRefresh = moment(time);
 
         return (
             <small className="last-refresh-info">
-                <span className="text-muted text-uppercase" data-tip="last refreshed">
-                    Last refresh {now && last_refresh.fromNow()}
+                <span className="text-muted text-uppercase" data-tip data-for="lastRefreshed">
+                    Last refresh <TimeFromNow time={lastRefresh}/>
                 </span>
-                <ReactTooltip place="bottom" type="dark" effect="solid">
-                    {last_refresh.format('L')} {last_refresh.format('LTS')}
+                <ReactTooltip place="bottom" type="dark" effect="solid" id="lastRefreshed">
+                    {lastRefresh.format('L')} {lastRefresh.format('LTS')}
                 </ReactTooltip>
                 <button className="btn btn-xs ml-1"
-                        hidden={!refreshable || error !== undefined || now.diff(last_refresh) < allowRefreshAfter}
+                        hidden={!refreshable || error !== undefined || now.diff(lastRefresh) < allowRefreshAfter}
                         onClick={() => this.refreshData(url)}
                         disabled={refreshing}>
                     <FontAwesomeIcon icon="sync" spin={refreshing} />
                 </button>
                 <br/>
-                { error &&
-                    <span className="badge badge-warning"><FontAwesomeIcon icon='exclamation-triangle'/> {error}</span>
+                { error !== undefined &&
+                    <span className="badge badge-warning"><FontAwesomeIcon icon='exclamation-triangle' color={theme.colors.orange}/> {error}</span>
                 }
             </small>
         );
@@ -94,6 +82,7 @@ LastRefreshInfo.defaultProps = {
     url: '',
     time: moment().subtract(100, 'year').format(),
 };
+
 LastRefreshInfo.propTypes = {
     refreshable: PropTypes.bool,
     update: PropTypes.number,
@@ -102,3 +91,5 @@ LastRefreshInfo.propTypes = {
     url: PropTypes.string,
     time: PropTypes.string,
 };
+
+export default withTheme(LastRefreshInfo);

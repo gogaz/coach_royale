@@ -5,14 +5,17 @@ export default class Loading extends React.Component {
     render() {
         const {height, loading} = this.props;
 
+        if (!loading)
+            return null;
+
         if (height)
             return <img hidden={!loading} src={ '/img/loading.svg' } style={{height: height, display: 'inline-block'}} />;
 
         return (
-            <div hidden={ !loading }>
+            <React.Fragment>
                 <div style={ {height: "50%"} }> </div>
                 <img className="d-block mx-auto" src={ '/img/loading.svg' } />
-            </div>
+            </React.Fragment>
         );
     }
 }

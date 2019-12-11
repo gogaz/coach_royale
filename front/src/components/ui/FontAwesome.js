@@ -10,9 +10,11 @@ class FontAwesomeIcon extends React.Component {
         if (rotate) classNames = [ ...classNames, 'fa-rotate-' + Number(rotate).toString() ];
         if (flip) classNames = [ ...classNames, 'fa-flip-' + flip ];
         if (scale > 1) classNames = [ ...classNames, 'fa-' + Number(scale).toString() + 'x' ];
-        if (color) classNames = [ ...classNames, 'text-' + color ];
 
-        return <i className={classNames.join(' ')} />
+        let props = {};
+        if (color) props = { ...props, style: {color} };
+
+        return <i className={classNames.join(' ')} {...props} />
     }
 }
 

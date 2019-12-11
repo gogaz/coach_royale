@@ -4,78 +4,16 @@
 body {
     background-color: #e4e5e6;
 }
-#root .navbar {
-    padding: .1rem 1rem;
-}
 .card-header .list-group li.list-group-item {
     background-color: #f0f3f5;
-}
-
-.mini-stats .content {
-    background: no-repeat center left;
-    background-size: auto 46px;
-    padding-left: 3rem;
 }
 
 .card-body:not(:last-child) {
     border-bottom: 1px solid #c2cfd6;
 }
-.mini-stats .title {
-  font-weight: bold;
-}
-i.donations-icons .text-warning .fa, i.donations-icons .text-warning .fas, i.donations-icons .text-warning .fal {
-    color: #ff9207 !important;
-}
 
-i.donations-icons .fa, i.donations-icons .fas, i.donations-icons .fal {
-    position: absolute;
-    margin: 0;
-    top: auto;
-    left: auto;
-    right: 0;
-    bottom: 0;
-    -webkit-transform: none;
-    transform: none;
-    font-size: .8em;
-    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-}
-.player-clan-info i.donations-icons .fa, .player-clan-info i.donations-icons .fas, .player-clan-info i.donations-icons .fal {
-    font-size: .6em;
-}
-i.donations-icons {
-    line-height: 1;
-    vertical-align: middle;
-    display: inline-block;
-    position: relative;
-}
-i.donations-icons img {
-    width: auto;
-    height: 1.3rem;
-    vertical-align: middle;
-    margin-left: 0.2rem;
-}
-.trophy-td img {
-    height: 1.5rem;
-}
 a:hover {
     text-decoration: none;
-}
-.player-clan-info>span {
-    border-left: 1px solid #c2cfd6;
-    padding-left: 8px;
-    padding-right: 8px;
-}
-.player-clan-info .donations-icons img {
-    vertical-align: top;
-    height: 1rem;
-}
-.player-clan-info .donations-icons svg {
-    font-size: .5rem;
-    top: 0;
-    margin-top: .69rem;
-}
-.progress-bar {
-    text-shadow: 1px 1px #333, -1px -1px #333, -1px 1px #333, 1px -1px #333;
 }
 button:disabled {
     cursor: not-allowed;
@@ -88,32 +26,7 @@ button:disabled {
 .last-refresh-info .badge {
     font-size: 100%;
 }
-.level-td {
-    display: block;
-    background: no-repeat center;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, .5),
-                   1px -1px rgba(0, 0, 0, .5),
-                   -1px 1px rgba(0, 0, 0, .5),
-                   -1px -1px rgba(0, 0, 0, .5);
-    color: #fff;
-    text-align: center;
-    vertical-align: middle;
-    font-weight: 800;
-    font-size: .75rem;
-    width: 100%;
-    background-size: 28px;
-    height: 32px;
-    padding-top: .4rem;
-}
-/** PlayerWarResultCell **/
-.war-result {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.war-result>img {
-    height: 30px;
-}
+
 /** ReactTable **/
 #root .rt-noData {
     text-align: center;

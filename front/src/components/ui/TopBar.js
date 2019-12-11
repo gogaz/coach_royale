@@ -1,19 +1,37 @@
 import React from 'react';
+import styled, {withTheme} from "styled-components";
 
-export default class TopBar extends React.Component {
-    render() {
-        return (
-            <nav className="navbar navbar-dark bg-dark">
-                <a className="navbar-brand" href="#">
-                    <img src="/img/logo_name_beside.png" height="30" alt=""/>
-                </a>
+const NavBar = styled.nav`
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    background: ${({theme}) => theme.colors.dark};
+    padding: .1rem 1rem;
+`;
 
-                {/*
-                <span className="my-2 my-lg-0">
-                    <Link to={'/login'} className="nav-link"><FontAwesomeIcon icon={"sign-in-alt"}/> Login</Link>
-                </span>
-                */}
-            </nav>
-        )
-    }
-}
+const Link = styled.a`
+    color: ${({theme}) => theme.colors.white};
+    display: inline-block;
+    padding: .3125rem 0;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+`;
+
+const Brand = styled.img`
+    vertical-align: initial;
+    height: 30px;
+`;
+
+const TopBar = ({...props}) => {
+    return (
+        <NavBar>
+            <Link href={GLOBAL_rootURL}><Brand src="/img/logo_name_beside.png" alt="Logo"/></Link>
+        </NavBar>
+    );
+};
+
+export default withTheme(TopBar);

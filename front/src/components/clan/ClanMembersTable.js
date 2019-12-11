@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import ReactTable from "react-table";
+import styled from "styled-components";
 import { images } from "../../helpers/assets"
 import { Link } from "react-router-dom";
 import DonationCell from "./cells/DonationCell";
@@ -8,6 +9,24 @@ import Loading from "../ui/Loading";
 import TrophiesCell from "./cells/TrophiesCell";
 
 const ROLES = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
+
+const PlayerLevelCell = styled.span`
+    display: block;
+    background: url("${({ image }) => image}") no-repeat center;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, .5),
+                   1px -1px rgba(0, 0, 0, .5),
+                   -1px 1px rgba(0, 0, 0, .5),
+                   -1px -1px rgba(0, 0, 0, .5);
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 800;
+    font-size: .75rem;
+    width: 100%;
+    background-size: 28px;
+    height: 32px;
+    padding-top: .4rem;
+`;
 
 const BASE_COLUMNS = [
     {
@@ -42,14 +61,7 @@ const BASE_COLUMNS = [
         accessor: "details.level",
         id: 'level',
         width: 45,
-        Cell: ({row}) => (
-            <span
-                className="level-td"
-                style={{backgroundImage: 'url(' + images.static('level') + ')'}}
-            >
-                {row.level}
-            </span>
-        )
+        Cell: ({row}) => <PlayerLevelCell image={images.static('level')}>{row.level}</PlayerLevelCell>
     },
     {
         Header: "Role",

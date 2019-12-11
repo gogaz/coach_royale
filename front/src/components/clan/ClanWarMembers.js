@@ -169,7 +169,7 @@ export default class ClanWarMembers extends React.Component {
                     columns={columns}
                     resizable={false}
                     filterable
-                    defaultSorted={[{id: "rank"}]}
+                    defaultSorted={[{id: "trophies", desc: true}]}
                     hidden={loading}
                     loading={loading}
                     pageSize={members.length}

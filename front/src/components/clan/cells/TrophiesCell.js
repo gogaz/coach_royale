@@ -1,8 +1,12 @@
 import React from 'react';
+import styled from "styled-components";
 import { images } from "../../../helpers/assets";
 import { locale } from "../../../helpers/browser";
 import { ConstantsContext, playerArenaFromTrophies } from "../../../helpers/constants";
 
+const Image = styled.img`
+    height: 1.5rem;
+`;
 export default class TrophiesCell extends React.Component {
     render() {
         const { arena, trophies } = this.props;
@@ -10,10 +14,10 @@ export default class TrophiesCell extends React.Component {
         if (!arena && !trophies)
             return null;
         return (
-            <span className="trophy-td">
-                <img src={images.arena(_arena)} />
+            <React.Fragment>
+                <Image src={images.arena(_arena)} />
                 {Number(trophies).toLocaleString(locale)}
-            </span>
+            </React.Fragment>
         );
     }
 }

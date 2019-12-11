@@ -4,15 +4,15 @@
   - [x] Store connection sessions to RoyaleAPI (back)
   - [ ] Add `/status` endpoint (back)
   - [ ] Display status in the app (front)
-- [x] Add more readable charts in player page
 - [ ] Add 'Best' column to player's seasons in clan (back)
 - [ ] Show last changes on a player
-- [ ] Embed constants.js in index.html ?
 - [ ] Add a db lock for sync with RoyaleAPI
 - [ ] Make all refrashable components to be actually refreshable (front)
-- [ ] Migrate all CSS to styled components
+- [x] Migrate all CSS to styled components
 - [ ] define donation reset time as a setting (should be every Monday at 00:00 UTC)
-- [x] Store exceptions
+- [ ] Decouple from Bootstrap
+- [ ] Add a 'Report' tab to ClanPage to contain information about who should be kicked, promoted, demoted (-> app settings or db record for configuration)
+- [ ] Change the "Players" counter on clan page to include recently joined/left members, show details in a tooltip
 
 - [ ] Authentication
 

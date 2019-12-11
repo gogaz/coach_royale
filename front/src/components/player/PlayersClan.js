@@ -1,54 +1,48 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import Loading from "../ui/Loading";
-import { handleErrors } from "../../helpers/api";
-import DonationCell from "../clan/cells/DonationCell";
 import moment from 'moment'
+import {Link} from "react-router-dom";
+import styled, { withTheme } from "styled-components";
 
-export default class PlayersClan extends React.Component {
-    constructor(props) {
-        super(props);
+import DonationCell from "../clan/cells/DonationCell";
 
-        this.state = {
-            loading: true,
-            endpoint: props.endpoint + '/clan',
-            player: {},
-        }
+const PlayerClanInfo = styled.div`
+    display: inline-block;
+    
+    .donations-icons svg {
+        font-size: .5rem;
+        top: 0;
+        margin-top: .69rem;
     }
+`;
 
-    componentDidMount() {
-        fetch(this.state.endpoint)
-            .then((res) => handleErrors(res))
-            .then(
-                (result) => {
-                    this.setState({ loading: false, player: result });
-                })
-            .catch(error => console.log(error) );
-    }
+const Data = styled.span`
+    border-left: 1px solid #c2cfd6;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: ${({theme}) => theme.colors.gray}!important;
+`;
 
-    render() {
-        const { clan } = this.props;
-        const { player, loading } = this.state;
-        const roles = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
+const PlayersClan = ({player}) => {
+    const roles = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
 
-        return (
-            <div className="mt-3">
-                <span className="mr-2"><Link to={"/clan/"+clan.tag}>{clan.name}</Link></span>
-                <Loading height="2.5pc" loading={loading} />
-                <div className="player-clan-info" hidden={loading} style={{display: 'inline-block'}}>
-                    <span className="text-muted">{roles[player.clan_role]}</span>
-                    <span className="text-muted">#{player.current_clan_rank}</span>
-                    <span className="text-muted">
-                        <DonationCell row={player} icon="arrow-up" color="success" column="donations"/>
-                    </span>
-                    <span className="text-muted">
-                        <DonationCell row={player} icon="arrow-down" color="danger" column="donations_received"/>
-                    </span>
-                    {player.joined &&
-                        <span className="text-muted">Joined {moment(player.joined).calendar()}</span>
-                    }
-                </div>
-            </div>
-        );
-    }
-}
+    return (
+        <div className="mt-3">
+            <span className="mr-2"><Link to={"/clan/" + player.clan.tag}>{player.clan.name}</Link></span>
+            <PlayerClanInfo>
+                <Data>{roles[player.clanDetails.clan_role]}</Data>
+                <Data>#{player.clanDetails.current_clan_rank}</Data>
+                <Data>
+                    <DonationCell row={player} icon="arrow-up" color="success" column="donations"/>
+                </Data>
+                <Data>
+                    <DonationCell row={player} icon="arrow-down" color="danger" column="donations_received"/>
+                </Data>
+                {player.clanDetails.joined &&
+                    <Data>Joined {moment(player.clanDetails.joined).calendar()}</Data>
+                }
+            </PlayerClanInfo>
+        </div>
+    );
+};
+
+export default withTheme(PlayersClan);

@@ -1,34 +1,59 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled, {withTheme} from "styled-components"
 
 import { locale } from "../../helpers/browser";
-import { FontAwesomeIcon } from "./FontAwesome";
+import {FontAwesomeIcon} from "./FontAwesome";
 
-export default class ClashRoyaleStat extends React.Component {
+const CardContent = styled.div`
+    background: url("${({image}) => image}") no-repeat center left;
+    background-size: auto 40px;
+    padding-left: 3rem;
+    position: relative;
+`;
+
+const CardContentTitle = styled.div`
+    font-weight: bold;
+`;
+
+const Icon = styled.span`
+    position: absolute;
+    bottom: 0;
+    left: 1.3rem;
+    font-size: 20px;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+`;
+
+class ClashRoyaleStat extends React.Component {
     render () {
-        let {value, title, localeString, compareTo, compareInv} = this.props;
+        let {value, title, localeString, compareTo, compareInv, theme} = this.props;
+
         if (localeString)
             value = isNaN(value) ? value : Number(value).toLocaleString(localeString);
 
-        let compare_result = undefined;
-        if (value && !isNaN(value) && compareTo !== undefined) {
-            if (!compareTo)
-                compareTo = 1000;
-            let result = value - compareTo;
+        let result = undefined;
+        if (value && !isNaN(value) && !isNaN(compareTo)) {
+            result = value - compareTo;
             if (compareInv)
                 result = -result;
-            let icon_props = result === 0 ? {icon: 'equals', color: 'muted'} : result > 0 ? {icon: 'arrow-up', color: 'success'} : {icon: 'arrow-down', color: 'danger'};
-            let compare_icon = <FontAwesomeIcon {...icon_props}/>;
-            compare_result = result === 0 ? compare_icon : <span> (<small>{compare_icon}</small> {Math.abs(result)})</span>;
         }
 
         return (
-            <div className="mini-stats">
-                <div className="content" style={{backgroundImage: "url(" + this.props.image + ")", ...this.props.style}}>
-                    <div className="title">{title && title}</div>
-                    <div className="value"> {value} {compare_result && compare_result}</div>
-                </div>
-            </div>
+            <CardContent image={this.props.image} style={this.props.style}>
+                { result > 0 && (
+                    <Icon><FontAwesomeIcon icon="arrow-up" color={theme.colors.green}/></Icon>
+                )}
+                { result < 0 && (
+                    <Icon><FontAwesomeIcon icon="arrow-down" color={theme.colors.red}/></Icon>
+                )}
+                { result === 0 && (
+                    <Icon><FontAwesomeIcon icon="equals" color={theme.colors.dark}/></Icon>
+                )}
+                <CardContentTitle>{title && title}</CardContentTitle>
+                {value}
+                { result > 0 && ` (+${result})`}
+                { result < 0 && ` (${result})`}
+            </CardContent>
         );
     }
 }
@@ -40,3 +65,5 @@ ClashRoyaleStat.propTypes = {
     compareInv: PropTypes.bool, // Invert comparison
 };
 ClashRoyaleStat.defaultProps = {localeString: locale, compareInv: true};
+
+export default withTheme(ClashRoyaleStat);

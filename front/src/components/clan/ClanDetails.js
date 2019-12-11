@@ -48,7 +48,7 @@ export default class ClanDetails extends React.Component {
             .then(
                 (result) => {
                     this.setState({loading: false, clan: result});
-                    setTitle(`${result.name} (${result.tag})`);
+                    setTitle(`${result.name} (#${result.tag})`);
                 })
             .catch(error => console.log(error));
     }
@@ -124,7 +124,7 @@ export default class ClanDetails extends React.Component {
                         value={clan.details.member_count + " / 50"}
                     />
                     <ClashRoyaleStat
-                        image={country_icon} style={{backgroundSize: '2.5rem'}}
+                        image={country_icon} style={{paddingLeft: '4.5rem'}}
                         title="Region"
                         value={clan.details.region}
                     />
