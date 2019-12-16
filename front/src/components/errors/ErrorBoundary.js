@@ -1,30 +1,33 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CriticalError from "./CriticalError";
 
 export default class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        hasError: false,
-        error: '',
-        errorInfo: '',
-    };
-  }
+    state = {hasError: false};
 
-  componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
-    this.setState({
-        hasError: true,
-        error: error,
-        errorInfo: errorInfo,
-    })
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <CriticalError code='' description={this.state.error} message={this.state.errorInfo}/>;
+    static getDerivedStateFromError() {
+        return {hasError: true}
     }
 
-    return this.props.children;
-  }
+    componentDidCatch(error, info) {
+        console.log(error);
+        console.log(info);
+    }
+
+    render() {
+        const {children, errorProps} = this.props;
+        const {hasError} = this.state;
+
+        return hasError ? <CriticalError {...errorProps} /> : children;
+    }
 }
+
+ErrorBoundary.propTypes = {
+    errorProps: PropTypes.object,
+};
+
+ErrorBoundary.defaultProps = {
+    errorProps: {
+        message: "We're very sorry, but something went wrong :(",
+    }
+};
