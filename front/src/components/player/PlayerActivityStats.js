@@ -1,11 +1,15 @@
 import React from 'react';
+import moment from "moment";
+import axios from "axios";
+
+import ReactTable from "react-table";
+
 import PlayerDiffStatsChart from "./charts/PlayerDiffStatsChart";
 import PlayerRecentBattlesResultsChart from "./charts/PlayerRecentBattlesResultsChart";
 import PlayerWarResultsChart from "./charts/PlayerWarResultsChart";
-import ReactTable from "react-table";
 import Loading from "../ui/Loading";
-import moment from "moment";
 import PlayerWarResultCell from "../clan/cells/PlayerWarResultCell";
+import {handleErrors} from "../../helpers/api";
 
 export default class PlayerActivityStats extends React.Component {
     constructor(props) {
@@ -26,8 +30,8 @@ export default class PlayerActivityStats extends React.Component {
     }
     fetchData() {
         const url = this.props.endpoint + '/activity';
-        fetch(url)
-            .then((res) => res.json())
+        axios.get(url)
+            .then(result => handleErrors(result))
             .then(result => {
                 this.setState({
                     data: {

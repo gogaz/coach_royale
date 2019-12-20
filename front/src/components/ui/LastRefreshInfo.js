@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
+import axios from "axios";
 import {withTheme} from "styled-components";
 
 import { handleErrors } from "../../helpers/api";
@@ -23,7 +24,7 @@ class LastRefreshInfo extends React.Component {
 
     refreshData(url) {
         this.setState({refreshing: true});
-        fetch(url, {method: 'POST'})
+        axios.get(url, {method: 'POST'})
             .then(res => handleErrors(res))
             .then(res => {
                 this.setState({data: res, refreshing: false});

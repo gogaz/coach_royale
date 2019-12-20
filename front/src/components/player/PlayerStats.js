@@ -1,6 +1,7 @@
 import React from 'react';
-import moment from 'moment'
+import moment from 'moment';
 import styled from "styled-components";
+import axios from "axios";
 
 import {ConstantsContext, playerArenaFromTrophies} from "../../helpers/constants";
 import {handleErrors} from "../../helpers/api";
@@ -52,7 +53,7 @@ export default class PlayerStats extends React.Component {
 
     fetchPlayerData() {
         setTitle("Player's profile");
-        fetch(this.props.endpoint + '/')
+        axios.get(this.props.endpoint + '/')
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
@@ -65,7 +66,7 @@ export default class PlayerStats extends React.Component {
     }
 
     fetchClanData() {
-        fetch(this.props.endpoint + '/clan')
+        axios.get(this.props.endpoint + '/clan')
             .then((res) => handleErrors(res))
             .then(
                 (result) => {

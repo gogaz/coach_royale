@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import axios from "axios";
 import DatePicker from "react-datepicker";
 import PropTypes from "prop-types";
 import { handleErrors } from "../../helpers/api";
@@ -43,9 +44,11 @@ export default class DateRangeForm extends React.Component {
         event.preventDefault();
         const form = new FormData(event.target);
         this.setState({loading: true});
-        fetch(this.props.endpoint, {
+        axios({
             method: 'POST',
-            body: form,
+            url: this.props.endpoint,
+            data: form,
+            headers: {'Content-Type': 'multipart/form-data'}
         })
             .then(res => handleErrors(res))
             .then(result => {

@@ -1,4 +1,5 @@
 import React from "react"
+import axios from "axios";
 import { Route, Switch } from "react-router-dom";
 import ClanPage from "./ClanPage";
 import { handleErrors } from "../../helpers/api";
@@ -29,7 +30,7 @@ class ClanList extends React.Component {
 
     componentDidMount() {
         setTitle("Available clans");
-        fetch(this.props.endpoint)
+        axios.get(this.props.endpoint)
             .then(res => handleErrors(res))
             .then(res => this.setState({tournaments: res, loading: false}))
             .catch(error => console.log(error))

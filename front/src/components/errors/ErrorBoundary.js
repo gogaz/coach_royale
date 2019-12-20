@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import CriticalError from "./CriticalError";
 
 export default class ErrorBoundary extends React.Component {
-    state = {hasError: false};
+    constructor(props) {
+        super(props);
+
+        this.state = {hasError: false};
+    }
 
     static getDerivedStateFromError() {
         return {hasError: true}

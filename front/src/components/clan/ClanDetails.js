@@ -1,5 +1,6 @@
 import React from "react";
 import styled from 'styled-components'
+import axios from "axios";
 
 import {handleErrors} from "../../helpers/api";
 
@@ -43,7 +44,7 @@ export default class ClanDetails extends React.Component {
 
     componentDidMount() {
         setTitle("Clan overview");
-        fetch(this.props.endpoint + '/')
+        axios.get(this.props.endpoint + '/')
             .then((res) => handleErrors(res))
             .then(
                 (result) => {

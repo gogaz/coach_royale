@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import ReactTable from "react-table";
 import styled, {withTheme} from "styled-components";
+import axios from "axios";
 import { images } from "../../helpers/assets"
 import { Link } from "react-router-dom";
 import DonationCell from "./cells/DonationCell";
 import Loading from "../ui/Loading";
 import TrophiesCell from "./cells/TrophiesCell";
+import {handleErrors} from "../../helpers/api";
 
 const ROLES = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
 
@@ -108,8 +110,8 @@ class ClanMembersTable extends React.Component {
     }
 
     componentDidMount() {
-        fetch(this.state.endpoint)
-            .then(res => res.json())
+        axios.get(this.state.endpoint)
+            .then(result => handleErrors(result))
             .then(result => this.setState({data: result, loading: false}))
             .catch(error => console.log(error))
             .then(result => this.props.onFetchData(result))

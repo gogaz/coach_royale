@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactTable from "react-table";
 import moment from 'moment'
+import styled from "styled-components";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Loading from "../ui/Loading";
 import PlayerWarResultCell from "./cells/PlayerWarResultCell";
@@ -22,7 +24,7 @@ export default class ClanWarMembers extends React.Component {
         };
     }
     componentDidMount() {
-        fetch(this.state.endpoint)
+        axios.get(this.state.endpoint)
             .then(res => handleErrors(res))
             .then(result => {
                 this.setState({data: result, loading: false});

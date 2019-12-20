@@ -1,10 +1,11 @@
 import React from "react";
+import axios from "axios";
 
 export const ConstantsContext = React.createContext({});
 
 export function loadConstants() {
     const constants = [
-        fetch('/constants/arenas.json').then(res => res.json()),
+        axios.get('/constants/arenas.json').then(result => result.data),
     ];
     return Promise.all(constants);
 }
