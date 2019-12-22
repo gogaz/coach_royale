@@ -4,14 +4,38 @@ import moment from 'moment'
 import styled from "styled-components";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
 import Loading from "../ui/Loading";
 import PlayerWarResultCell from "./cells/PlayerWarResultCell";
-import '../../style/indicators.css';
 import { locale } from "../../helpers/browser";
 import { images } from "../../helpers/assets";
 import DateRangeForm from "../forms/DateRangeForm";
 import { handleErrors } from "../../helpers/api";
 import TrophiesCell from "./cells/TrophiesCell";
+
+const Indicator = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: ${({color}) => color ? `rgba(${color.r}, ${color.g}, ${color.b}, 1)` : 'transparent'}
+`;
+
+const EmptyIndicator = styled(Indicator)`
+    background-color: rgb(242, 246, 249);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+`;
+
+const IndicatorContent = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: inherit;
+    text-align: right;
+`;
 
 export default class ClanWarMembers extends React.Component {
     constructor(props) {
@@ -41,7 +65,6 @@ export default class ClanWarMembers extends React.Component {
             {
                 Header: <img src={images.static('trophy')} height={20}/>,
                 id: 'trophies',
-                className: "text-right",
                 accessor: "details.trophies",
                 width: 80,
                 Cell: ({row, original}) => <TrophiesCell trophies={row.trophies} arena={original.details.arena} />,
@@ -79,7 +102,7 @@ export default class ClanWarMembers extends React.Component {
             {
                 Header: "Win %",
                 id: "winrate",
-                className: 'indicator-container',
+                style: {position: 'relative'},
                 width: 70,
                 accessor: (data) => {
                     const wins = data.wars.reduce((acc, elem) => acc + elem.final_battles_wins, 0);
@@ -88,7 +111,7 @@ export default class ClanWarMembers extends React.Component {
                 },
                 Cell: ({row}) => {
                     if (row.winrate < 0) {
-                        return <div className="indicator empty" />
+                        return <EmptyIndicator />
                     }
                     let color = {r: 255, g: 255, b: 255};
                     if (row.winrate < 50 && row.winrate !== null)
@@ -97,13 +120,13 @@ export default class ClanWarMembers extends React.Component {
                         color = {g: 230 + (100 - row.winrate) / 3, r: 250 - 2.5 * (row.winrate - 50), b: 255 - 2.5 * (row.winrate - 50)};
                     return (
                         <div style={{padding: 'inherit'}}>
-                            <div className="indicator" style={{backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, 1)`}} />
-                            <div className="indicator-data text-right">
+                            <Indicator color={color} />
+                            <IndicatorContent>
                                 {row.winrate !== null && Number(row.winrate).toLocaleString(locale, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }) + '%'}
-                            </div>
+                            </IndicatorContent>
                         </div>
                     )},
                 filterMethod: (filter, row) => {
@@ -128,7 +151,6 @@ export default class ClanWarMembers extends React.Component {
             },
             {
                 Header: <img src={images.static('battle')} height={20}/>,
-                className: "text-right",
                 id: "count",
                 width: 40,
                 filterable: false,
@@ -136,7 +158,6 @@ export default class ClanWarMembers extends React.Component {
             },
             {
                 Header: <img src={images.static('warYet')} height={20}/>,
-                className: "text-right",
                 id: "count_missing",
                 width: 40,
                 filterable: false,

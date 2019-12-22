@@ -8,6 +8,11 @@
     "collectCoverageFrom": [
       "src/**/**/*.{js,jsx}"
     ],
+    "moduleDirectories": [
+      "node_modules",
+      "helpers",
+      "tests"
+    ],
     "moduleNameMapper": {
       "\\.css$": "identity-obj-proxy"
     }
@@ -48,6 +53,7 @@
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
+    "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "async-wait-until": "^1.2.4",
     "axios-mock-adapter": "^1.17.0",
@@ -63,7 +69,6 @@
     "jest": "^23.6.0",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^0.8.0",
-    "nock": "^11.3.4",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "react-svg-loader": "^3.0.0",
     "react-test-renderer": "^16.12.0",

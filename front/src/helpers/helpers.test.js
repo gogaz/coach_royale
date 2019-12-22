@@ -4,11 +4,9 @@ const { handleErrors } = require('./api');
 const { images } = require('./assets');
 let { test, expect } = global;
 
-test('handleErrors returns JSON', () => {
+test('handleErrors returns response data', () => {
     expect(handleErrors({
-        json: () => {
-            return 42
-        }, ok: true
+        data: 42, status: 200,
     })).toBe(42);
 });
 
@@ -30,7 +28,7 @@ test('assets.image returns an image URL with https', () => {
         if (!images.hasOwnProperty(key)) continue;
 
         let result = images[key];
-        if (result && {}.toString.call(result) === '[object Function]')
+        if (typeof(result) === 'function')
             result = result(42);
         expect(result).toEqual(expect.stringMatching(/.*\.(png|jpg|gif|svg)/))
     }

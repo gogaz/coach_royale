@@ -29,7 +29,7 @@ const Brand = styled.img`
 const TopBar = ({...props}) => {
     return (
         <NavBar>
-            <Link href={GLOBAL_rootURL}><Brand src="/img/logo_name_beside.png" alt="Logo"/></Link>
+            <Link href={window.GLOBAL_rootURL}><Brand src="/img/logo_name_beside.png" alt="Logo"/></Link>
         </NavBar>
     );
 };

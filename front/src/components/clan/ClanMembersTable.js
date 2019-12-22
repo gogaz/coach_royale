@@ -112,10 +112,11 @@ class ClanMembersTable extends React.Component {
     componentDidMount() {
         axios.get(this.state.endpoint)
             .then(result => handleErrors(result))
-            .then(result => this.setState({data: result, loading: false}))
-            .catch(error => console.log(error))
-            .then(result => this.props.onFetchData(result))
-            .catch(error => this.setState({error: error}))
+            .then(result => {
+                this.setState({data: result, loading: false});
+                this.props.onFetchData(result)
+            })
+            .catch(error => { console.log(error); this.setState({error: error}) })
         ;
     }
 

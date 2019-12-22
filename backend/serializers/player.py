@@ -23,19 +23,24 @@ class PlayerStatsSerializer(HyperlinkedModelSerializer):
 
 
 class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
-    joined = SerializerMethodField()
+    clan = SerializerMethodField()
+    dates_in_clan = SerializerMethodField()
 
-    def get_joined(self, obj: PlayerClanStatsHistory):
-        return PlayerClanHistory.objects.filter(player=obj.player, clan=obj.clan) \
-                                        .order_by('-id') \
-                                        .values('joined_clan') \
-                                        .first()['joined_clan']
+    def get_dates_in_clan(self, obj: PlayerClanStatsHistory):
+        return PlayerClanHistory.objects\
+            .filter(player=obj.player, clan=obj.clan)\
+            .order_by('-id')\
+            .values('joined_clan', 'left_clan')\
+            .first()
+
+    def get_clan(self, obj: PlayerClanStatsHistory):
+        return ClanWithDetailsSerializer(obj.clan).data
 
     class Meta:
         model = PlayerClanStatsHistory
-        fields = ('timestamp', 'last_refresh',
+        fields = ('clan', 'timestamp', 'last_refresh',
                   'clan_role', 'current_clan_rank',
-                  'donations', 'donations_received', 'joined', 'last_seen')
+                  'donations', 'donations_received', 'dates_in_clan', 'last_seen')
 
 
 class PlayerStatsHistorySerializer(HyperlinkedModelSerializer):
@@ -61,7 +66,9 @@ class PlayerSerializer(HyperlinkedModelSerializer):
         return PlayerStatsSerializer(PlayerStatsHistory.objects.filter(player=obj).order_by('-id').first()).data
 
     def get_clan(self, obj):
-        return ClanWithDetailsSerializer(obj.get_clan()).data
+        return PlayerClanStatsSerializer(
+            PlayerClanStatsHistory.objects.filter(player=obj).order_by('-last_refresh').first()
+        ).data
 
     class Meta:
         model = Player

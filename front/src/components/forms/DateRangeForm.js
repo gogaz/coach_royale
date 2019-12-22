@@ -65,7 +65,7 @@ export default class DateRangeForm extends React.Component {
     catchErrors(error) {
         if (error.status === 403 || error.status === 404)
         {
-            error.json().then(res => console.log(res));
+            error.then(res => console.log(res.data));
         }
         else
             console.log(error);

@@ -42,13 +42,11 @@ export default class PlayerStats extends React.Component {
         super(props);
 
         this.state = {
-            loadingPlayer: true,
-            loadingClan: true,
+            loading: true,
             player: {details: {}}
         };
 
         this.fetchPlayerData = this.fetchPlayerData.bind(this);
-        this.fetchClanData = this.fetchClanData.bind(this)
     }
 
     fetchPlayerData() {
@@ -57,21 +55,8 @@ export default class PlayerStats extends React.Component {
             .then((res) => handleErrors(res))
             .then(
                 (result) => {
-                    console.log(result);
-                    this.setState({loadingPlayer: false, player: result});
+                    this.setState({loading: false, player: result});
                     setTitle(`${result.name} (#${result.tag})`);
-                    this.fetchClanData();
-                })
-            .catch(error => console.log(error));
-    }
-
-    fetchClanData() {
-        axios.get(this.props.endpoint + '/clan')
-            .then((res) => handleErrors(res))
-            .then(
-                (result) => {
-                    console.log(result);
-                    this.setState({loadingClan: false, player: {...this.state.player, clanDetails: result}});
                 })
             .catch(error => console.log(error));
     }
@@ -81,15 +66,16 @@ export default class PlayerStats extends React.Component {
     }
 
     render() {
-        const {loadingPlayer, loadingClan, player} = this.state;
+        const {loading, player} = this.state;
 
-        if (loadingPlayer || loadingClan) return <Loading/>;
+        if (loading) return <Loading/>;
 
-        const lastSeen = moment(player.clanDetails.last_seen);
+        const lastSeen = moment(player.clan.last_seen);
         const LastSeen = (...args) => (
             <React.Fragment>
                 <span data-tip data-for="lastSeen"><TimeFromNow time={lastSeen}/></span>
-                <ReactTooltip type="dark" effect="solid" id="lastSeen">{lastSeen.format('L')} {lastSeen.format('LTS')}</ReactTooltip>
+                <ReactTooltip type="dark" effect="solid"
+                              id="lastSeen">{lastSeen.format('L')} {lastSeen.format('LTS')}</ReactTooltip>
             </React.Fragment>
         );
 
@@ -102,9 +88,11 @@ export default class PlayerStats extends React.Component {
                             <LastRefreshInfo time={player.details.last_refresh}/>
                             <PlayersClan player={player}/>
                         </div>
-                        <div className="col-5">
-                            <img src={player.clan.details.badge} style={{float: 'right', height: '5pc'}}/>
-                        </div>
+                        {player.clan.details && (
+                            <div className="col-5">
+                                <img src={player.clan.details.badge} style={{float: 'right', height: '5pc'}}/>
+                            </div>
+                        )}
                     </div>
                     <div className="mt-1 ml-md-3 ml-1" hidden={player.details.last_refresh !== null}>
                         No more information available

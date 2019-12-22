@@ -15,6 +15,8 @@ class FontAwesomeIcon extends React.Component {
         const iconProps = {
             style: {
                 color: color || theme.colors.black,
+                marginRight: '3px',
+                marginLeft: '3px',
                 ...style
             }
         };

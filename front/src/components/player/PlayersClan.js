@@ -4,9 +4,13 @@ import {Link} from "react-router-dom";
 import styled, { withTheme } from "styled-components";
 
 import DonationCell from "../clan/cells/DonationCell";
+import FontAwesomeIcon from "../ui/FontAwesome";
 
 const PlayerClanInfo = styled.div`
     display: inline-block;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: ${({theme}) => theme.colors.gray}!important;
     
     .donations-icons svg {
         font-size: .5rem;
@@ -17,29 +21,34 @@ const PlayerClanInfo = styled.div`
 
 const Data = styled.span`
     border-left: 1px solid #c2cfd6;
-    padding-left: 8px;
-    padding-right: 8px;
-    color: ${({theme}) => theme.colors.gray}!important;
 `;
 
-const PlayersClan = ({player}) => {
+const PlayersClan = ({theme, player}) => {
     const roles = {elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member"};
+    const {dates_in_clan: {joined_clan, left_clan}, clan_role, current_clan_rank, clan} = player.clan;
+
+    if (left_clan)
+        return (
+            <PlayerClanInfo>
+                Left <Link to={`/clan/${clan.tag}`}>{clan.name}</Link>
+                <FontAwesomeIcon color={theme.colors.gray} icon='sign-out-alt'/>
+                {moment(left_clan).calendar()}
+            </PlayerClanInfo>
+        );
 
     return (
         <div className="mt-3">
             <span className="mr-2"><Link to={"/clan/" + player.clan.tag}>{player.clan.name}</Link></span>
             <PlayerClanInfo>
-                <Data>{roles[player.clanDetails.clan_role]}</Data>
-                <Data>#{player.clanDetails.current_clan_rank}</Data>
+                <Data>{roles[clan_role]}</Data>
+                <Data>#{current_clan_rank}</Data>
                 <Data>
                     <DonationCell row={player} icon="arrow-up" color="success" column="donations"/>
                 </Data>
                 <Data>
                     <DonationCell row={player} icon="arrow-down" color="danger" column="donations_received"/>
                 </Data>
-                {player.clanDetails.joined &&
-                    <Data>Joined {moment(player.clanDetails.joined).calendar()}</Data>
-                }
+                {joined_clan && <Data>Joined on {moment(joined_clan).calendar()}</Data>}
             </PlayerClanInfo>
         </div>
     );

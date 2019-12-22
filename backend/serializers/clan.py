@@ -80,8 +80,8 @@ class PlayerInClanWarSerializer(HyperlinkedModelSerializer):
     wars = SerializerMethodField()
     details = SerializerMethodField()
 
-    def __init__(self, *args, wars=[], **kwargs):
-        self.wars_list = wars
+    def __init__(self, *args, **kwargs):
+        self.wars_list = kwargs.pop('wars' or [])
         super().__init__(*args, **kwargs)
 
     def get_details(self, obj):

@@ -2,7 +2,7 @@ from django.urls import path, re_path, include
 
 from backend.views.clan import clans_list, clan_info, clan_members, clan_wars, clan_weekly_season, clan_monthly_season
 from backend.views.default import index, manifest
-from backend.views.player import player_info, player_clan, player_activity
+from backend.views.player import player_info, player_activity
 
 urlpatterns = [
     path('', index),
@@ -21,7 +21,6 @@ urlpatterns = [
         path('player/', include([
             path('<slug:tag>/', include([
                 path('', player_info, name="player_info"),
-                path('clan', player_clan, name="player_clan"),
                 path('activity', player_activity, name="player_activity")
             ]))
         ])),

@@ -21,9 +21,9 @@
     </div>
 </body>
 <script>
-    const GLOBAL_mainClan = '{{ MAIN_CLAN }}';
-    const GLOBAL_rootURL = `/clan/${GLOBAL_mainClan}`;
-    const GLOBAL_refreshRate = Number({{ REFRESH_RATE }});
+    window.GLOBAL_mainClan = '{{ MAIN_CLAN }}';
+    window.GLOBAL_rootURL = `/clan/${GLOBAL_mainClan}`;
+    window.GLOBAL_refreshRate = Number({{ REFRESH_RATE }});
 </script>
 <script src="/app/bundle.js"></script>
 </html>
