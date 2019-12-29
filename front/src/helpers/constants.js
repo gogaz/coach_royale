@@ -2,15 +2,19 @@ import React from "react";
 import axios from "axios";
 
 export const ConstantsContext = React.createContext({});
+export const ConstantsProvider = ConstantsContext.Provider;
 
-export function loadConstants() {
-    const constants = [
-        axios.get('/constants/arenas.json').then(result => result.data),
-    ];
-    return Promise.all(constants);
+function fetchData(url) {
+    return axios.get(url).then(response => response.data);
 }
 
-export function playerArenaFromTrophies(context, trophies) {
-    const arena = context.arenas.slice(1).find((e, i, array) => i === array.length-1 || trophies < array[i+1].trophy_limit);
-    return arena.arena;
+export async function loadConstants() {
+    return {
+        arenas: await fetchData('/constants/arenas.json'),
+    };
+}
+
+export function playerArenaFromTrophies(constants, trophies) {
+    const arena = constants.arenas.slice(1).find((e, i, array) => i === array.length-1 || trophies < array[i+1].trophy_limit);
+    return arena ? arena.arena : null;
 }

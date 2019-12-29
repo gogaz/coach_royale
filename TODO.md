@@ -13,11 +13,12 @@
 - [ ] Decouple from Bootstrap
 - [ ] Add a 'Report' tab to ClanPage to contain information about who should be kicked, promoted, demoted (-> app settings or db record for configuration)
 - [ ] Change the "Players" counter on clan page to include recently joined/left members, show details in a tooltip
+- [ ] Add war outcome to ClanMembersTable
 
 - [ ] Authentication
 
 #### Authentication
-Proposed solution:
+Possible solution:
 > Play a Ladder battle with the following deck : \*randomly generated deck\*
 - [ ] Random deck generator (based on player's best cards?)
 - [ ] OAuth2 for transactions with the backend

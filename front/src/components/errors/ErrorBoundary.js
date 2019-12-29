@@ -6,11 +6,11 @@ export default class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {hasError: false};
+        this.state = { hasError: false };
     }
 
     static getDerivedStateFromError() {
-        return {hasError: true}
+        return { hasError: true }
     }
 
     componentDidCatch(error, info) {
@@ -19,10 +19,10 @@ export default class ErrorBoundary extends React.Component {
     }
 
     render() {
-        const {children, errorProps} = this.props;
-        const {hasError} = this.state;
+        const { children, errorProps } = this.props;
+        const { hasError } = this.state;
 
-        return hasError ? <CriticalError {...errorProps} /> : children;
+        return hasError ? <CriticalError { ...errorProps } /> : children;
     }
 }
 

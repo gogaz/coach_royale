@@ -1,8 +1,9 @@
-import '@testing-library/jest-dom/extend-expect';
 import React from 'react'
-import { render, waitForElement, getByText } from '../test-utils'
+import { render, wait } from '../test-utils'
+import "@testing-library/jest-dom/extend-expect"
 import App from "../../src/components/App";
 import mock from "../axiosMock";
+import ClanDetails from "../../src/components/clan/ClanDetails";
 
 const members = [
     {
@@ -61,28 +62,29 @@ const clanInfos = {
     }
 };
 
-const subject = async () => {
+const subject = () => {
     mock.onGet('/constants/arenas.json')
-            .reply(200, [])
+        .reply(200, [])
         .onGet('/api/clan/ABCD/')
-            .reply(200, clanInfos)
+        .reply(200, clanInfos)
         .onGet('/api/clan/ABCD/members')
-            .reply(200, members);
+        .reply(200, members);
 
-    const rendered = render(<App/>, {}, { route: '/clan/ABCD' });
-    await waitForElement(() => rendered.queryByText(clanInfos.name));
-    return rendered;
+    return render(<ClanDetails endpoint={'/api/clan/ABCD'} data={clanInfos}/>, {}, { route: '/clan/ABCD' });
+    //await wait(() => rendered.getByText(clanInfos.name));
 };
 
 describe("Clan members page", () => {
-    it("renders the clan details as card header", async () => {
-        const rendered = await subject();
-        expect(rendered.queryByText(clanInfos.details.trophies));
+    test("it renders the clan details as card header", async () => {
+        const rendered = subject();
+        await wait(() => rendered.getByText(clanInfos.name));
+        expect(rendered.queryByText(clanInfos.details.trophies)).toBe(true);
         rendered.getByText(clanInfos.details.trophies);
     });
-    it("renders list of members in a react-table", async () => {
-        const rendered = await subject();
-        getByText(rendered, clanInfos.name);
-        getByText(rendered, clanInfos.details.trophies);
+    test("it renders list of members in a react-table", async () => {
+        const rendered = subject();
+        await wait(() => rendered.getByText(clanInfos.name));
+        rendered.getByText(clanInfos.name);
+        rendered.getByText(clanInfos.details.trophies);
     });
 });

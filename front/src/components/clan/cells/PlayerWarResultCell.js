@@ -13,23 +13,23 @@ const WarResult = styled.div`
     }
 `;
 
-export default class PlayerWarResultCell extends React.Component {
-    render() {
-        const {war} = this.props;
-        if (!war)
-            return <WarResult/>;
-        let result = [];
-        for (let i = 0; i < war.final_battles_wins; i++)
-            result = [...result, <img alt="Final battle won" src={images.static('warWon')} key={'win' + i} />];
-        for (let i = 0; i < war.final_battles_done - war.final_battles_wins; i++)
-            result = [...result, <img alt="Final battle lost" src={images.static('warLost')} key={'lose' + i} />];
-        for (let i = 0; i < war.final_battles_misses; i++)
-            result = [...result, <img alt="Final battle missed" src={images.static('warYet')} key={'yet' + i} />];
+const PlayerWarResultCell = ({ war }) => {
+    if (!war)
+        return <WarResult/>;
 
-        return <WarResult>{result}</WarResult>
-    }
-}
+    let result = [];
+    for (let i = 0; i < war.final_battles_wins; i++)
+        result = [...result, <img alt="Final battle won" src={ images.static('warWon') } key={ 'win' + i }/>];
+    for (let i = 0; i < war.final_battles_done - war.final_battles_wins; i++)
+        result = [...result, <img alt="Final battle lost" src={ images.static('warLost') } key={ 'lose' + i }/>];
+    for (let i = 0; i < war.final_battles_misses; i++)
+        result = [...result, <img alt="Final battle missed" src={ images.static('warYet') } key={ 'yet' + i }/>];
+
+    return <WarResult>{ result }</WarResult>
+};
 
 PlayerWarResultCell.propTypes = {
     war: PropTypes.object,
 };
+
+export default PlayerWarResultCell;

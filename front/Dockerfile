@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:10
 
 RUN npm install -g npm@latest
 
@@ -8,6 +8,7 @@ ADD package-lock.json /code
 
 WORKDIR /code
 RUN npm install
+RUN npm audit fix
 
 ADD .babelrc /code
 ADD webpack.common.js /code

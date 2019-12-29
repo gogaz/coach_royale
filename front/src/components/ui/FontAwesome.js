@@ -1,29 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withTheme} from "styled-components";
+import { withTheme } from "styled-components";
 
-class FontAwesomeIcon extends React.Component {
-    render() {
-        const {theme, library, icon, spin, pulse, rotate, flip, scale, color, style} = this.props;
-        let classNames = [ library, 'fa-' + icon ];
-        if (spin) classNames = [ ...classNames, 'fa-spin' ];
-        if (pulse) classNames = [ ...classNames, 'fa-pulse' ];
-        if (rotate) classNames = [ ...classNames, 'fa-rotate-' + Number(rotate).toString() ];
-        if (flip) classNames = [ ...classNames, 'fa-flip-' + flip ];
-        if (scale > 1) classNames = [ ...classNames, 'fa-' + Number(scale).toString() + 'x' ];
+const FontAwesomeIcon = ({ theme, library, icon, spin, pulse, rotate, flip, scale, color, style }) => {
+    let classNames = [library, 'fa-' + icon];
+    if (spin) classNames = [...classNames, 'fa-spin'];
+    if (pulse) classNames = [...classNames, 'fa-pulse'];
+    if (rotate) classNames = [...classNames, 'fa-rotate-' + Number(rotate).toString()];
+    if (flip) classNames = [...classNames, 'fa-flip-' + flip];
+    if (scale > 1) classNames = [...classNames, 'fa-' + Number(scale).toString() + 'x'];
 
-        const iconProps = {
-            style: {
-                color: color || theme.colors.black,
-                marginRight: '3px',
-                marginLeft: '3px',
-                ...style
-            }
-        };
+    const iconProps = {
+        style: {
+            color: color || theme.colors.black,
+            marginRight: '3px',
+            marginLeft: '3px',
+            ...style
+        }
+    };
 
-        return <i className={classNames.join(' ')} {...iconProps} />
-    }
-}
+    return <i className={ classNames.join(' ') } { ...iconProps } />
+};
 
 FontAwesomeIcon.defaultProps = {
     spin: false,
@@ -37,10 +34,10 @@ FontAwesomeIcon.propTypes = {
     icon: PropTypes.string.isRequired,
     spin: PropTypes.bool,
     pulse: PropTypes.bool,
-    rotate: PropTypes.oneOf([ 0, 90, 180, 270 ]),
-    flip: PropTypes.oneOf([ false, 'vertical', 'horizontal' ]),
+    rotate: PropTypes.oneOf([0, 90, 180, 270]),
+    flip: PropTypes.oneOf([false, 'vertical', 'horizontal']),
     scale: PropTypes.oneOf([...Array(5).keys()]),
-    library: PropTypes.oneOf([ 'fa', 'fas', 'fal' ]),
+    library: PropTypes.oneOf(['fa', 'fas', 'fal']),
     color: PropTypes.string,
     style: PropTypes.object,
 };

@@ -1,5 +1,34 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { handleErrors } from "./api";
+
+export const useFetch = (url, onFetch) => {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            axios
+                .get(url)
+                .then((res) => {
+                    const result = handleErrors(res);
+                    if (onFetch) onFetch(result);
+                    setData(result);
+                    setLoading(false);
+                })
+                .catch((e) => {
+                    setError(e);
+                    setLoading(false);
+                });
+        })();
+    }, [url]);
+
+    return { data, error, loading };
+};
+
 export function setTitle(title) {
-    document.title = "Coach Royale" + title.length ? ' ' + title : '';
+    document.title = "Coach Royale" + title.length ? ' - ' + title : '';
 }
 
 export function getCookie(name) {
@@ -22,7 +51,7 @@ export const cookies = {
     csrf: () => getCookie('csrftoken'),
 };
 
-export const locale = window.navigator.userLanguage || window.navigator.language;
+export const locale = window.navigator.userLanguage || window.navigator.language || 'en-US';
 export const dateFormats = {
     "ar-SA": "dd/MM/yy",
     "bg-BG": "dd.M.yyyy",

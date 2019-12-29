@@ -1,49 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from "moment";
 
-export default class TimeFromNow extends React.Component {
-    constructor(props) {
-        super(props);
+const useForceUpdate = () => {
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => ++value); // update the state to force render
+};
 
-        this.state = {
-            intervalID: undefined,
-            now: 0,
-        };
+const TimeFromNow = ({ time, update }) => {
+    const forceUpdate = useForceUpdate();
 
-        this.updateComponent = this.updateComponent.bind(this);
-    }
+    useEffect(() => {
+        const interval = setInterval(forceUpdate, Math.round(update * 1000));
+        return () => clearInterval(interval);
+    });
 
-    updateComponent() {
-        this.setState({now: moment().unix()});
-    }
+    let timeObject = time;
+    if (!(time instanceof moment)) timeObject = moment(time);
 
-    componentDidMount() {
-        if (this.props.update > 0) {
-            this.setState({intervalID: setInterval(this.updateComponent, Math.round(this.props.update * 1000))})
-        }
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.state.intervalID);
-    }
-
-    render() {
-        const {time} = this.props;
-
-        let timeObject = time;
-        if (!(time instanceof moment)) timeObject = moment(time);
-
-        if (!(timeObject.isValid())) return "unknown";
-        return timeObject.fromNow()
-    }
-}
+    if (!(timeObject.isValid())) return "unknown";
+    return timeObject.fromNow()
+};
 
 TimeFromNow.defaultProps = {
-    update: 15,
+    update: 30,
 };
 
 TimeFromNow.propTypes = {
     update: PropTypes.number.isRequired,
     time: PropTypes.object.isRequired,
 };
+
+export default TimeFromNow;
