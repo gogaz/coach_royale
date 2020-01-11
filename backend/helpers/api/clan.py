@@ -196,6 +196,8 @@ def update_war_status(command, options, db_clan):
             clan = p.get_clan(b.time)
             if clan:
                 war = b.get_war_for_collection_day(clan)
+                if war is None:
+                    continue
                 b.war = war
                 b.save()
                 if options['verbose']:

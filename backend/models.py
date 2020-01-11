@@ -1,9 +1,11 @@
+import logging
 import traceback
 
 from django.db import models
 from django.db.models import Q, F
 from django.utils import timezone
 
+logger = logging.getLogger()
 
 class BaseModel(models.Model):
     id = models.AutoField(primary_key=True)
@@ -320,6 +322,13 @@ class Battle(BaseModel):
                 date_end__gte=self.time
             )
         except ClanWar.DoesNotExist:
+            return None
+        except ClanWar.MultipleObjectsReturned:
+            filters = "date_start <= $1 and date_end >= $1 [$1: %s]" % (self.time.isoformat())
+            logger.log(
+                logging.ERROR,
+                "could not find unique war matching %s for <Battle:%d> and <Clan: %s" % (filters, self.id, clan.id)
+            )
             return None
 
     def get_war_for_final_day(self, clan, war=None):

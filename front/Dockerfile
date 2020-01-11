@@ -1,14 +1,11 @@
 FROM node:10
 
-RUN npm install -g npm@latest
-
 RUN mkdir -p /code
 ADD package.json /code
-ADD package-lock.json /code
+ADD yarn.lock /code
 
 WORKDIR /code
-RUN npm install
-RUN npm audit fix
+RUN yarn install
 
 ADD .babelrc /code
 ADD webpack.common.js /code

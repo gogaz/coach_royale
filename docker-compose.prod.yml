@@ -2,7 +2,7 @@ version: '3'
 
 services:
   front:
-    command: npm run-script build
+    command: yarn build
   backend:
     #environment:
     #  - DJANGO_SETTINGS_MODULE=coach_royale.settings_prod
