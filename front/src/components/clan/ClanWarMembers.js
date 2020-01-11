@@ -24,7 +24,7 @@ const Indicator = styled.div`
 
 const EmptyIndicator = styled(Indicator)`
     background-color: rgb(242, 246, 249);
-    box-shadow: inset 0 0 10px ${ ({ theme }) => theme.colors.black };
+    box-shadow: inset 0 0 10px ${ ({ theme }) => theme.colors.lightGray };
 `;
 
 const IndicatorContent = styled.div`

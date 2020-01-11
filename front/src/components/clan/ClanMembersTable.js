@@ -111,7 +111,7 @@ const ClanMembersTable = ({
 }) => {
     const { data, loading } = useFetch(endpoint, onFetchData);
 
-    if (!data && !loading)
+    if (loading)
         return <Loading/>;
 
     if (!data.length)

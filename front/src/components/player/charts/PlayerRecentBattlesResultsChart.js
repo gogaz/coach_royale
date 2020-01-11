@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Bar } from "react-chartjs-2";
 
-const PlayerRecentBattlesResultsChart = ({ data, height, datasets, title, cardHeader }) => {
+import { Card, Header } from "../../ui/Card";
+
+const PlayerRecentBattlesResultsChart = ({ theme, data, height, datasets, title, cardHeader }) => {
     const width = window.innerWidth;
     let mobile = false;
     if (width <= 768)
@@ -29,8 +31,8 @@ const PlayerRecentBattlesResultsChart = ({ data, height, datasets, title, cardHe
     };
 
     return (
-        <div className="card">
-            { cardHeader && <div className="card-header">{ cardHeader }</div> }
+        <Card>
+            { cardHeader && <Header>{ cardHeader }</Header> }
             <Bar height={ height + (mobile ? 80 : 0) }
                  data={ {
                      datasets: datasets.map(e => {
@@ -55,7 +57,7 @@ const PlayerRecentBattlesResultsChart = ({ data, height, datasets, title, cardHe
                      }
                  } }
             />
-        </div>
+        </Card>
     );
 };
 

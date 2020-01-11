@@ -20,7 +20,7 @@ export const Grid = styled.div`
 
 export const FlexWrapper = styled.div`
     display: flex;
-    flex-direction: ${({direction}) => direction};
+    flex-direction: ${ ({ direction }) => direction };
 `;
 
 export const Flex = styled.div`
