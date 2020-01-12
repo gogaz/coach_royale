@@ -1,8 +1,8 @@
 import clashroyale
 from django.conf import settings
-from django.core.management import BaseCommand
 from django.db.models import Q
 from django.utils import timezone
+from command_log.commands import LoggedCommand
 
 from backend.helpers.api.clan import refresh_clan_details
 from backend.helpers.api.constants import refresh_constants
@@ -11,7 +11,7 @@ from backend.helpers.api.player import refresh_player_profile
 from backend.models import Clan, Player, FullRefresh
 
 
-class Command(BaseCommand):
+class Command(LoggedCommand):
     def add_arguments(self, parser):
         parser.add_argument('--verbose', action='store_true', help="enable verbose mode")
         parser.add_argument('--clan', type=str, help="add clan tag to database and enable auto-refresh")
@@ -19,7 +19,7 @@ class Command(BaseCommand):
         parser.add_argument('--force', action='store_true', help="Force update without taking last refresh into account")
         parser.add_argument('--battles', action='store_true', help="Refresh player war battles")
 
-    def handle(self, *args, **options):
+    def do_command(self, *args, **options):
         api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=60)
         now = timezone.now()
         time_delta = now - settings.REFRESH_RATE

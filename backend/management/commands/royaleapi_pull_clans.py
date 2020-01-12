@@ -1,15 +1,15 @@
 import clashroyale
 from django.conf import settings
-from django.core.management import BaseCommand
 from django.db.models import Q
 from django.utils import timezone
+from command_log.commands import LoggedCommand
 
 from backend.helpers.api.clan import update_war_status, refresh_clan_details
 from backend.helpers.api.helpers import run_refresh_method
 from backend.models import Clan
 
 
-class Command(BaseCommand):
+class Command(LoggedCommand):
     def add_arguments(self, parser):
         parser.add_argument('--verbose', action='store_true', help="enable verbose mode")
         parser.add_argument('--force', action='store_true', help="enable verbose mode")
@@ -17,7 +17,7 @@ class Command(BaseCommand):
         parser.add_argument('--clan', type=str, help="refresh selected clan tag")
         parser.add_argument('--war', action='store_true', help="updates previous wars status")
 
-    def handle(self, *args, **options):
+    def do_command(self, *args, **options):
         api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=30)
         now = timezone.now()
 

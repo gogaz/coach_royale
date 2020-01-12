@@ -5,7 +5,8 @@ from django.db import models
 from django.db.models import Q, F
 from django.utils import timezone
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
+
 
 class BaseModel(models.Model):
     id = models.AutoField(primary_key=True)
@@ -327,7 +328,7 @@ class Battle(BaseModel):
             filters = "date_start <= $1 and date_end >= $1 [$1: %s]" % (self.time.isoformat())
             logger.log(
                 logging.ERROR,
-                "could not find unique war matching %s for <Battle:%d> and <Clan: %s" % (filters, self.id, clan.id)
+                "could not find unique war matching %s for <Battle:%d> and <Clan: %s>" % (filters, self.id, clan.id)
             )
             return None
 

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'backend.apps.ReactApiConfig',
     'rest_framework',
+    'command_log',
 ]
 
 MIDDLEWARE = [
