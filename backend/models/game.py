@@ -1,33 +1,11 @@
 import logging
-import traceback
-
 from django.db import models
 from django.db.models import Q, F
 from django.utils import timezone
 
+from .base import BaseModel, HistoryModel
+
 logger = logging.getLogger(__name__)
-
-
-class BaseModel(models.Model):
-    id = models.AutoField(primary_key=True)
-
-    class Meta:
-        abstract = True
-
-
-class HistoryModel(BaseModel):
-    timestamp = models.DateTimeField(null=True)
-    last_refresh = models.DateTimeField(null=True)
-
-    class Meta:
-        abstract = True
-
-    @classmethod
-    def create_or_find(cls, **kwargs):
-        try:
-            return cls.objects.get_or_create(**kwargs)
-        except cls.MultipleObjectsReturned:
-            return cls.objects.filter(**kwargs).order_by('-timestamp')[0], False
 
 
 class Card(BaseModel):
@@ -389,16 +367,6 @@ class PlayerClanWar(BaseModel):
             .format(self, "Win" if self.final_battles_wins else "Lose" if self.final_battles_done else "Yet!")
 
 
-class TournamentRefresh(models.Model):
-    timestamp = models.DateTimeField()
-    success = models.BooleanField()
-    error = models.TextField(null=True)
-    count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return "[{1}] Refreshed {0.count} tournaments (success: {0.success})".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M"))
-
-
 class Tournament(models.Model):
     tag = models.CharField(max_length=20)
     name = models.CharField(max_length=255, null=True)
@@ -417,44 +385,3 @@ class Tournament(models.Model):
 
     def __str__(self):
         return "Tournament {} started on {}".format(self.name, self.create_time.strftime("%Y-%m-%d"))
-
-
-class FullRefresh(models.Model):
-    timestamp = models.DateTimeField()
-    error = models.TextField(null=True)
-    constants_updated = models.BooleanField()
-    clans_count = models.IntegerField()
-    players_count = models.IntegerField()
-
-    def __str__(self):
-        return "[{0}] Refreshed all clans & players (success: {1})".format(self.timestamp.strftime("%Y-%m-%d %H:%M"), self.error is None)
-
-
-class BaseError(models.Model):
-    clazz = models.CharField(max_length=256, null=True)
-    traceback = models.TextField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        abstract = True
-
-
-class RoyaleAPIError(BaseError):
-    method = models.CharField(max_length=128, null=True)
-    refresh_method = models.CharField(max_length=256, null=True)
-    data = models.TextField(null=True)
-    code = models.CharField(max_length=64, null=True)
-    reason = models.CharField(max_length=256, null=True)
-
-    @classmethod
-    def create_and_save(cls, exception, func):
-        error = RoyaleAPIError(
-            clazz=exception.__class__,
-            traceback=traceback.format_exc(),
-            method=getattr(exception, 'method', None),
-            refresh_method=func.__name__,
-            data=getattr(exception, 'data', None),
-            code=getattr(exception, 'code', None),
-            reason=getattr(exception, 'reason', None)
-        )
-        error.save()
