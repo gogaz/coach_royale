@@ -40,7 +40,7 @@
     "react-scripts": "^3.3.0",
     "react-table": "^6.10.1",
     "react-tooltip": "^3.10.1",
-    "styled-components": "^4.4.1",
+    "styled-components": "^5.0.1",
     "underscore": "^1.9.1",
     "whatwg-fetch": "^3.0.0"
   },
