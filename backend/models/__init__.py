@@ -1,5 +1,7 @@
+from .base import EditableModel
 from .monitoring import BaseError, FullRefresh, RoyaleAPIError, TournamentRefresh
-from .game import (
+from .cubes import PlayerCube
+from .clashroyale import (
     Battle,
     BattleMode,
     Card,

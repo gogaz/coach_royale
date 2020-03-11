@@ -1,7 +1,7 @@
 from box import Box
 from django.test import TestCase
 
-from backend.helpers.models import int_difference_instances
+from backend.lib.models import int_difference_instances
 from backend.models import Card
 
 

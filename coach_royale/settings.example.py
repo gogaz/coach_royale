@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'backend.apps.ReactApiConfig',
+    'backend.apps.BackendConfig',
     'rest_framework',
     'command_log',
 ]

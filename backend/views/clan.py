@@ -118,3 +118,14 @@ def clan_monthly_season(request, tag):
     date = timezone.make_aware(timezone.datetime.strptime(month, "%Y-%W-%w %H:%M")) - timezone.timedelta(weeks=1)
     players = clan.get_players(date).annotate(season_id=Value(season.id, output_field=IntegerField()))
     return Response(PlayerClanSeasonSerializer(players, many=True).data)
+
+
+@api_view(['GET'])
+def clan_role_change(request, tag):
+    try:
+        clan = Clan.objects.get(tag=tag)
+    except Clan.DoesNotExist:
+        return not_found_error("clan", tag)
+
+    clan_players = clan.get_players()
+    grouped_players = {player.role: player for player in clan_players}

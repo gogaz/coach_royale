@@ -2,15 +2,24 @@ import traceback
 
 from django.db import models
 
+from .validators import validate_comma_separated_token_list
+from .base import EditableModel
+
 
 class TournamentRefresh(models.Model):
+    """
+    OBSOLETE: related endpoints removed from RoyaleAPI.com
+    """
     timestamp = models.DateTimeField()
     success = models.BooleanField()
     error = models.TextField(null=True)
     count = models.IntegerField(default=0)
 
     def __str__(self):
-        return "[{1}] Refreshed {0.count} tournaments (success: {0.success})".format(self, self.timestamp.strftime("%Y-%m-%d %H:%M"))
+        return "[{1}] Refreshed {0.count} tournaments (success: {0.success})".format(
+            self,
+            self.timestamp.strftime("%Y-%m-%d %H:%M")
+        )
 
 
 class FullRefresh(models.Model):
@@ -21,7 +30,10 @@ class FullRefresh(models.Model):
     players_count = models.IntegerField()
 
     def __str__(self):
-        return "[{0}] Refreshed all clans & players (success: {1})".format(self.timestamp.strftime("%Y-%m-%d %H:%M"), self.error is None)
+        return "[{0}] Refreshed all clans & players (success: {1})".format(
+            self.timestamp.strftime("%Y-%m-%d %H:%M"),
+            self.error is None
+        )
 
 
 class BaseError(models.Model):

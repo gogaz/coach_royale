@@ -4,8 +4,8 @@ from django.db.models import Q
 from django.utils import timezone
 from command_log.commands import LoggedCommand
 
-from backend.helpers.api.clan import update_war_status, refresh_clan_details
-from backend.helpers.api.helpers import run_refresh_method
+from backend.lib.royale_api.clan import update_war_status, refresh_clan_details
+from backend.lib.royale_api.helpers import run_refresh_method
 from backend.models import Clan
 
 

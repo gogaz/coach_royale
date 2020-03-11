@@ -4,6 +4,8 @@ import styled from "styled-components";
 export const Grid = styled.div`
     display: grid;
     
+    ${ ({ gap }) => gap && `gap: ${gap};`}
+    
     ${ ({ theme, columns }) => {
         const keys = columns ? Object.keys(columns) : [];
         if (keys.length === 1)

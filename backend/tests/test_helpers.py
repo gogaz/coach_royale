@@ -8,10 +8,10 @@ from clashroyale.errors import NotResponding
 from django.conf import settings
 from django.test import TestCase
 
-from backend.helpers.api.clan import refresh_clan_details
-from backend.helpers.api.constants import refresh_constants
-from backend.helpers.api.helpers import command_print, run_refresh_method
-from backend.helpers.api.player import refresh_player_profile
+from backend.lib.royale_api.clan import refresh_clan_details
+from backend.lib.royale_api.constants import refresh_constants
+from backend.lib.royale_api.helpers import command_print, run_refresh_method
+from backend.lib.royale_api.player import refresh_player_profile
 from backend.models import (Clan,
                             Player,
                             ClanHistory,

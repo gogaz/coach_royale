@@ -1,8 +1,10 @@
+import logging
+
 from clashroyale import RoyaleAPI
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone, dateparse
 
-from backend.helpers.api.helpers import command_print
+from backend.lib.royale_api.helpers import command_print
 from backend.models import (Battle,
                             PlayerClanWar,
                             Player,
@@ -11,6 +13,8 @@ from backend.models import (Battle,
                             PlayerClanStatsHistory,
                             ClanHistory,
                             Clan)
+
+logger = logging.getLogger(__name__)
 
 
 def refresh_clan_details(command, options, db_clan, api_client):
@@ -25,6 +29,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
 
     if options['verbose']:
         command_print(command, "#INFO: Refreshing clan %s", db_clan.tag)
+    logger.log(logging.INFO, "Refreshing clan %s", repr(db_clan))
 
     clan = api_client.get_clan(db_clan.tag)
 

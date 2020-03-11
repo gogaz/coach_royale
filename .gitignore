@@ -10,7 +10,7 @@ venv
 front/node_modules
 front/dist
 bin
-lib
+./lib
 pip-selfcheck.json
 # sensitive files
 settings*.py

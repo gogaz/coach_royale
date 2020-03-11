@@ -4,10 +4,10 @@ from django.db.models import Q
 from django.utils import timezone
 from command_log.commands import LoggedCommand
 
-from backend.helpers.api.clan import refresh_clan_details
-from backend.helpers.api.constants import refresh_constants
-from backend.helpers.api.helpers import run_refresh_method
-from backend.helpers.api.player import refresh_player_profile
+from backend.lib.royale_api.clan import refresh_clan_details
+from backend.lib.royale_api.constants import refresh_constants
+from backend.lib.royale_api.helpers import run_refresh_method
+from backend.lib.royale_api.player import refresh_player_profile
 from backend.models import Clan, Player, FullRefresh
 
 

@@ -368,6 +368,9 @@ class PlayerClanWar(BaseModel):
 
 
 class Tournament(models.Model):
+    """
+    OBSOLETE: related endpoints removed from RoyaleAPI.com
+    """
     tag = models.CharField(max_length=20)
     name = models.CharField(max_length=255, null=True)
     open = models.BooleanField()
