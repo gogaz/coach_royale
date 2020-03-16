@@ -2,9 +2,6 @@ import traceback
 
 from django.db import models
 
-from .validators import validate_comma_separated_token_list
-from .base import EditableModel
-
 
 class TournamentRefresh(models.Model):
     """
@@ -45,7 +42,7 @@ class BaseError(models.Model):
         abstract = True
 
 
-class RoyaleAPIError(BaseError):
+class ObsoleteRoyaleAPIError(BaseError):
     method = models.CharField(max_length=128, null=True)
     refresh_method = models.CharField(max_length=256, null=True)
     data = models.TextField(null=True)
@@ -53,8 +50,29 @@ class RoyaleAPIError(BaseError):
     reason = models.CharField(max_length=256, null=True)
 
     @classmethod
-    def create_and_save(cls, exception, func):
-        error = RoyaleAPIError(
+    def create(cls, exception, func):
+        error = ObsoleteRoyaleAPIError(
+            clazz=exception.__class__,
+            traceback=traceback.format_exc(),
+            method=getattr(exception, 'method', None),
+            refresh_method=func.__name__,
+            data=getattr(exception, 'data', None),
+            code=getattr(exception, 'code', None),
+            reason=getattr(exception, 'reason', None)
+        )
+        error.save()
+
+
+class OfficialAPIError(BaseError):
+    method = models.CharField(max_length=128, null=True)
+    refresh_method = models.CharField(max_length=256, null=True)
+    data = models.TextField(null=True)
+    code = models.CharField(max_length=64, null=True)
+    reason = models.CharField(max_length=256, null=True)
+
+    @classmethod
+    def create(cls, exception, func):
+        error = OfficialAPIError(
             clazz=exception.__class__,
             traceback=traceback.format_exc(),
             method=getattr(exception, 'method', None),

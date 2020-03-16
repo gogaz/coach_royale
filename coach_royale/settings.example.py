@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'secret!'
 
 # Royale API configuration
-ROYALE_API_KEY = os.environ.get('ROYALE_API_KEY') or "YOUR_API_KEY"
+CLASHROYALE_API_KEY = os.environ.get('CLASHROYALE_API_KEY') or "YOUR_API_KEY"
 REFRESH_RATE = timezone.timedelta(minutes=5)
 MAIN_CLAN = "2GJU9Y2G"  # omit the '#'
 
@@ -45,6 +45,26 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# Logs - Uncomment the following lines to write logs to ./logs/django.log
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': '/logs/django.log',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#     },
+# }
 
 # Application definition - do not change anything under this line
 INSTALLED_APPS = [
@@ -97,25 +117,6 @@ TEMPLATES = [
         },
     },
 ]
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': '/logs/django.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators

@@ -6,12 +6,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from backend.forms import DateRangeForm, WeekForm
+from backend.lib.clan_rule_matcher.models import PlayerClanRuleGoal
+from backend.lib.clan_rule_matcher.serializers import PlayerClanRuleSerializer, PlayerClanRuleGoalSerializer
 from backend.models import Clan, PlayerClanStatsHistory, ClanWar, LeagueSeason
 from backend.serializers.clan import (ClanWithDetailsSerializer,
                                       PlayerClanDetailsSerializer,
                                       PlayerInClanWarSerializer,
                                       ClanWarSerializer, PlayerWeeklyDonationsSerializer, PlayerClanSeasonSerializer)
 from backend.serializers.misc import not_found_error, form_error
+from backend.serializers.player import PlayerSerializer
 
 
 @api_view(['GET'])
@@ -127,5 +130,19 @@ def clan_role_change(request, tag):
     except Clan.DoesNotExist:
         return not_found_error("clan", tag)
 
-    clan_players = clan.get_players()
-    grouped_players = {player.role: player for player in clan_players}
+    members = clan.get_current_players()
+    db_clan_goals = PlayerClanRuleGoal.objects.filter(members, clan=clan)
+
+    clan_goal_results = list()
+    serialized_clan_goals = list()
+    for goal in db_clan_goals:
+        results = goal.execute_on(members)
+        clan_goal_results.append({
+            'goal_id': goal.id,
+            'rules': PlayerClanRuleSerializer(results.keys()).data,
+            'matching_players': [{rule.id: PlayerSerializer(player).data} for rule, player in results]
+        })
+        serialized_clan_goals.append(PlayerClanRuleGoalSerializer(goal))
+
+    clan_goal_results = [{'goal_id': clan_goal.id, 'rules': clan_goal.execute_on(members)} for clan_goal in db_clan_goals]
+    return Response({'goals': serialized_clan_goals, 'results': clan_goal_results})

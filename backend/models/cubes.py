@@ -52,7 +52,7 @@ class PlayerCube(models.Model):
         ) player_clanstats ON backend_player.id = player_clanstats.player_id
         JOIN (
             SELECT player_id, MAX(id) as max_id
-            FROM backend_playerstatshistory 
+            FROM backend_playerstatshistory
             GROUP BY player_id
         ) player_stats ON backend_player.id = player_stats.player_id
         LEFT JOIN (
@@ -67,7 +67,8 @@ class PlayerCube(models.Model):
             FROM backend_playerclanwar
             -- We are interested in all recorded wars from the player because this app is supposed to manage one clan or
             --   a family of clans and not to continue tracking a player that exited a tracked clan
-            -- Otherwise, it's easy to join backend_clan from here, select and group on its id, then join on it in main query 
+            -- Otherwise, it's easy to join backend_clan from here, select and group on its id, then join on it in
+            --    main query
             GROUP BY backend_playerclanwar.player_id
         ) player_wars ON player_wars.player_id = backend_player.id
         JOIN backend_playerclanhistory ON player_clan.max_id = backend_playerclanhistory.id
@@ -78,7 +79,7 @@ class PlayerCube(models.Model):
                 clan_id
             FROM backend_clanwar
             GROUP BY clan_id
-        ) clan_wars ON backend_clan.id = clan_wars.clan_id  
+        ) clan_wars ON backend_clan.id = clan_wars.clan_id
         JOIN backend_playerclanstatshistory ON backend_playerclanstatshistory.id = player_clanstats.max_id
         JOIN backend_playerstatshistory ON backend_playerstatshistory.id = player_stats.max_id
         WHERE backend_playerclanhistory.left_clan IS NULL;

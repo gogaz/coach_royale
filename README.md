@@ -1,13 +1,15 @@
-Coach Royale
-===
+# Coach Royale
 
 
 [![CircleCI branch](https://img.shields.io/circleci/project/github/gogaz/coach_royale/master.svg)](https://circleci.com/gh/gogaz/coach_royale/tree/master)
 [![codecov](https://codecov.io/gh/gogaz/coach_royale/branch/master/graph/badge.svg)](https://codecov.io/gh/gogaz/coach_royale)
-[![Requirements Status](https://requires.io/github/gogaz/coach_royale/requirements.svg?branch=master)](https://requires.io/github/gogaz/coach_royale/requirements/?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/gogaz/coach_royale.svg)](https://greenkeeper.io/)
+[![Requirements Status](https://requires.io/github/gogaz/coach_royale/requirements.svg?branch=master)](https://requires.io/github/gogaz/coach_royale/requirements/?branch=master)
+[![Greenkeeper badge](https://badges.greenkeeper.io/gogaz/coach_royale.svg)](https://greenkeeper.io/)
 
 #### Django + React + Docker
-Coach royale is a hobby project which consumes [RoyaleAPI](https://royaleapi.com) endpoints.
+Coach royale is a hobby project which consumes [Clash Royale API](https://developer.clashroyale.com) endpoints.
+This project used to support and rely on [RoyaleAPI](https://royaleapi.com), which is now discontinued, but was the first
+and the best Clash Royale API.
 
 [Demo](https://cycom.gogaz.org)
 

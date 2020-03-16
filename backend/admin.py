@@ -4,7 +4,7 @@ from django.contrib import admin
 from backend.models import (Clan, ClanHistory, ClanWar,
                             Player, PlayerClanStatsHistory, PlayerStatsHistory, PlayerClanWar,
                             Card, BattleMode,
-                            Tournament, TournamentRefresh, RoyaleAPIError)
+                            Tournament, TournamentRefresh, OfficialAPIError)
 
 admin.site.register(Clan)
 admin.site.register(ClanHistory)
@@ -21,4 +21,4 @@ admin.site.register(BattleMode)
 admin.site.register(Tournament)
 admin.site.register(TournamentRefresh)
 
-admin.site.register(RoyaleAPIError)
+admin.site.register(OfficialAPIError)

@@ -2,7 +2,17 @@ import random
 
 from django.utils import timezone
 
-from backend.models import *
+from backend.models import (
+    Clan,
+    ClanHistory,
+    ClanWar,
+    Player,
+    PlayerClanWar,
+    PlayerStatsHistory,
+    PlayerClanHistory,
+    PlayerClanStatsHistory
+)
+
 from .base import Factory
 
 
@@ -63,7 +73,7 @@ class PlayerFactory(Factory):
             tag=tag
         )
         player.save()
-        
+
         if with_history:
             PlayerHistoryFactory.create(player=player, **kwargs)
 
@@ -133,7 +143,7 @@ class PlayerClanHistoryFactory(Factory):
         )
         pch.save()
         return pch
-    
+
 
 class PlayerClanStatsHistoryFactory(Factory):
     @classmethod
@@ -159,7 +169,6 @@ class PlayerClanStatsHistoryFactory(Factory):
 class PlayerClanWarFactory(Factory):
     @classmethod
     def create(cls, **kwargs):
-
         pcw = PlayerClanWar(
             clan_war=kwargs.pop('clan_war', ClanWarFactory.create(**kwargs)),
             player=kwargs.get('player', PlayerFactory.create(**kwargs)),

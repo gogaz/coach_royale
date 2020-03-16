@@ -1,5 +1,5 @@
 from .base import Factory
-from .clashroyale import ClanFactory 
+from .clashroyale import ClanFactory
 from backend.lib.clan_rule_matcher.models import PlayerClanRule, PlayerClanRuleGoal
 
 
