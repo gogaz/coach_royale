@@ -4,8 +4,8 @@ from django.db.models import Q
 from django.utils import timezone
 from command_log.commands import LoggedCommand
 
-from backend.lib.royale_api.clan import update_war_status, refresh_clan_details
-from backend.lib.royale_api.helpers import run_refresh_method
+from backend.lib.official_api.clan import update_war_status, refresh_clan_details
+from backend.lib.console_tools.command_helpers import run_refresh_method
 from backend.models import Clan
 
 
@@ -18,7 +18,7 @@ class Command(LoggedCommand):
         parser.add_argument('--war', action='store_true', help="updates previous wars status")
 
     def do_command(self, *args, **options):
-        api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=30)
+        api_client = clashroyale.OfficialAPI(settings.ROYALE_API_KEY, timeout=30)
         now = timezone.now()
 
         db_clans = Clan.objects.filter(refresh=True)

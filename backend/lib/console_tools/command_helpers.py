@@ -4,7 +4,8 @@ import sys
 import clashroyale
 from django.db.models import Model
 
-from backend.models import Clan, Player, Card, RoyaleAPIError
+from backend.models import Clan, Player
+from backend.models.monitoring import OfficialAPIError
 
 
 def run_refresh_method(cmd, options, func, iterable, tries=3, **kwargs):
@@ -26,40 +27,30 @@ def run_refresh_method(cmd, options, func, iterable, tries=3, **kwargs):
             func(cmd, options, i, **kwargs)
         except clashroyale.ServerError as e:
             if tries == 1:
-                RoyaleAPIError.create_and_save(e, func)
+                handle_refresh_error(cmd, e, i, func, verbose=options.get('verbose'))
+        except clashroyale.Unauthorized as e:
+            handle_refresh_error(cmd, e, i, func, verbose=options.get('verbose'))
         except clashroyale.RequestError as e:
-            if options['verbose']:
-                if isinstance(i, Clan):
-                    cmd.stderr.write("#Error while fetching data for clan #%s" % i.tag)
-                elif isinstance(i, Player):
-                    cmd.stderr.write("#Error while fetching data for player #%s" % i.tag)
-                else:
-                    cmd.stderr.write("#Error while fetching data for #" + str(i))
             if isinstance(i, Model):
                 failed.append(i)
             elif isinstance(e, clashroyale.NotResponding):
                 failed.append(i)
             if tries == 1:
-                RoyaleAPIError.create_and_save(e, func)
+                handle_refresh_error(cmd, e, i, func, verbose=options.get('verbose'))
 
     run_refresh_method(cmd, options, func, failed, tries - 1, **kwargs)
 
 
-def store_battle_players(db_player, team, players, save_decks=True):
-    i = 0
-    decks = [[], []]
-    for p in players:
-        if p.tag == db_player.tag:
-            db_p = db_player
+def handle_refresh_error(cmd, error, record, func, verbose=False):
+    if verbose:
+        if isinstance(record, Clan):
+            cmd.stderr.write("#Error while fetching data for clan #%s" % record.tag)
+        elif isinstance(record, Player):
+            cmd.stderr.write("#Error while fetching data for player #%s" % record.tag)
         else:
-            db_p, created = Player.objects.get_or_create(tag=p.tag, defaults={'name': p.name})
-        team.add(db_p)
-        if save_decks:
-            for card in p.deck:
-                fc = Card.instance_from_data(card)
-                decks[i].append(fc)
-        i += 1
-    return decks
+            cmd.stderr.write("#Error while fetching data for #" + str(record))
+
+    OfficialAPIError.create(error, func)
 
 
 def exit_with_failure(command):

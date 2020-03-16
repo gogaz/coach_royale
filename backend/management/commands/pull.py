@@ -4,10 +4,11 @@ from django.db.models import Q
 from django.utils import timezone
 from command_log.commands import LoggedCommand
 
-from backend.lib.royale_api.clan import refresh_clan_details
-from backend.lib.royale_api.constants import refresh_constants
-from backend.lib.royale_api.helpers import run_refresh_method
-from backend.lib.royale_api.player import refresh_player_profile
+from backend.lib.official_api.clan import refresh_clan_details
+from backend.lib.official_api.constants import refresh_constants, refresh_cards
+from backend.lib.console_tools.command_helpers import run_refresh_method
+from backend.lib.official_api.player import refresh_player_profile
+
 from backend.models import Clan, Player, FullRefresh
 
 
@@ -20,10 +21,23 @@ class Command(LoggedCommand):
         parser.add_argument('--battles', action='store_true', help="Refresh player war battles")
 
     def do_command(self, *args, **options):
-        api_client = clashroyale.RoyaleAPI(settings.ROYALE_API_KEY, timeout=60)
+        api_client = clashroyale.OfficialAPI(settings.CLASHROYALE_API_KEY, timeout=60)
         now = timezone.now()
         time_delta = now - settings.REFRESH_RATE
         constants_time_delta = now - timezone.timedelta(days=1)
+
+        # Update constants
+        do_update_constants = True
+        if not options['force']:
+            do_update_constants = 0 == FullRefresh.objects.filter(
+                constants_updated=True,
+                timestamp__gt=constants_time_delta
+            ).count()
+        if do_update_constants:
+            refresh_constants(api_client)
+            if options['verbose']:
+                self.stdout.write('Constants has been updated')
+        refresh_cards(api_client)
 
         if not Clan.objects.filter(tag=settings.MAIN_CLAN).count() and options['clan'] != settings.MAIN_CLAN:
             opts = options
@@ -46,14 +60,7 @@ class Command(LoggedCommand):
         if options['player']:
             run_refresh_method(self, options, refresh_player_profile, [None], api_client=api_client)
 
-        # Update constants & log the execution of this command
-        do_update_constants = True
-        if not options['force']:
-            do_update_constants = FullRefresh.objects.filter(constants_updated=True, timestamp__gt=constants_time_delta).count() == 0
-        if do_update_constants:
-            refresh_constants(api_client)
-            if options['verbose']:
-                self.stdout.write('Constants has been updated')
+        # Log the execution of this command
         last_full_refresh = FullRefresh(timestamp=now,
                                         clans_count=db_clans.count(),
                                         players_count=db_players.count(),

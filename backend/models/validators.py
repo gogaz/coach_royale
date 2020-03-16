@@ -1,5 +1,5 @@
 import re
-from django.core.validators import RegexValidator, int_list_validator
+from django.core.validators import RegexValidator
 
 
 def comma_separated_token_list_validator(sep=',', message=None, code='invalid'):

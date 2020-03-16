@@ -1,4 +1,4 @@
-@reboot root python3 /code/manage.py royaleapi_pull --battles --verbose &>> /logs/django-jobs.log
-@reboot root python3 /code/manage.py royaleapi_pull_clans --war --verbose &>> /logs/django-jobs.log
-* * * * * root python3 /code/manage.py royaleapi_pull --battles --verbose &>> /logs/django-jobs.log
-25 */6 * * * root python3 /code/manage.py royaleapi_pull_clans --war --verbose &>> /logs/django-jobs.log
+@reboot root python3 /code/manage.py pull --battles --verbose &>> /logs/django-jobs.log
+@reboot root python3 /code/manage.py pull_clans --war --verbose &>> /logs/django-jobs.log
+* * * * * root python3 /code/manage.py pull --battles --verbose &>> /logs/django-jobs.log
+25 */6 * * * root python3 /code/manage.py pull_clans --war --verbose &>> /logs/django-jobs.log

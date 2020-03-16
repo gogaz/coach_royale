@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class Card(BaseModel):
+    card_id = models.IntegerField(null=True)
     key = models.CharField(max_length=64)
     name = models.CharField(max_length=255)
     rarity = models.CharField(max_length=64)
@@ -22,18 +23,36 @@ class Card(BaseModel):
         return self.name
 
     @classmethod
+    def key_from_name(cls, name: str):
+        return name.lower().\
+            replace(' ', '-').\
+            replace('.', '')
+
+    @classmethod
     def instance_from_data(cls, data):
-        fc, created = Card.objects.get_or_create(key=data.key)
-        if created:
-            fc.name = data.name
-            fc.arena = data.arena
-            fc.elixir = data.elixir
-            fc.rarity = data.rarity
-            fc.image = data.icon
-            fc.type = data.type
-            fc.max_level = data.max_level
-            fc.save()
-        return fc
+        key = data.key if 'key' in data.keys() else cls.key_from_name(data.name)
+        card, created = Card.objects.get_or_create(key=key)
+
+        if card.elixir is None and 'elixir' in data.keys():
+            card.card_id = data.id
+            card.name = data.name
+            card.arena = data.arena
+            card.elixir = data.elixir
+            card.rarity = data.rarity
+            card.type = data.type
+            card.save()
+
+        if not card.image:
+            card.image = data.icon_urls.medium if 'iconUrls' in data.keys() else None
+            if card.image:
+                card.save()
+
+        if card.max_level is None:
+            card.max_level = data.max_level if 'maxLevel' in data.keys() else None
+            if card.max_level:
+                card.save()
+
+        return card
 
 
 class PlayerCardLevel(BaseModel):
@@ -41,6 +60,7 @@ class PlayerCardLevel(BaseModel):
     card = models.ForeignKey(Card, related_name='player', on_delete=models.CASCADE)
     count = models.IntegerField(null=True)
     level = models.IntegerField(null=True)
+    star_level = models.IntegerField(null=True)
 
 
 # PLAYER / CLAN
@@ -92,6 +112,7 @@ class PlayerStatsHistory(HistoryModel):
     cards_found = models.IntegerField(null=True)
     favorite_card = models.CharField(max_length=255)
     arena = models.IntegerField(null=True)
+    star_points = models.IntegerField(null=True)
 
     # Games stats
     total_games = models.IntegerField(null=True)
@@ -196,9 +217,23 @@ class Clan(BaseModel):
     def __str__(self):
         return "{0.name} (#{0.tag})".format(self)
 
+    def _get_current_player_ids_sql(self):
+        return """
+            SELECT backend_player.id
+            FROM backend_player
+            JOIN (
+                SELECT MAX(id) as max_id, player_id FROM backend_playerclanhistory GROUP BY player_id
+            ) player_clan ON player_id = backend_player.id
+            JOIN backend_playerclanhistory clan_history ON clan_history.id = player_clan.max_id
+            WHERE clan_id = {0.id} AND left_clan IS NULL;
+            """.format(self).strip()
+
+    def get_current_players(self):
+        return Player.objects.filter(id__in=[x.id for x in Player.objects.raw(self._get_current_player_ids_sql())])
+
     def get_players(self, date=None):
         if date is None:
-            date = timezone.now()
+            return self.get_current_players()
 
         return Player.objects.filter(
             Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__gte=date) |
@@ -239,6 +274,7 @@ class ClanHistory(HistoryModel):
     donations = models.IntegerField(null=True)
     region = models.CharField(max_length=64)
     region_code = models.CharField(max_length=2)
+    region_id = models.CharField(null=True, max_length=32)
     badge = models.CharField(max_length=512)
     trophies = models.IntegerField(null=True)
     prev_local_rank = models.IntegerField(null=True)

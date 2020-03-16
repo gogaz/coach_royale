@@ -1,12 +1,12 @@
 ## Todo
 - [ ] Charts for clan stats
 - [ ] Add API status with information on last successful sync
-  - [x] Store connection sessions to RoyaleAPI (back)
+  - [x] Store connection sessions to API (back)
   - [ ] Add `/status` endpoint (back)
   - [ ] Display status in the app (front)
 - [ ] Add 'Best' column to player's seasons in clan (back)
 - [ ] Show last changes on a player
-- [ ] Add a db lock for sync with RoyaleAPI
+- [ ] Add a db lock for sync with API
 - [ ] Make all refrashable components to be actually refreshable (front)
 - [x] Migrate all CSS to styled components
 - [ ] define donation reset time as a setting (should be every Monday at 00:00 UTC)

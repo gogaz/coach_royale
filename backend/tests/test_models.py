@@ -7,14 +7,19 @@ from backend.models import Card
 
 class ModelsTestCase(TestCase):
     def setUp(self):
-        self.card = {"name": "Skeleton Army",
-                     "rarity": "Epic",
-                     "icon": "https://api-assets.clashroyale.com/cards/300/fAOToOi1pRy7svN2xQS6mDkhQw2pj9m_17FauaNqyl4.png",
-                     "key": "skeleton-army",
-                     "elixir": 3,
-                     "type": "Troop",
-                     "arena": 0,
-                     "max_level": 13}
+        self.card = {
+            'id': 123456,
+            'name': 'Skeleton Army',
+            'rarity': 'Epic',
+            'iconUrls': {
+                'medium': 'https://api-assets.clashroyale.com/cards/300/fAOToOi1pRy7svN2xQS6mDkhQw2pj9m_17FauaNqyl4.png',
+            },
+            'key': 'skeleton-army',
+            'elixir': 3,
+            'type': 'Troop',
+            'arena': 0,
+            'maxLevel': 13,
+        }
 
     def _test_card_parsing(self):
         """Test the parsing of a single card"""
@@ -22,9 +27,10 @@ class ModelsTestCase(TestCase):
 
         card = Card.instance_from_data(data)
         # Test required fields
+        self.assertEqual(card.card_id, data.id)
         self.assertEqual(card.name, data.name)
         self.assertEqual(card.key, data.key)
-        self.assertEqual(card.image, data.icon)
+        self.assertEqual(card.image, data.icon_urls.medium)
 
     def _test_card_uniqueness(self):
         """Cards with same key should not be duplicated"""

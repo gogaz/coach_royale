@@ -1,43 +1,41 @@
-import logging
-
-from clashroyale import RoyaleAPI
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils import timezone, dateparse
+from django.utils import timezone
 
-from backend.lib.royale_api.helpers import command_print
-from backend.models import (Battle,
-                            PlayerClanWar,
-                            Player,
-                            ClanWar,
-                            PlayerClanHistory,
-                            PlayerClanStatsHistory,
-                            ClanHistory,
-                            Clan)
-
-logger = logging.getLogger(__name__)
+from backend.lib.console_tools.command_helpers import command_print
+from backend.models import (
+    Battle,
+    PlayerClanWar,
+    Player,
+    ClanWar,
+    PlayerClanHistory,
+    PlayerClanStatsHistory,
+    ClanHistory,
+    Clan
+)
 
 
 def refresh_clan_details(command, options, db_clan, api_client):
     """
     Used to refresh a single clan
-    :param clashroyale.RoyaleAPI api_client: The API client to request from
+    :param clashroyale.OfficialAPI api_client: The API client to request from
     :param BaseCommand command: The command it is executed from
     :param dict options: options passed to the command
-    :param Clan|None db_clan: a clan
+    :param Clan|None db_clan: a clan record
     :return: False on error
     """
 
     if options['verbose']:
         command_print(command, "#INFO: Refreshing clan %s", db_clan.tag)
-    logger.log(logging.INFO, "Refreshing clan %s", repr(db_clan))
 
     clan = api_client.get_clan(db_clan.tag)
 
     clan_created = False
+    track_clan = db_clan.refresh if db_clan else False
     if not db_clan.name:
-        db_clan, clan_created = Clan.objects.get_or_create(tag=clan.tag, defaults={'refresh': db_clan.refresh})
+        db_clan, clan_created = Clan.objects.get_or_create(tag=clan.tag[1:], defaults={'refresh': track_clan})
         if clan_created:
             db_clan.name = clan.name
+
     now = timezone.now()
     db_clan.last_refresh = now
     db_clan.save()
@@ -49,60 +47,61 @@ def refresh_clan_details(command, options, db_clan, api_client):
 
     db_clan_history, created = ClanHistory.create_or_find(
         clan=db_clan,
-        score=clan.score,
-        trophies=clan.war_trophies,
-        required_trophies=clan.required_score,
+        score=clan.clan_score,
+        trophies=clan.clan_war_trophies,
+        required_trophies=clan.required_trophies,
         type=clan.type,
         description=clan.description,
-        member_count=clan.member_count,
-        donations=clan.donations,
+        member_count=clan.members,
+        donations=clan.donations_per_week,
         region=clan.location.name,
-        region_code=clan.location.code,
-        badge=clan.badge.image
+        region_code=clan.location.country_code,
+        badge=api_client.get_clan_image(clan)
     )
     db_clan_history.last_refresh = now
     if created:
         db_clan_history.timestamp = now
 
-    if db_clan_history.highest_score is None or db_clan_history.highest_score < clan.score:
+    if db_clan_history.highest_score is None or db_clan_history.highest_score < clan.clan_score:
         db_clan_history.highest_score = clan.score
 
     if previous_history and previous_history.highest_score > db_clan_history.highest_score:
         db_clan_history.highest_score = previous_history.highest_score
 
     db_clan_history.save()
-    read_clan_members(clan, db_clan, command, now, options['verbose'], clan_created)
+    read_clan_members(api_client, clan, db_clan, command, now, options['verbose'], clan_created)
     read_war_log(command, db_clan, api_client, options['verbose'])
     update_war_status(command, options, db_clan)
     read_clan_rank(command, db_clan, api_client, db_clan_history, verbose=options['verbose'])
 
 
-def read_clan_members(clan, db_clan, command, now=timezone.now(), verbose=False, clan_created=False):
+def read_clan_members(api_client, clan, db_clan, command, now=timezone.now(), verbose=False, clan_created=False):
     # Read clan members
     read_players = []
     for player in clan.members:
         now = timezone.now()
         try:
-            db_player = Player.objects.get(tag=player.tag)
+            db_player = Player.objects.get(tag=player.tag[1:])
         except ObjectDoesNotExist:
-            db_player = Player(tag=player.tag, name=player.name)
+            db_player = Player(tag=player.tag[1:], name=player.name)
             db_player.save()
 
         read_players.append(db_player.tag)
+        last_seen = timezone.make_aware(api_client.get_datetime(player.last_seen, unix=False), timezone=timezone.utc)
         history_args = {
             "clan": db_clan,
             "player": db_player,
             "clan_role": player.role,
             "donations": player.donations,
             "donations_received": player.donations_received,
-            "last_seen": player.last_seen,
+            "last_seen": last_seen,
         }
         db_player_clanstats, created = PlayerClanStatsHistory.create_or_find(**history_args)
-        db_player_clanstats.current_clan_rank = player.rank
-        db_player_clanstats.previous_clan_rank = player.get('previousRank')
+        db_player_clanstats.current_clan_rank = player.clan_rank
+        db_player_clanstats.previous_clan_rank = player.previous_clan_rank
         db_player_clanstats.trophies = player.trophies
         db_player_clanstats.level = player.exp_level
-        db_player_clanstats.arena = player.arena.id
+        db_player_clanstats.arena = int(str(player.arena.id)[2:])
 
         db_player_clanstats.last_refresh = now
         if created:
@@ -133,35 +132,41 @@ def read_war_log(command, db_clan: Clan, api_client, verbose=False):
         command_print(command, "Refreshing ended wars")
     wars = api_client.get_clan_war_log(db_clan.tag)
     for war in wars:
-        time = dateparse.parse_datetime(war.war_end_time)
+        time = timezone.make_aware(api_client.get_datetime(war.created_date, unix=False), timezone=timezone.timezone.utc)
         db_war, created = ClanWar.objects.get_or_create(
             clan=db_clan,
-            date_end__range=(time, time + timezone.timedelta(hours=24)),
-            defaults={'date_end': time}
+            date_end__range=(time - timezone.timedelta(hours=12), time + timezone.timedelta(hours=12)),
+            defaults=dict(date_end=time)
         )
+
+        # We want to process the war if it hasn't already be processed, which means it was just created, or we don't
+        #   have a start date (which is quite the same expectation) or if no players are associated with the war
         if created or db_war.date_start is None or PlayerClanWar.objects.filter(clan_war=db_war).count() == 0:
             db_war.participants = len(war.participants)
             for p in war.participants:
-                db_p, _ = Player.objects.get_or_create(tag=p.tag, defaults={'name': p.name})
+                db_p, _ = Player.objects.get_or_create(tag=p.tag[1:], defaults={'name': p.name})
                 pcw, cpcw = PlayerClanWar.objects.get_or_create(clan_war=db_war, player=db_p)
                 if cpcw:
+                    pcw.final_battles = p.number_of_battles
                     pcw.final_battles_done = p.battles_played
                     pcw.final_battles_wins = p.wins
-                    pcw.final_battles_misses = p.battles_missed
+                    pcw.final_battles_misses = p.number_of_battles - p.battles_played
                     pcw.collections_cards_earned = p.cards_earned
+                    pcw.collections_battles_done = p.collection_day_battles_played
                     pcw.save()
+
             position = 0
-            while war.standings[position].tag != db_clan.tag:
+            while war.standings[position].clan.tag[1:] != db_clan.tag:
                 position += 1
-            war_results = war.standings[position]
+            war_results = war.standings[position].clan
+
             db_war.final_position = position + 1
-            db_war.trophies = war_results.war_trophies_change
-            db_war.total_trophies = war_results.war_trophies
+            db_war.total_trophies = war_results.clan_score
             db_war.crowns = war_results.crowns
             db_war.wins = war_results.wins
             db_war.final_battles = war_results.battles_played
             db_war.losses = war_results.battles_played - war_results.wins
-            db_war.season = war.season_number
+            db_war.season = war.season_id
             db_war.date_start = db_war.date_end - timezone.timedelta(days=2)
             db_war.save()
 
@@ -210,9 +215,9 @@ def update_war_status(command, options, db_clan):
                 break
 
 
-def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: ClanHistory, verbose=False):
+def read_clan_rank(command, db_clan: Clan, api_client, clan_stats: ClanHistory, verbose=False):
     # Top clans by trophies
-    tops = read_top_ranks(api_client.get_top_clans(clan_stats.region_code), db_clan, clan_stats)
+    tops = read_top_ranks(api_client.get_top_clans(clan_stats.region_id), db_clan, clan_stats)
     if tops[0] is not None:
         clan_stats.local_rank = tops[0]
         clan_stats.prev_local_rank = tops[1]
@@ -224,11 +229,11 @@ def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: Cl
         command_print(command, "Clan #%s is not in rankings", db_clan.tag)
 
     # Top clans by war trophies
-    war_tops = read_top_ranks(api_client.get_top_war_clans(clan_stats.region_code), db_clan, clan_stats)
+    war_tops = read_top_ranks(api_client.get_top_clanwar_clans(clan_stats.region_code), db_clan, clan_stats)
     if war_tops[0] is not None:
         clan_stats.local_war_rank = war_tops[0]
         clan_stats.prev_local_war_rank = tops[1]
-        g_tops = read_top_ranks(api_client.get_top_war_clans(), db_clan, clan_stats)
+        g_tops = read_top_ranks(api_client.get_top_clanwar_clans(), db_clan, clan_stats)
         if g_tops[0] is not None:
             clan_stats.global_war_rank = g_tops[0]
             clan_stats.prev_global_war_rank = g_tops[1]
@@ -243,7 +248,8 @@ def read_clan_rank(command, db_clan: Clan, api_client: RoyaleAPI, clan_stats: Cl
 def read_top_ranks(tops, db_clan, clan_stats):
     if tops[-1].score > clan_stats.score:
         return None, None
-    for top in tops:
-        if top.tag == db_clan.tag:
-            return top.rank, top.previous_rank
-    return None, None
+    try:
+        top = next(x for x in tops if x.tag[1:] == db_clan.tag)
+    except StopIteration:
+        return None, None
+    return top.rank, top.previous_rank
