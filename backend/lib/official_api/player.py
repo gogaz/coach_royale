@@ -90,12 +90,12 @@ def refresh_player_profile(command, options, db_player: Player, api_client):
     # Player cards
     for card in player.cards:
         db_card = Card.instance_from_data(card)
-        db_pcl, created = PlayerCardLevel.objects.get_or_create(player=db_player, card=db_card)
+        db_pcl, created = PlayerCardLevel.create_or_find(player=db_player, card=db_card)
         if db_pcl.count != card.count:
             db_pcl.count = card.count
         db_pcl.level = card.level
         db_pcl.count = card.count
-        db_pcl.star_level = card.star_level
+        db_pcl.star_level = card.star_level if 'starLevel' in card.keys() else 0
         db_pcl.save()
 
     # Player battles

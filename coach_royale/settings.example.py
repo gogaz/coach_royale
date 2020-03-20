@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'backend.apps.BackendConfig',
     'rest_framework',
     'command_log',
+    'backend.lib.clan_rule_matcher',
 ]
 
 MIDDLEWARE = [

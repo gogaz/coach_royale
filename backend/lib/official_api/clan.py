@@ -65,8 +65,10 @@ def refresh_clan_details(command, options, db_clan, api_client):
     if db_clan_history.highest_score is None or db_clan_history.highest_score < clan.clan_score:
         db_clan_history.highest_score = clan.score
 
-    if previous_history and previous_history.highest_score > db_clan_history.highest_score:
-        db_clan_history.highest_score = previous_history.highest_score
+    if previous_history:
+        db_clan_history.highest_score = clan.clan_score if clan.clan_score > previous_history.highest_score else previous_history.highest_score
+    else:
+        db_clan_history.highest_score = clan.clan_score
 
     db_clan_history.save()
     read_clan_members(api_client, clan, db_clan, command, now, options['verbose'], clan_created)
@@ -78,7 +80,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
 def read_clan_members(api_client, clan, db_clan, command, now=timezone.now(), verbose=False, clan_created=False):
     # Read clan members
     read_players = []
-    for player in clan.members:
+    for player in clan.member_list:
         now = timezone.now()
         try:
             db_player = Player.objects.get(tag=player.tag[1:])

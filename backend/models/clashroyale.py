@@ -55,7 +55,7 @@ class Card(BaseModel):
         return card
 
 
-class PlayerCardLevel(BaseModel):
+class PlayerCardLevel(HistoryModel):
     player = models.ForeignKey("Player", related_name='card_level', on_delete=models.CASCADE)
     card = models.ForeignKey(Card, related_name='player', on_delete=models.CASCADE)
     count = models.IntegerField(null=True)
