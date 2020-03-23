@@ -56,6 +56,7 @@ def refresh_clan_details(command, options, db_clan, api_client):
         donations=clan.donations_per_week,
         region=clan.location.name,
         region_code=clan.location.country_code,
+        region_id=clan.location.id,
         badge=api_client.get_clan_image(clan)
     )
     db_clan_history.last_refresh = now
@@ -231,7 +232,7 @@ def read_clan_rank(command, db_clan: Clan, api_client, clan_stats: ClanHistory, 
         command_print(command, "Clan #%s is not in rankings", db_clan.tag)
 
     # Top clans by war trophies
-    war_tops = read_top_ranks(api_client.get_top_clanwar_clans(clan_stats.region_code), db_clan, clan_stats)
+    war_tops = read_top_ranks(api_client.get_top_clanwar_clans(clan_stats.region_id), db_clan, clan_stats)
     if war_tops[0] is not None:
         clan_stats.local_war_rank = war_tops[0]
         clan_stats.prev_local_war_rank = tops[1]
@@ -248,7 +249,7 @@ def read_clan_rank(command, db_clan: Clan, api_client, clan_stats: ClanHistory, 
 
 
 def read_top_ranks(tops, db_clan, clan_stats):
-    if tops[-1].score > clan_stats.score:
+    if tops[-1].clan_score > clan_stats.score:
         return None, None
     try:
         top = next(x for x in tops if x.tag[1:] == db_clan.tag)

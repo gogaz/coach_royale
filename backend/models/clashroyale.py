@@ -274,7 +274,7 @@ class ClanHistory(HistoryModel):
     donations = models.IntegerField(null=True)
     region = models.CharField(max_length=64)
     region_code = models.CharField(max_length=2)
-    region_id = models.CharField(null=True, max_length=32)
+    region_id = models.IntegerField(null=True)
     badge = models.CharField(max_length=512)
     trophies = models.IntegerField(null=True)
     prev_local_rank = models.IntegerField(null=True)
