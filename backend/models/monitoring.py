@@ -3,36 +3,6 @@ import traceback
 from django.db import models
 
 
-class TournamentRefresh(models.Model):
-    """
-    OBSOLETE: related endpoints removed from RoyaleAPI.com
-    """
-    timestamp = models.DateTimeField()
-    success = models.BooleanField()
-    error = models.TextField(null=True)
-    count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return "[{1}] Refreshed {0.count} tournaments (success: {0.success})".format(
-            self,
-            self.timestamp.strftime("%Y-%m-%d %H:%M")
-        )
-
-
-class FullRefresh(models.Model):
-    timestamp = models.DateTimeField()
-    error = models.TextField(null=True)
-    constants_updated = models.BooleanField()
-    clans_count = models.IntegerField()
-    players_count = models.IntegerField()
-
-    def __str__(self):
-        return "[{0}] Refreshed all clans & players (success: {1})".format(
-            self.timestamp.strftime("%Y-%m-%d %H:%M"),
-            self.error is None
-        )
-
-
 class BaseError(models.Model):
     clazz = models.CharField(max_length=256, null=True)
     traceback = models.TextField(null=True)

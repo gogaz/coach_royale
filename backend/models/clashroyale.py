@@ -78,6 +78,17 @@ class PlayerClanHistory(BaseModel):
             action = "left"
         return "{0.player} {1} clan {0.clan}".format(self, action)
 
+    @classmethod
+    def joined(cls, db_player, db_clan, clan_is_new=False, now=None):
+        db_player_clan = PlayerClanHistory(
+            player=db_player,
+            clan_id=db_clan.id,
+            left_clan=None,
+            joined_clan=None if clan_is_new else (now or timezone.now())
+        )
+        db_player_clan.save()
+        return db_player_clan
+
 
 class PlayerClanStatsHistory(HistoryModel):
     clan = models.ForeignKey('Clan', null=True, on_delete=models.CASCADE)
@@ -168,9 +179,27 @@ class Player(BaseModel):
     def __str__(self):
         return "{} (#{})".format(self.name, self.tag)
 
+    def _get_latest_clan_sql(self):
+        return """
+            SELECT backend_clan.id
+            FROM backend_clan
+            JOIN (
+                SELECT MAX(id) as max_id, clan_id FROM backend_playerclanhistory GROUP BY player_id
+            ) player_clan ON player_clan.clan_id = backend_clan.id
+            JOIN backend_playerclanhistory ON backend_playerclanhistory.id = player_clan.max_id
+            WHERE backend_playerclanhistory.player_id = {0.id} AND left_clan IS NULL;
+            """.format(self)
+
+    def get_latest_clan(self):
+        try:
+            return Clan.objects.filter(id=Clan.objects.raw(self._get_latest_clan_sql())[0].id)
+        except Clan.DoesNotExist:
+            return None
+
     def get_clan(self, date=None):
         if date is None:
-            date = timezone.now()
+            return self.get_latest_clan()
+
         clan = Clan.objects.filter(
             (Q(playerclanhistory__joined_clan__isnull=True) & Q(playerclanhistory__left_clan__gte=date)) |
             (Q(playerclanhistory__joined_clan__isnull=True) & Q(playerclanhistory__left_clan__isnull=True)) |
@@ -260,6 +289,39 @@ class Clan(BaseModel):
             ),
             team__playerclanhistory__clan=self
         )
+
+    def associate_war_battles(self):
+        war_col_battles = self.get_players_battles().filter(war__isnull=True, mode__collection_day=True).order_by('time')
+        # We keep the war we find for each battle to try to associate it to the next battle, if it does not match,
+        #   we will hopefully get another war and continue onwards
+        war = None
+        for battle in war_col_battles:
+            war = battle.get_war_for_collection_day(war)
+            if war is None:
+                continue
+            battle.war = war
+            battle.save()
+
+        war_final_battles = self.get_players_battles().filter(war__isnull=True, mode__war_day=True).order_by('time')
+        war = None
+        for battle in war_final_battles:
+            war = battle.get_war_for_final_day(self, war)
+            if war is None:
+                continue
+            battle.war = war
+            battle.save()
+
+        orphan_battles = Battle.objects.filter(war__isnull=True).order_by('time')
+        for b in orphan_battles.select_related('mode'):
+            for p in b.team.all():
+                clan = p.get_clan(b.time)
+                if clan:
+                    war = b.get_war_for_collection_day(clan)
+                    if war is None:
+                        continue
+                    b.war = war
+                    b.save()
+                    break
 
 
 class ClanHistory(HistoryModel):
@@ -401,26 +463,3 @@ class PlayerClanWar(BaseModel):
     def __str__(self):
         return "{0.player} in {0.clan_war} ({1} | {0.collections_cards_earned} cards)" \
             .format(self, "Win" if self.final_battles_wins else "Lose" if self.final_battles_done else "Yet!")
-
-
-class Tournament(models.Model):
-    """
-    OBSOLETE: related endpoints removed from RoyaleAPI.com
-    """
-    tag = models.CharField(max_length=20)
-    name = models.CharField(max_length=255, null=True)
-    open = models.BooleanField()
-    max_players = models.IntegerField(null=True)
-    current_players = models.IntegerField(null=True)
-    status = models.CharField(max_length=50, null=True)
-    create_time = models.DateTimeField()
-    prep_time = models.DurationField(null=True)
-    start_time = models.DateTimeField(null=True)
-    end_time = models.DateTimeField(null=True)
-    duration = models.DurationField(null=True)
-
-    class Meta:
-        unique_together = (('tag', 'create_time'),)
-
-    def __str__(self):
-        return "Tournament {} started on {}".format(self.name, self.create_time.strftime("%Y-%m-%d"))

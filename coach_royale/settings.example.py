@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 import codecs
 import os
+from celery.schedules import crontab
 
 from django.utils import timezone
 
@@ -23,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'secret!'
 
-# Royale API configuration
+# Clash Royale API configuration
 CLASHROYALE_API_KEY = os.environ.get('CLASHROYALE_API_KEY') or "YOUR_API_KEY"
 REFRESH_RATE = timezone.timedelta(minutes=5)
 MAIN_CLAN = "2GJU9Y2G"  # omit the '#'
@@ -46,27 +47,7 @@ DATABASES = {
     }
 }
 
-# Logs - Uncomment the following lines to write logs to ./logs/django.log
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'file': {
-#             'level': 'INFO',
-#             'class': 'logging.FileHandler',
-#             'filename': '/logs/django.log',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'INFO',
-#             'propagate': True,
-#         },
-#     },
-# }
-
-# Application definition - do not change anything under this line
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,9 +55,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'backend.apps.BackendConfig',
+    'backend.apps.ClanRuleMatcherConfig',
     'rest_framework',
     'command_log',
-    'backend.lib.clan_rule_matcher',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +82,25 @@ REST_FRAMEWORK = {
 ROOT_URLCONF = 'coach_royale.urls'
 
 WSGI_APPLICATION = 'coach_royale.wsgi.application'
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://redis:6379'
+
+#: Only add pickle to this list if your broker is secured from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULE = {
+    'launcher': {
+        'task': 'backend.tasks.refresh_launcher_job',
+        'schedule': crontab()  # executes every minute
+    },
+    'refresh_constants': {
+        'task': 'backend.tasks.refresh_constants_job',
+        'schedule': crontab('0', '9')  # executes every day at 9AM UTC
+    }
+}
 
 TEMPLATES = [
     {

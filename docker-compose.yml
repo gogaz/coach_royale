@@ -17,7 +17,7 @@ services:
       - POSTGRES_USER=coach_royale
     expose:
       - "5432"
-    restart: always
+    restart: on-failure
   nginx:
     image: nginx:alpine
     volumes:
@@ -43,5 +43,25 @@ services:
       - nginx
       - postgres
     restart: always
+  redis:
+    image: redis:alpine
+    restart: on-failure
+  celery:
+    build: .
+    command: celery -A coach_royale worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - postgres
+      - redis
+  celery-beat:
+    build: .
+    command: >
+      bash -c "rm -f /code/celerybeat.pid && celery -A coach_royale beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    volumes:
+      - .:/code
+    depends_on:
+      - postgres
+      - redis
 volumes:
   postgres:

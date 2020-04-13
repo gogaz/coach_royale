@@ -1,5 +1,5 @@
 from .base import EditableModel
-from .monitoring import BaseError, FullRefresh, OfficialAPIError, TournamentRefresh
+from .monitoring import BaseError, OfficialAPIError
 from .cubes import PlayerCube
 from .clashroyale import (
     Battle,
@@ -16,5 +16,4 @@ from .clashroyale import (
     PlayerClanWar,
     PlayerSeason,
     PlayerStatsHistory,
-    Tournament,
 )

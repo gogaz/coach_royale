@@ -10,6 +10,13 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+    @classmethod
+    def create_or_find(cls, **kwargs):
+        try:
+            return cls.objects.get_or_create(**kwargs)
+        except cls.MultipleObjectsReturned:
+            return cls.objects.filter(**kwargs).order_by('-id')[0], False
+
 
 class HistoryModel(BaseModel):
     timestamp = models.DateTimeField(null=True)
@@ -17,13 +24,6 @@ class HistoryModel(BaseModel):
 
     class Meta:
         abstract = True
-
-    @classmethod
-    def create_or_find(cls, **kwargs):
-        try:
-            return cls.objects.get_or_create(**kwargs)
-        except cls.MultipleObjectsReturned:
-            return cls.objects.filter(**kwargs).order_by('-timestamp')[0], False
 
 
 class EditableModel(BaseModel):

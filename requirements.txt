@@ -9,3 +9,7 @@ psycopg2-binary
 python-box
 requests
 django-command-log==0.2.2
+celery
+redis
+django-celery-results
+django-celery-beat

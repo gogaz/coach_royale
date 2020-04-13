@@ -2,8 +2,10 @@ FROM debian:stable
 
 # Install global dependencies
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip build-essential gunicorn3 cron systemd git
+RUN apt-get install -y python3-pip build-essential gunicorn3 git
 RUN ln -s /usr/bin/python3 /usr/bin/py
+RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/pip3 /usr/bin/pip
 ENV PYTHONUNBUFFERED 1
 
 # Install python dependencies
@@ -11,13 +13,5 @@ WORKDIR /code
 RUN mkdir -p logs
 ADD requirements.txt /code/
 RUN pip3 install -r requirements.txt
-
-# Setup cron jobs
-ADD docker/crontab /etc/cron.d/coach_royale
-RUN chmod 0644 /etc/cron.d/coach_royale
-RUN chown root:root /etc/cron.d/coach_royale
-RUN crontab /etc/cron.d/coach_royale
-RUN systemctl enable cron.service
-RUN service cron start
 
 CMD ["/bin/bash"]
