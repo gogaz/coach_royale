@@ -71,8 +71,11 @@ jobs:
       - run:
           name: Build front-end
           command: cd front && npm run build
+      - store_artifacts:
+          path: test-reports/
+          destination: tr1
       - store_test_results:
-          path: test_results
+          path: test-reports/
 
 workflows:
   version: 2
