@@ -7,5 +7,5 @@ services:
     #environment:
     #  - DJANGO_SETTINGS_MODULE=coach_royale.settings_prod
     command: >
-      bash -c "cron && python3 manage.py migrate
+      bash -c "python3 manage.py migrate
       && gunicorn3 coach_royale.wsgi:application --bind 0.0.0.0:8000 --error-logfile /code/logs/gunicorn-error.log"

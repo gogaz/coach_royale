@@ -182,6 +182,11 @@ class APIConsumer(BaseConsumer):
         return timezone.make_aware(self.client.get_datetime(battle.battle_time, unix=False), timezone=timezone.utc)
 
     def read_player_war_battles(self, db_player):
+        """
+        Read war battles for a given player - other battles are ignored
+        :param Player db_player:
+        :return: None
+        """
         battles = self.client.get_player_battles(db_player.tag)
         latest_battle = self._get_last_from_database(Battle, False, team__id__exact=db_player.id)
 

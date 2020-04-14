@@ -13,16 +13,14 @@ class APIConsumer:
         'ERROR',
     ]
 
-    def __init__(self, client=None, command=None, **options):
+    def __init__(self, client=None, **options):
         """
         :param BaseCommand command: the command running this consumer
         :param str api_key: the key to connect to the API, settings used if none given
-        :param dict options: additional options
+        :param options: additional options
         """
         self.client = client or clashroyale.OfficialAPI(settings.CLASHROYALE_API_KEY, timeout=60)
-        self.command = command
         self.verbose = options.pop('verbose', True)
-        self.options = options
         self._update_current_time()
 
     def _update_current_time(self):

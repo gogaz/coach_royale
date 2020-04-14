@@ -14,33 +14,33 @@ from backend.models import (
 
 # Since the list is ordered, we only have to find the position of the given clan in the list to know its rank. If the
 #   clan is not in the list then it's not ranked
-# FIXME: can be tested
-def read_clan_ranking(rankings, clan_tag, clan_stats, type):
+def read_clan_ranking(rankings, clan_tag, clan_stats, attr_name):
     """
     Sets global or local clan ranking info on a clan history object
     :param list rankings:
     :param str clan_tag:
     :param ClanHistory clan_stats:
-    :param str type: must be in (local, global, local_war, global_war) - see backend.models.clashroyale.ClanHistory
+    :param str attr_name: must be in (local, global, local_war, global_war) - see backend.models.clashroyale.ClanHistory
     :return:
     """
     try:
         ranking = next(x for x in rankings if x.tag[1:] == clan_tag)
     except StopIteration:
         return None
-    setattr(clan_stats, '{}_rank'.format(type), ranking.rank)
-    setattr(clan_stats, 'prev_{}_rank'.format(type), ranking.previous_rank)
+    setattr(clan_stats, '{}_rank'.format(attr_name), ranking.rank)
+    setattr(clan_stats, 'prev_{}_rank'.format(attr_name), ranking.previous_rank)
     return ranking
 
 
 class APIConsumer(BaseConsumer):
-    def read_clan(self, tag):
+    def read_clan(self, tag, track_clan=False):
         """
         :param str tag: clan tag without the initial #
+        :param bool track_clan: whether the clan should be tracked or not (only used on clan creation)
         :return: None
         """
         clan = self.client.get_clan(tag)
-        db_clan, created = Clan.objects.get_or_create(tag=tag, defaults={'name': clan.name})
+        db_clan, created = Clan.objects.get_or_create(tag=tag, defaults={'name': clan.name, 'refresh': track_clan})
 
         self._log("Refreshing clan %s" % db_clan.tag)
         self.read_clan_stats(db_clan, clan)
