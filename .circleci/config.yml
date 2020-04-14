@@ -13,7 +13,7 @@ jobs:
       - checkout
       # Download and cache dependencies
       - restore_cache:
-          keys: v1-dependencies-{{ checksum "requirements.txt" }}
+          keys: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: install dependencies
           command: |
@@ -25,7 +25,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: Linter
           command: |
