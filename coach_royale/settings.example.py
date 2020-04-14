@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'backend.apps.BackendConfig',
     'backend.apps.ClanRuleMatcherConfig',
     'rest_framework',
-    'command_log',
     'django_celery_results',
     'django_celery_beat',
 ]
