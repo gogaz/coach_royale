@@ -3,11 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.7
-      - image: circleci/postgres:latest
+      - image: circleci/postgres:10.5-alpine-ram
         environment:
           POSTGRES_USER: coach_royale
           POSTGRES_DB: test_coach_royale
-          POSTGRES_PASSWORD: ""
       - image: circleci/redis
     steps:
       - checkout
