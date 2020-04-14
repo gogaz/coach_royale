@@ -45,6 +45,8 @@ jobs:
           command: |
             . venv/bin/activate
             codecov
+      - store_test_results:
+          path: test_results
 
   # Build the front-end
   build-front:
