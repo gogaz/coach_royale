@@ -12,7 +12,8 @@ jobs:
       - checkout
       # Download and cache dependencies
       - restore_cache:
-          keys: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          keys:
+            - pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: install dependencies
           command: |
