@@ -19,5 +19,6 @@ settings*.py
 .coverage
 front/coverage/
 logs
+test-reports
 # Celery
 celerybeat.pid

@@ -47,6 +47,9 @@ DATABASES = {
     }
 }
 
+TEST_RUNNER = 'xmlrunner.extra.djangotestrunner.XMLTestRunner'
+TEST_OUTPUT_DIR = os.path.join('.', 'test-reports')
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
