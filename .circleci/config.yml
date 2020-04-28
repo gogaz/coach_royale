@@ -51,7 +51,7 @@ jobs:
   # Build the front-end
   build-front:
     docker:
-      - image: circleci/node:8-jessie
+      - image: circleci/node:10
     steps:
       - checkout
       - restore_cache:
