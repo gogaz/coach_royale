@@ -56,13 +56,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v2-dependencies-{{ checksum "package-lock.json" }}
+            - v2-dependencies-{{ checksum "yarn.lock" }}
             - v2-dependencies-
       - run:
           name: Install dependencies
           command: cd front && npm install
       - save_cache:
-          key: v2-dependencies-{{ checksum "package-lock.json" }}
+          key: v2-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
       - run:
