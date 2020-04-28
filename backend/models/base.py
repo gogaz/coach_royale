@@ -11,11 +11,11 @@ class BaseModel(models.Model):
         abstract = True
 
     @classmethod
-    def create_or_find(cls, **kwargs):
+    def create_or_get(cls, **kwargs):
         try:
-            return cls.objects.get_or_create(**kwargs)
-        except cls.MultipleObjectsReturned:
-            return cls.objects.filter(**kwargs).order_by('-id')[0], False
+            return cls.objects.get(**kwargs), False
+        except cls.DoesNotExist:
+            return cls.objects.create(**kwargs), True
 
 
 class HistoryModel(BaseModel):

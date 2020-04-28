@@ -15,6 +15,7 @@ const CriticalError = ({ code, description, message }) => (
     </div>
 );
 
+
 CriticalError.defaultProps = {
     code: 500,
     message: "Oops, something went terribly wrong!",

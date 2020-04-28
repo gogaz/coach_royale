@@ -2,7 +2,7 @@
   "groups": {
     "default": {
       "packages": [
-        "front/package.json"
+        "static/app/package.json"
       ]
     }
   }

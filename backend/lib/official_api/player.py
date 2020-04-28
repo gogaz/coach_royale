@@ -122,8 +122,8 @@ class APIConsumer(BaseConsumer):
             'tournament_games': player.tournament_battle_count,
             'defaults': {'timestamp': self.now}
         }
-        db_player_stats, _ = PlayerStatsHistory.create_or_find(**query_fields)
-        db_player_stats.favorite_card = Card.key_from_name(player.current_favourite_card.name)
+        db_player_stats, _ = PlayerStatsHistory.create_or_get(**query_fields)
+        db_player_stats.favorite_card = Card.instance_from_data(player.current_favourite_card).key
         db_player_stats.win_3_crowns = player.three_crown_wins
         db_player_stats.draws = player.battle_count - player.wins - player.losses
         db_player_stats.losses = player.losses
@@ -167,7 +167,7 @@ class APIConsumer(BaseConsumer):
 
         for card in cards:
             db_card = Card.instance_from_data(card)
-            db_pcl, created = PlayerCardLevel.create_or_find(player=db_player, card=db_card)
+            db_pcl, created = PlayerCardLevel.create_or_get(player=db_player, card=db_card)
             if db_pcl.count != card.count:
                 db_pcl.count = card.count
             db_pcl.level = card.level

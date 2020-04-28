@@ -3,12 +3,12 @@ from django.db import models
 from django.db.models import Q, F
 from django.utils import timezone
 
-from .base import BaseModel, HistoryModel
+from .base import BaseModel, HistoryModel, EditableModel
 
 logger = logging.getLogger(__name__)
 
 
-class Card(BaseModel):
+class Card(EditableModel):
     card_id = models.IntegerField(null=True)
     key = models.CharField(max_length=64)
     name = models.CharField(max_length=255)
@@ -33,24 +33,20 @@ class Card(BaseModel):
         key = data.key if 'key' in data.keys() else cls.key_from_name(data.name)
         card, created = Card.objects.get_or_create(key=key)
 
-        if card.elixir is None and 'elixir' in data.keys():
-            card.card_id = data.id
+        # In most cases, Cards shouldn't be created from here, but it can happen when a new card is released in the game
+        if created:
+            # card.key = data.key if 'key' in data.keys() else cls.key_from_name(data.name)
+            card.id = data.id
             card.name = data.name
-            card.arena = data.arena
-            card.elixir = data.elixir
-            card.rarity = data.rarity
-            card.type = data.type
             card.save()
 
-        if not card.image:
-            card.image = data.icon_urls.medium if 'iconUrls' in data.keys() else None
-            if card.image:
-                card.save()
+        if not card.image and 'icon_urls' in data.keys():
+            card.image = data.icon_urls.medium
+            card.save()
 
-        if card.max_level is None:
-            card.max_level = data.max_level if 'maxLevel' in data.keys() else None
-            if card.max_level:
-                card.save()
+        if not card.max_level and 'max_level' in data.keys():
+            card.max_level = data.max_level
+            card.save()
 
         return card
 

@@ -10,7 +10,7 @@ function fetchData(url) {
 
 export async function loadConstants() {
     return {
-        arenas: await fetchData('/constants/arenas.json'),
+        arenas: await fetchData('/static/constants/arenas.json'),
     };
 }
 

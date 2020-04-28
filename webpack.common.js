@@ -5,9 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
-    entry: {
-        app: './src/index.js'
-    },
+    entry: './static/app/index.js',
     optimization: {
         minimizer: [
             new UglifyJsPlugin({
@@ -52,7 +50,7 @@ module.exports = {
                 use: {
                     loader: 'file-loader',
                     options: {
-                        name: "./static/front/dist/[hash].[ext]",
+                        name: "./static/dist/[hash].[ext]",
                     },
                 },
             }
@@ -60,6 +58,6 @@ module.exports = {
     },
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'static/dist')
     },
 };

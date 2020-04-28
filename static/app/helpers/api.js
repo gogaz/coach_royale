@@ -5,6 +5,5 @@ export function handleErrors(response) {
         }
         throw response;
     }
-    console.log(response.data);
     return response.data;
 }

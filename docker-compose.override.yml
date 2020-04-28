@@ -1,15 +1,31 @@
 version: '3'
 
+# In development mode, always open ports to the local machine
 services:
-  front:
-    command: yarn build-dev
-  backend:
-    command: >
-        bash -c "python3 manage.py makemigrations && python3 manage.py migrate
-        && python3 manage.py runserver 0.0.0.0:8000"
   postgres:
     ports:
       - "127.0.0.1:5432:5432"
   redis:
     ports:
       - "127.0.0.1:6379:6379"
+  nginx:
+    volumes:
+      - ./docker/nginx.dev.conf:/etc/nginx/conf.d/default.conf
+      - .:/code
+      - ./logs:/logs
+  webpack-dev-server:
+    image: coach_royale_base
+    restart: on-failure
+    working_dir: /code
+    command: sh -c "cd /code && yarn run start-dev"
+    volumes:
+      - ./static:/code/static
+    ports:
+      - "127.0.0.1:3333:3333"
+  backend:
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - postgres
+      - redis
+      - nginx
+      - webpack-dev-server

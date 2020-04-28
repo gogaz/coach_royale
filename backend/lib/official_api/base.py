@@ -1,5 +1,3 @@
-import datetime
-
 import clashroyale
 from django.conf import settings
 from django.utils import timezone
@@ -36,11 +34,7 @@ class APIConsumer:
             err = "level {} not known, possible values are [{}]".format(level, ', '.join(APIConsumer.LOG_LEVELS))
             raise KeyError(err)
 
-        message = "[{}] {}: {}".format(
-            datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            level,
-            message
-        )
+        message = "{}: {}".format(level, message)
 
         if not self.verbose:
             return

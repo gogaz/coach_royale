@@ -25,6 +25,6 @@ urlpatterns = [
             ]))
         ])),
     ])),
-    # Fallbacks to the index page and lets React handle the routing
+    # Fallback to the index page, let React handle the routing (and 404s)
     re_path(r'^(?:.*)/?$', index),
 ]

@@ -1,17 +1,31 @@
-FROM debian:stable
+FROM python:3-alpine
 
-# Install global dependencies
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip build-essential gunicorn3 git
-RUN ln -s /usr/bin/python3 /usr/bin/py
-RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN ln -s /usr/bin/pip3 /usr/bin/pip
-ENV PYTHONUNBUFFERED 1
+# psycopg2 requirements
+RUN apk add --no-cache --virtual .build-deps gcc git
+RUN apk add --no-cache musl-dev postgresql-dev
 
 # Install python dependencies
 WORKDIR /code
 RUN mkdir -p logs
 ADD requirements.txt /code/
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
+RUN apk --purge del .build-deps
 
-CMD ["/bin/bash"]
+# Install node dependencies
+RUN apk add yarn nodejs
+ADD package.json /code
+ADD yarn.lock /code
+RUN yarn install
+
+# Add local files to container
+ADD manage.py /code/
+ADD tox.ini /code/
+
+ADD .babelrc /code
+ADD webpack.common.js /code
+ADD webpack.prod.js /code
+ADD webpack.dev.js /code
+
+ADD ./docker/start-backend.sh /code/
+RUN chmod +x /code/start-backend.sh
+CMD /code/start-backend.sh

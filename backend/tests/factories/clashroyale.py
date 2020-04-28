@@ -107,7 +107,7 @@ class PlayerStatsHistoryFactory(Factory):
     @classmethod
     def create(cls, **kwargs):
         level = kwargs.get('level', 13)
-        trophies = kwargs.get('current_trophies', level * 400)
+        trophies = kwargs.get('current_trophies', level * random.randint(300, 500))
         psh = PlayerStatsHistory(
             player=kwargs.get('player', PlayerFactory.create(**kwargs)),
             level=level,
@@ -148,10 +148,10 @@ class PlayerClanHistoryFactory(Factory):
 class PlayerClanStatsHistoryFactory(Factory):
     @classmethod
     def create(cls, **kwargs):
-        level = kwargs.get('level', 13)
+        level = kwargs.pop('level', random.randint(9, 13))
         pcsh = PlayerClanStatsHistory(
             clan=kwargs.get('clan', ClanFactory.create(**kwargs)),
-            player=kwargs.get('player', PlayerFactory.create(**kwargs)),
+            player=kwargs.get('player', PlayerFactory.create(**kwargs, level=level)),
             clan_role=kwargs.pop('clan_role', 'member'),
             current_clan_rank=kwargs.pop('current_clan_rank', 20 - level),
             previous_clan_rank=kwargs.pop('previous_clan_rank', 25 - level),
@@ -187,20 +187,21 @@ class PlayerClanWarFactory(Factory):
 class ClanWarFactory(Factory):
     @classmethod
     def create(cls, **kwargs):
+        participants = kwargs.pop('participants', random.randint(25, 40))
         war = ClanWar(
             clan=kwargs.get('clan', ClanFactory.create(**kwargs)),
             date_start=kwargs.pop('date_start', timezone.now()),
             date_end=kwargs.pop('date_end', timezone.now()),
-            participants=kwargs.pop('participants', 25),
-            final_battles=kwargs.pop('final_battles', 25),
-            collections_battles=kwargs.pop('collections_battles', 60),
-            wins=kwargs.pop('wins', 18),
-            losses=kwargs.pop('losses', 5),
-            collections_cards=kwargs.pop('collections_cards', 10000),
-            crowns=kwargs.pop('crowns', 25),
+            participants=kwargs.pop('participants', participants),
+            final_battles=kwargs.pop('final_battles', participants - int(participants / 10)),
+            collections_battles=kwargs.pop('collections_battles', int(participants * 2.5)),
+            wins=kwargs.pop('wins', int(participants / 2)),
+            losses=kwargs.pop('losses', int(participants / 2) - int(participants / 10)),
+            collections_cards=kwargs.pop('collections_cards', participants * 1500),
+            crowns=kwargs.pop('crowns', int(participants * 1.5)),
             final_position=kwargs.pop('final_position', 2),
-            total_trophies=kwargs.pop('total_trophies', 6666),
-            trophies=kwargs.pop('trophies', 66),
+            total_trophies=kwargs.pop('total_trophies', participants * 200),
+            trophies=kwargs.pop('trophies', int(participants / 2) + 50),
             season=kwargs.pop('season', 1),
         )
         war.save()

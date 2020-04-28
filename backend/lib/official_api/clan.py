@@ -67,7 +67,7 @@ class APIConsumer(BaseConsumer):
         except IndexError:
             previous_history = None
 
-        db_clan_history, created = ClanHistory.create_or_find(
+        db_clan_history, created = ClanHistory.create_or_get(
             clan=db_clan,
             score=clan.clan_score,
             trophies=clan.clan_war_trophies,
@@ -127,7 +127,7 @@ class APIConsumer(BaseConsumer):
                 "donations_received": player.donations_received,
                 "last_seen": last_seen,
             }
-            db_player_clanstats, created = PlayerClanStatsHistory.create_or_find(**history_args)
+            db_player_clanstats, created = PlayerClanStatsHistory.create_or_get(**history_args)
             db_player_clanstats.current_clan_rank = player.clan_rank
             db_player_clanstats.previous_clan_rank = player.previous_clan_rank
             db_player_clanstats.trophies = player.trophies
@@ -147,7 +147,7 @@ class APIConsumer(BaseConsumer):
             # Check if each player in database is still in clan
             for p in actual_players:
                 if p.tag not in read_players:  # Player left clan
-                    pch, _ = PlayerClanHistory.create_or_find(player=p, clan=db_clan, left_clan__isnull=True)
+                    pch, _ = PlayerClanHistory.create_or_get(player=p, clan=db_clan, left_clan__isnull=True)
                     pch.left_clan = now
                     pch.save()
                     self._log("Player #%s left clan" % p.tag)

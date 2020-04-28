@@ -93,10 +93,11 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+# FIXME: move the schedule to another file, it should stay up to date
 CELERY_BEAT_SCHEDULE = {
     'launcher': {
         'task': 'backend.tasks.refresh_launcher_job',
-        'schedule': crontab()  # executes every minute
+        'schedule': crontab('*/3')  # executes every 3 minutes
     },
     'refresh_constants': {
         'task': 'backend.tasks.refresh_constants_job',
@@ -160,9 +161,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+CONSTANTS_DIR = os.path.join(BASE_DIR, 'static/constants')
 STATIC_URL = '/static/'
-
-CONSTANTS_DIR = os.path.join(BASE_DIR, 'constants')
+STATICFILES_DIRS = (
+    CONSTANTS_DIR,
+    os.path.join(BASE_DIR, 'static')
+)
 
 # Production values, comment when in development
 X_FRAME_OPTIONS = 'DENY'

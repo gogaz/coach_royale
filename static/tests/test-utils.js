@@ -5,14 +5,14 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import mock from "./axiosMock";
-import { ConstantsProvider, loadConstants } from "../src/helpers/constants";
+import { ConstantsProvider, loadConstants } from "../app/helpers/constants";
 
 const reactTestingLibrary = require('@testing-library/react');
 
 window.GLOBAL_rootURL = "/clan/ABCD";
 window.GLOBAL_mainClan = "ABCD";
 
-mock.onGet('/constants/arenas.json').reply(200, [])
+mock.onGet('/static/constants/arenas.json').reply(200, [])
 const constants = loadConstants();
 
 const AllTheProviders = ({ children }) => (

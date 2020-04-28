@@ -1,13 +1,6 @@
 version: '3'
 
 services:
-  front:
-    build: ./front
-    working_dir: /code
-    volumes:
-      - ./front/dist:/code/dist
-      - ./front/src:/code/src
-    restart: 'no'
   postgres:
     container_name: db.postgres
     image: postgres:latest
@@ -18,36 +11,30 @@ services:
     expose:
       - "5432"
     restart: on-failure
-  nginx:
-    image: nginx:alpine
-    volumes:
-      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
-      - .:/code
-      - ./logs:/logs
-    restart: on-failure
-    ports:
-      - "127.0.0.1:8000:80"
-    depends_on:
-      - front
-  backend:
-    build: .
-    user: root
-    volumes:
-      - .:/code
-      - ./logs:/logs
-    #  - ./docker/crontab:/etc/cron.d/coach_royale
-    expose:
-      - "8000"
-    depends_on:
-      - front
-      - nginx
-      - postgres
-    restart: always
   redis:
     image: redis:alpine
     restart: on-failure
+  nginx:
+    image: nginx:alpine
+    restart: on-failure
+    ports:
+      - "127.0.0.1:8000:80"
+  backend:
+    image: coach_royale_base
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: root
+    volumes:
+      - ./coach_royale:/code/coach_royale
+      - ./backend:/code/backend
+      - ./static:/code/static
+      - ./logs:/logs
+    expose:
+      - "8000"
+    restart: always
   celery:
-    build: .
+    image: coach_royale_base
     command: celery -A coach_royale worker -l info
     volumes:
       - .:/code
@@ -55,9 +42,9 @@ services:
       - postgres
       - redis
   celery-beat:
-    build: .
+    image: coach_royale_base
     command: >
-      bash -c "rm -f /code/celerybeat.pid && celery -A coach_royale beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+      sh -c "rm -f /code/celerybeat.pid && celery -A coach_royale beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     volumes:
       - .:/code
     depends_on:
