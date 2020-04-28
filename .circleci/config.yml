@@ -60,17 +60,17 @@ jobs:
             - v2-dependencies-
       - run:
           name: Install dependencies
-          command: cd front && npm install
+          command: yarn install
       - save_cache:
           key: v2-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
       - run:
           name: Test front-end
-          command: cd front && npm test && npm run coverage
+          command: yarn run test && yarn run coverage
       - run:
           name: Build front-end
-          command: cd front && npm run build
+          command: yarn run build
       - store_artifacts:
           path: test-reports/
           destination: tr1
