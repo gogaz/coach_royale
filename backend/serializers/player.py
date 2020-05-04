@@ -1,8 +1,15 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from backend.models import Player, PlayerCardLevel, PlayerClanHistory, PlayerStatsHistory, PlayerClanStatsHistory
-from backend.serializers.clan import ClanWithDetailsSerializer
+from backend.models import (
+    Player,
+    PlayerCardLevel,
+    PlayerClanHistory,
+    PlayerStatsHistory,
+    PlayerClanStatsHistory,
+    PlayerClanWar,
+)
+from backend.serializers.clan import ClanWithDetailsSerializer, ClanWarSerializer
 from backend.serializers.misc import CardSerializer
 
 
@@ -89,3 +96,22 @@ class PlayerClanSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = PlayerClanHistory
         fields = ('clan', 'joined_clan', 'left_clan')
+
+
+class PlayerClanWarSerializer(HyperlinkedModelSerializer):
+    clan_war = ClanWarSerializer(required=False)
+
+    class Meta:
+        model = PlayerClanWar
+        fields = (
+            'clan_war',
+            'final_battles',
+            'final_battles_done',
+            'final_battles_wins',
+            'final_battles_misses',
+            'crowns',
+            'collections_cards_earned',
+            'collections_battles',
+            'collections_battles_done',
+            'collections_battles_wins',
+        )

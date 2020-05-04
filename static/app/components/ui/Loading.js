@@ -6,7 +6,7 @@ const Loading = ({ height, loading }) => {
         return null;
 
     const imageProps = {
-        src: "img/loading.svg",
+        src: "/static/img/loading.svg",
         alt: "Loading...",
     };
 
@@ -16,7 +16,7 @@ const Loading = ({ height, loading }) => {
     return (
         <React.Fragment>
             <div style={ { height: "50%" } }>&nbsp;</div>
-            <img className="d-block mx-auto" { ...imageProps }/>
+            <img className="d-block mx-auto" { ...imageProps } />
         </React.Fragment>
     );
 };

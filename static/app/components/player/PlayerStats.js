@@ -61,7 +61,7 @@ const PlayerStats = ({ endpoint }) => {
     if (loading) return <Loading/>;
 
     const lastSeen = moment(player.clan.last_seen);
-    const LastSeen = (...args) => (
+    const LastSeen = () => (
         <React.Fragment>
             <span data-tip data-for="lastSeen"><TimeFromNow time={ lastSeen }/></span>
             <ReactTooltip type="dark" effect="solid"

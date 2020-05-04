@@ -77,7 +77,7 @@ const subject = async () => {
 describe("Clan members page", () => {
     test("it renders the clan details as card header", async () => {
         const rendered = await subject();
-        rendered.getByText(6666);
+        rendered.getByText("6,666");
         rendered.getByText(clanInfos.details.description)
     });
     test("it renders list of members in a react-table", async () => {

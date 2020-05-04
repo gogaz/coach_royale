@@ -3,7 +3,6 @@ import "regenerator-runtime/runtime";
 import React from "react";
 import ReactDOM from "react-dom";
 
-import "react-table/react-table.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style/app.css"
 
@@ -21,7 +20,8 @@ moment.locale(locale);
 const constants = loadConstants();
 
 
-ReactDOM.render((
+ReactDOM.render(
+    (
         <ThemeProvider theme={ defaultTheme }>
             <ConstantsProvider value={ constants }>
                 <Router>
@@ -30,4 +30,5 @@ ReactDOM.render((
             </ConstantsProvider>
         </ThemeProvider>
     ),
-    document.getElementById("root"));
+    document.getElementById("root")
+);

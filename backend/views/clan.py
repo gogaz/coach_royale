@@ -20,16 +20,12 @@ from backend.serializers.player import PlayerSerializer
 @api_view(['GET'])
 def clans_list(request):
     if request.method == 'GET':
-        try:
-            main_clan = Clan.objects.get(tag=settings.MAIN_CLAN)
-        except Clan.DoesNotExist:
-            return not_found_error("clan", "main")
-        clans = Clan.objects.exclude(tag=settings.MAIN_CLAN)
+        clans = Clan.objects.exclude(tag=settings.MAIN_CLAN).exclude(tag='').exclude(tag__isnull=True)
         if clans:
-            family = ClanWithDetailsSerializer(clans, many=True).data
+            family = clans.values_list('tag', flat=True)
         else:
             family = []
-        return Response({'main': ClanWithDetailsSerializer(main_clan, allow_null=True).data, 'family': family})
+        return Response({'main': settings.MAIN_CLAN, 'family': family})
 
 
 @api_view(['GET'])

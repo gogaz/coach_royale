@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { Card, Header } from "../ui/Card";
 import { Flex, FlexWrapper, Grid } from "../ui/Disposition";
-import ClanMembersTable from "./ClanMembersTable";
+import ClanMembersTable from "./tables/ClanMembersTable";
 import TrophiesCell from "./cells/TrophiesCell";
 import ErrorBoundary from "../errors/ErrorBoundary";
 
@@ -23,9 +23,9 @@ const ClanSeasons = ({ endpoint }) => {
                 <ErrorBoundary>
                     <ClanMembersTable
                         endpoint={ endpoint + '/weekly' }
-                        baseColumns={ ['name', 'trophies', 'given'] }
-                        defaultSorted={ [{ id: "given", desc: true }] }
-                        showPagination={ true }
+                        columns={ ['name', 'trophies', 'received', 'given', 'total'] }
+                        defaultSorted={ [{ id: "donated", desc: true }] }
+                        showPagination
                     />
                 </ErrorBoundary>
             </Card>
@@ -34,24 +34,10 @@ const ClanSeasons = ({ endpoint }) => {
                 <ErrorBoundary>
                     <ClanMembersTable
                         endpoint={ endpoint + '/season' }
-                        baseColumns={ ['name'] }
-                        columns={ [
-                            {
-                                Header: "Trophies",
-                                accessor: "details.ending",
-                                width: 90,
-                                Cell: ({ _, original }) => <TrophiesCell trophies={ original.details.ending } arena={ original.details.arena }/>
-                            },
-                            {
-                                Header: "Highest",
-                                accessor: "details.highest",
-                                width: 90,
-                                Cell: ({ _, original }) => <TrophiesCell trophies={ original.details.highest }/>
-                            },
-                        ] }
-                        defaultSorted={ [{ id: "details.ending", desc: true }] }
+                        columns={ ['name', 'ending', 'highest'] }
+                        defaultSorted={ [{ id: "ending", desc: true }] }
                         onFetchData={ (data) => setPreviousSeason(moment(data[0].details.season__identifier + '-01', 'YYYY-MM-DD')) }
-                        showPagination={ true }
+                        showPagination
                     />
                 </ErrorBoundary>
             </Card>

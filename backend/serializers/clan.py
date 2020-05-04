@@ -29,10 +29,12 @@ class ClanSerializer(HyperlinkedModelSerializer):
 class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = PlayerClanStatsHistory
-        fields = ('last_refresh',
-                  'clan_role', 'current_clan_rank',
-                  'donations', 'donations_received',
-                  'level', 'trophies', 'arena', 'last_seen')
+        fields = (
+            'last_refresh',
+            'clan_role', 'current_clan_rank',
+            'donations', 'donations_received',
+            'level', 'trophies', 'arena', 'last_seen'
+        )
 
 
 class PlayerClanDetailsSerializer(HyperlinkedModelSerializer):
@@ -51,29 +53,37 @@ class ClanWarSerializer(HyperlinkedModelSerializer):
         model = ClanWar
         fields = (
             'id',
-            'date_start', 'date_end',
+            'date_start',
+            'date_end',
             'participants',
             'final_battles',
-            'collections_battles', 'collections_cards',
-            'wins', 'losses', 'crowns',
+            'collections_battles',
+            'collections_cards',
+            'wins',
+            'losses',
+            'crowns',
             'final_position',
-            'trophies', 'total_trophies', 'season',
+            'trophies',
+            'total_trophies',
+            'season',
         )
 
 
 class PlayerClanWarSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = PlayerClanWar
-        fields = ('clan_war_id',
-                  'final_battles',
-                  'final_battles_done',
-                  'final_battles_wins',
-                  'final_battles_misses',
-                  'crowns',
-                  'collections_cards_earned',
-                  'collections_battles',
-                  'collections_battles_done',
-                  'collections_battles_wins',)
+        fields = (
+            'clan_war_id',
+            'final_battles',
+            'final_battles_done',
+            'final_battles_wins',
+            'final_battles_misses',
+            'crowns',
+            'collections_cards_earned',
+            'collections_battles',
+            'collections_battles_done',
+            'collections_battles_wins',
+        )
 
 
 class PlayerInClanWarSerializer(HyperlinkedModelSerializer):

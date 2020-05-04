@@ -1,12 +1,13 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { NavTab } from 'react-router-tabs';
 import ClanDetails from "./ClanDetails";
-import ClanWarMembers from "./ClanWarMembers";
-import ClanMembersTable from "./ClanMembersTable";
+import ClanWarMembers from "./tables/ClanWarMembers";
+import ClanMembersTable from "./tables/ClanMembersTable";
 import ClanSeasons from "./ClanSeasons";
 import ErrorBoundary from "../errors/ErrorBoundary";
 import { Card } from "../ui/Card";
+import { TabsContainer, Tab, TabLink } from "../ui/Tabs";
+import Separator from "../ui/Separator";
 
 const ClanPage = ({ match }) => {
     const endPoint = `/api/clan/${ match.params.tag }`;
@@ -14,27 +15,28 @@ const ClanPage = ({ match }) => {
     return (
         <Card>
             <ErrorBoundary>
-                <ClanDetails endpoint={ endPoint }/>
+                <ClanDetails tag={ match.params.tag }/>
             </ErrorBoundary>
             <ErrorBoundary>
-                <ul className="nav nav-tabs">
-                    <li className="nav-item">
-                        <NavTab to={ `${ match.url }/members` } className="nav-link">Clan members</NavTab>
-                    </li>
-                    <li className="nav-item">
-                        <NavTab to={ `${ match.url }/wars` } className="nav-link">War log</NavTab>
-                    </li>
-                    <li className="nav-item">
-                        <NavTab to={ `${ match.url }/seasons` } className="nav-link">Seasons</NavTab>
-                    </li>
-                </ul>
+                <TabsContainer>
+                    <Tab>
+                        <TabLink to={ `${ match.url }/members` }>Clan members</TabLink>
+                    </Tab>
+                    <Tab>
+                        <TabLink to={ `${ match.url }/wars` }>War log</TabLink>
+                    </Tab>
+                    <Tab>
+                        <TabLink to={ `${ match.url }/seasons` }>Seasons</TabLink>
+                    </Tab>
+                </TabsContainer>
             </ErrorBoundary>
+            <Separator />
             <ErrorBoundary>
                 <Switch>
                     <Route exact path={ `${ match.url }` } render={ () => <Redirect replace to={ `${ match.url }/members` }/> }/>
                     <Route
                         path={ `${ match.url }/members` }
-                        render={ (props) => <ClanMembersTable { ...props } endpoint={ endPoint + '/members' } pageSize={ 50 }/> }
+                        render={ (props) => <ClanMembersTable { ...props } endpoint={ endPoint + '/members' } /> }
                     />
                     <Route path={ `${ match.url }/wars` } render={ (props) => <ClanWarMembers { ...props } endpoint={ endPoint }/> }/>
                     <Route path={ `${ match.url }/seasons` } render={ (props) => <ClanSeasons { ...props } endpoint={ endPoint }/> }/>

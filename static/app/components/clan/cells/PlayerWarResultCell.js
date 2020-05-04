@@ -8,14 +8,14 @@ const WarResult = styled.div`
     align-items: center;
     justify-content: center;
     
-    img {
+    & > img {
         height: 30px;
     }
 `;
 
 const PlayerWarResultCell = ({ war }) => {
     if (!war)
-        return <WarResult/>;
+        return <WarResult />;
 
     let result = [];
     for (let i = 0; i < war.final_battles_wins; i++)

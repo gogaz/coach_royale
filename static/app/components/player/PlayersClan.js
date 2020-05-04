@@ -42,9 +42,9 @@ const PlayersClan = ({ theme, player }) => {
         );
 
     return (
-        <div className="mt-3">
-            <span className="mr-2"><Link to={ "/clan/" + player.clan.tag }>{ player.clan.name }</Link></span>
+        <div className="mt-1">
             <PlayerClanInfo>
+                <Data><Link to={ `/clan/${ clan.tag }` }>{ clan.name }</Link></Data>
                 <Data>{ roles[clan_role] }</Data>
                 <Data>#{ current_clan_rank }</Data>
                 <Data>

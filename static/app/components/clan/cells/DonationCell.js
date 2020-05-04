@@ -42,11 +42,12 @@ const DonationCell = ({ theme, column, row, compareTo, icon, color }) => {
 
     return (
         <React.Fragment>
+            { result }
+            &nbsp;
             <ImageWrapper>
                 <Image src={ images.static('cardsWar') } alt="Donations"/>
                 <FontAwesomeIcon icon={ icon } color={ color || theme.colors.blue } style={ iconStyle }/>
             </ImageWrapper>
-            &nbsp;{ result }
         </React.Fragment>
     )
 };

@@ -17,8 +17,11 @@ const CardContainer = styled(Grid)`
     row-gap: 10px;
 `;
 
-const ClanDetails = ({ endpoint }) => {
-    const { data, loading } = useFetch(endpoint + '/', (result) => setTitle(`${ result.name } (#${ result.tag })`));
+const ClanDetails = ({ tag }) => {
+    const { data, loading } = useFetch(
+        `/api/clan/${tag}/`,
+        (result) => setTitle(`${ result.name } (#${ result.tag })`)
+    );
 
     if (loading) return <Header><Loading/></Header>;
 
