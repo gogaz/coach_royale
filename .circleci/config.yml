@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.7-node
       - image: circleci/postgres:10.5-alpine-ram
         environment:
           POSTGRES_USER: coach_royale
@@ -14,6 +14,7 @@ jobs:
       - restore_cache:
           keys:
             - pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+            - v2-dependencies-{{ checksum "yarn.lock" }}
       - run:
           name: install dependencies
           command: |
@@ -22,10 +23,15 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
             mv coach_royale/settings.example.py coach_royale/settings.py
+            yarn install
       - save_cache:
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - ./venv
-          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - save_cache:
+          key: v2-dependencies-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
       - run:
           name: Linter
           command: |
@@ -37,49 +43,20 @@ jobs:
             . venv/bin/activate
             coverage run manage.py test --noinput
             coverage report
+            yarn run test && yarn run coverage
       - store_artifacts:
           path: test-reports
-          destination: test-reports
+          destination: tr1
+      - store_test_results:
+          path: test-reports
       - run:
           name: Code coverage
           command: |
             . venv/bin/activate
             codecov
-      - store_test_results:
-          path: test_results
-
-  # Build the front-end
-  build-front:
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "yarn.lock" }}
-            - v2-dependencies-
-      - run:
-          name: Install dependencies
-          command: yarn install
-      - save_cache:
-          key: v2-dependencies-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules
-      - run:
-          name: Test front-end
-          command: yarn run test && yarn run coverage
-      - run:
-          name: Build front-end
-          command: yarn run build
-      - store_artifacts:
-          path: test-reports/
-          destination: tr1
-      - store_test_results:
-          path: test-reports/
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build-front
       - build
