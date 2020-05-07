@@ -37,9 +37,9 @@ class ViewsTestCase(TestCase):
         self.assertEqual(len(data), 2)
 
         i = 1
-        self.assertEqual(data['main']['name'], self.clans[0].name)
+        self.assertEqual(data['main'], self.clans[0].tag)
         for clan in data['family']:
-            self.assertEqual(clan['name'], self.clans[i].name)
+            self.assertEqual(clan, self.clans[i].tag)
             i += 1
 
     def test_clan_info(self):
