@@ -23,6 +23,8 @@ export const Grid = styled.div`
 export const FlexWrapper = styled.div`
     display: flex;
     flex-direction: ${ ({ direction }) => direction };
+    ${ ({ justifyContent }) => justifyContent && `justify-content: ${justifyContent};` }
+    ${ ({ alignItems }) => alignItems && `align-items: ${alignItems};` }
 `;
 
 export const Flex = styled.div`

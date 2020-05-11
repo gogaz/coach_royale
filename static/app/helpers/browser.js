@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { handleErrors } from "./api";
 
-export const useFetch = (url, onFetch, defaultData = null) => {
+export const useFetch = (url, defaultData, onFetch) => {
     const [data, setData] = useState(defaultData);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);

@@ -1,4 +1,5 @@
 import React from "react";
+import { withTheme } from "styled-components";
 
 // Basic string search
 const DefaultColumnFilter = ({ column: { filterValue, setFilter }, }) => (
@@ -42,7 +43,34 @@ function SelectColumnFilter({
     )
 }
 
+const winRateFilterMethod = (rows, id, filterValue) => {
+    if (filterValue === "all")
+        return rows;
+    else if (filterValue === "grey")
+        return rows.filter(row => row.values[id] < 0);
+    else if (filterValue === "red")
+        return rows.filter(row => row.values[id] < 50 && row.values[id] >= 0);
+    return rows.filter(row => row.values[id] >= 50);
+};
+winRateFilterMethod.autoRemove = val => !val
+
+const WinRateColumnFilter = withTheme(({ theme, column: { filterValue, setFilter }, }) => {
+    return (
+        <select
+            onChange={ e => setFilter(e.target.value) }
+            value={ filterValue }
+        >
+            <option value="">All</option>
+            <option value="grey">No battles</option>
+            <option value="green" style={ { backgroundColor: theme.colors.lightGreen } }>&gt;= 50%</option>
+            <option value="red" style={ { backgroundColor: theme.colors.lightRed } }>&lt; 50%</option>
+        </select>
+    )
+})
+
 export {
     DefaultColumnFilter,
-    SelectColumnFilter
+    SelectColumnFilter,
+    WinRateColumnFilter,
+    winRateFilterMethod,
 }

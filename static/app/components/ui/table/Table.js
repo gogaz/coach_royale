@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useFilters, usePagination, useTable, useSortBy } from "react-table";
 import styled, { withTheme } from "styled-components";
 
-import { DefaultColumnFilter } from './filters'
+import { winRateFilterMethod } from './filters'
 import FontAwesomeIcon from "../FontAwesome";
 import Pagination from "./Pagination";
 
@@ -12,29 +12,32 @@ const StyledTable = styled.table`
     margin-bottom: 1rem;
     background-color: transparent;
     table-layout: fixed;
-    
+
     thead > tr > th {
         padding: 5px;
         overflow: hidden;
         font-weight: 400;
-    }
-    
-    td, th {
         vertical-align: middle;
-        border-bottom: 1px solid ${ ({ theme }) => theme.colors.light2 };
     }
-    
+
     tbody {
-        tr > td {
-          padding: 5px 7px;
-        }
-        
-        tr:nth-of-type(odd) {
-            background-color: ${ ({ theme }) => theme.colors.light };
-        }
-    
-        tr:hover, tr:nth-of-type(odd):hover {
-            background-color: ${ ({ theme }) => theme.colors.light3 };
+        tr {
+            &:not(:last-child) {
+                border-bottom: 1px solid ${ ({ theme }) => theme.colors.light2 };
+            }
+            
+            &:nth-of-type(odd) {
+                background-color: ${ ({ theme }) => theme.colors.light };
+            }
+            
+            &:hover, &:nth-of-type(odd):hover {
+                background-color: ${ ({ theme }) => theme.colors.light3 };
+            }
+            
+            & > td {
+                padding: 5px 7px;
+                vertical-align: middle;
+            }
         }
     }    
 `;
@@ -87,28 +90,32 @@ const Table = ({
     }, useFilters, useSortBy, usePagination)
 
     return (
-        <React.Fragment>
+        <div>
             <StyledTable { ...getTableProps() }>
                 <thead>
                 { headerGroups.map(headerGroup => (
                     <tr { ...headerGroup.getHeaderGroupProps() }>
-                        { headerGroup.headers.map(column => (
-                            <StyledHeaderCell
-                                width={column.width}
-                                { ...column.getHeaderProps() }
-                            >
-                                <span { ...column.getSortByToggleProps() }>
-                                    { column.render('Header') }
-                                </span>
-                                { column.isSorted && (column.isSortedDesc
-                                    ? <FontAwesomeIcon icon="angle-down" />
-                                    : <FontAwesomeIcon icon="angle-up" />
-                                ) }
-                                {!disableFilters &&
-                                    <div>{ column.Filter ? column.render('Filter') : null }</div>
-                                }
-                            </StyledHeaderCell>
-                        )) }
+                        { headerGroup.headers.map(column => {
+                            const Header = column.render('Header');
+                            const hasFilter = !disableFilters && !!column.Filter;
+                            return (
+                                <StyledHeaderCell
+                                    width={ column.width }
+                                    { ...column.getHeaderProps() }
+                                >
+                                    <span { ...column.getSortByToggleProps() }>
+                                        { Header }
+                                    </span>
+                                    { column.isSorted && (column.isSortedDesc
+                                            ? <FontAwesomeIcon icon="angle-down"/>
+                                            : <FontAwesomeIcon icon="angle-up"/>
+                                    ) }
+                                    { hasFilter &&
+                                        <div role="filter">{ column.render('Filter') }</div>
+                                    }
+                                </StyledHeaderCell>
+                            );
+                        }) }
                     </tr>
                 )) }
                 </thead>
@@ -144,7 +151,7 @@ const Table = ({
                     previousPage={ previousPage }
                 />
             ) }
-        </React.Fragment>
+        </div>
     );
 }
 
@@ -165,7 +172,9 @@ Table.propTypes = {
 }
 
 Table.defaultProps = {
-    filterTypes: {},
+    filterTypes: {
+        winRate: winRateFilterMethod,
+    },
     showPagination: false,
     disableFilters: false,
     pageSize: 10,

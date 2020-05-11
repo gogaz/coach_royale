@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types'
 import Table from "../../ui/table/Table";
@@ -11,8 +11,7 @@ import Loading from "../../ui/Loading";
 import TrophiesCell from "../cells/TrophiesCell";
 import { useFetch } from "../../../helpers/browser";
 import { SelectColumnFilter } from "../../ui/table/filters";
-
-const ROLES = { elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member" };
+import { ConstantsContext } from "../../../helpers/constants";
 
 const PlayerLevelCell = styled.span`
     display: block;
@@ -52,13 +51,7 @@ const getBaseColumns = (theme) => [
         id: "trophies",
         accessor: (data) => data.details.trophies.toLocaleString(),
         width: 90,
-        Cell: ({ row }) => {
-            let props = { trophies: row.original.details.trophies };
-            if (row.original.details.arena)
-                props = { ...props, arena: row.original.details.arena };
-
-            return <TrophiesCell { ...props } />
-        }
+        Cell: ({ row }) => <TrophiesCell trophies={row.original.details.trophies} />,
     },
     {
         Header: "Level",
@@ -73,7 +66,11 @@ const getBaseColumns = (theme) => [
         Header: "Role",
         id: "role",
         Filter: SelectColumnFilter,
-        accessor: (data) => ROLES[data.details.clan_role],
+        accessor: (data) => data.details.clan_role,
+        Cell: ({ row }) => {
+            const { clanRoles } = useContext(ConstantsContext)
+            return clanRoles[row.values.role]
+        },
         width: 100,
     },
     {
@@ -139,7 +136,7 @@ const ClanMembersTable = ({
     showPagination,
     onFetchData
 }) => {
-    const { data, loading } = useFetch(endpoint, onFetchData);
+    const { data, loading } = useFetch(endpoint, [], onFetchData);
     const tableColumns = useMemo(() => getColumns(theme, columns), [theme, columns]);
 
     if (loading)

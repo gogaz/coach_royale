@@ -1,20 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export const ConstantsContext = React.createContext({});
-export const ConstantsProvider = ConstantsContext.Provider;
+export const CLAN_ROLES = { elder: 'Elder', coLeader: "Co-Leader", leader: "Leader", member: "Member" };
 
-function fetchData(url) {
-    return axios.get(url).then(response => response.data);
-}
+export const ConstantsContext = React.createContext({
+    loading: true,
+    error: null,
+    arenas: [],
+    clanRoles: CLAN_ROLES,
+});
 
-export async function loadConstants() {
-    return {
-        arenas: await fetchData('/static/constants/arenas.json'),
-    };
-}
+const ConstantsProvider = ({children}) => {
+    const [state, setState] = useState({
+        loading: true,
+        error: null,
+        arenas: [],
+        clanRoles: CLAN_ROLES,
+    })
+    useEffect(
+         () => {
+             axios.get('/static/constants/arenas.json')
+                 .then((result) => {
+                 setState((prevState) => ({
+                     ...prevState,
+                     loading: false,
+                     error: null,
+                     arenas: result.data,
+                 }))
+             })
+         },
+        []
+    );
 
-export function playerArenaFromTrophies(constants, trophies) {
-    const arena = constants.arenas.slice(1).find((e, i, array) => i === array.length-1 || trophies < array[i+1].trophy_limit);
-    return arena ? arena.arena : null;
-}
+    const playerArenaFromTrophies = (trophies) => (
+        state.arenas
+            .filter((e) => e.arena !== 0)
+            .find((e, i, array) => i === array.length - 1 || Number(trophies) < array[i + 1].trophy_limit)
+    )
+
+    return (
+        <ConstantsContext.Provider
+            value={{
+                ...state,
+                playerArenaFromTrophies,
+            }}
+        >
+            {children}
+        </ConstantsContext.Provider>
+    )
+};
+
+export default ConstantsProvider;

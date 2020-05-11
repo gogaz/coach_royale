@@ -23,11 +23,11 @@ const TimeFromNow = ({ time, update }) => {
 };
 
 TimeFromNow.defaultProps = {
-    update: 30,
+    update: 30, // in seconds
 };
 
 TimeFromNow.propTypes = {
-    update: PropTypes.number.isRequired,
+    update: PropTypes.number,
     time: PropTypes.object.isRequired,
 };
 

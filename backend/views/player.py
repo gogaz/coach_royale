@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from backend.models import Player, PlayerClanStatsHistory, PlayerStatsHistory, PlayerClanWar
+from backend.models import Player, PlayerStatsHistory, PlayerClanWar
 from backend.serializers.player import PlayerSerializer, PlayerClanWarSerializer
 
 
@@ -28,10 +28,8 @@ def player_activity(request, tag):
 
     if request.method == 'GET':
         ps = PlayerStatsHistory.objects.filter(player=player).order_by('-id')
-        pcs = PlayerClanStatsHistory.objects.filter(player=player).order_by('-id')
 
         stats = ps.values('current_trophies', 'total_games', 'total_donations', 'timestamp', 'wins', 'losses', 'draws')[:30]
-        clan = pcs.values('current_clan_rank', 'timestamp')[:30]
         wars = PlayerClanWar.objects\
             .filter(player=player)\
             .annotate(date=F('clan_war__date_end')) \
@@ -44,7 +42,6 @@ def player_activity(request, tag):
 
         result = {
             "stats": stats,
-            "clan": clan,
             "wars": PlayerClanWarSerializer(wars, many=True).data,
             "war_stats": war_stats,
         }

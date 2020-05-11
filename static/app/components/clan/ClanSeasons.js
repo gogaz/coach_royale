@@ -36,7 +36,7 @@ const ClanSeasons = ({ endpoint }) => {
                         endpoint={ endpoint + '/season' }
                         columns={ ['name', 'ending', 'highest'] }
                         defaultSorted={ [{ id: "ending", desc: true }] }
-                        onFetchData={ (data) => setPreviousSeason(moment(data[0].details.season__identifier + '-01', 'YYYY-MM-DD')) }
+                        onFetchData={ (data) => !!data.length && setPreviousSeason(moment(data[0].details.season__identifier + '-01', 'YYYY-MM-DD')) }
                         showPagination
                     />
                 </ErrorBoundary>

@@ -1,6 +1,7 @@
 import React from "react";
 import PlayerStats from "./PlayerStats";
 import PlayerActivityStats from "./PlayerActivityStats";
+import ErrorBoundary from "../errors/ErrorBoundary";
 
 const PlayerPage = ({ match }) => {
     const endpoint = "/api/player/" + match.params.tag;
@@ -9,7 +10,9 @@ const PlayerPage = ({ match }) => {
         <div className="card">
             <PlayerStats endpoint={ endpoint }/>
             <div className="card-body">
-                <PlayerActivityStats endpoint={ endpoint }/>
+                <ErrorBoundary>
+                    <PlayerActivityStats endpoint={ endpoint }/>
+                </ErrorBoundary>
             </div>
         </div>
     );

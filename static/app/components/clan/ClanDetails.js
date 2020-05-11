@@ -20,6 +20,7 @@ const CardContainer = styled(Grid)`
 const ClanDetails = ({ tag }) => {
     const { data, loading } = useFetch(
         `/api/clan/${tag}/`,
+        {},
         (result) => setTitle(`${ result.name } (#${ result.tag })`)
     );
 
@@ -28,7 +29,7 @@ const ClanDetails = ({ tag }) => {
     const country_icon = images.region(data.details.region_code.toLowerCase());
 
     return (
-        <React.Fragment>
+        <div data-testid='clan details'>
             <Header>
                 <FlexWrapper direction="row">
                     <Flex grow={9}>
@@ -99,7 +100,7 @@ const ClanDetails = ({ tag }) => {
                     value={ data.details.donations }
                 />
             </CardContainer>
-        </React.Fragment>
+        </div>
     );
 };
 

@@ -9,18 +9,18 @@ const Image = styled.img`
 `;
 
 const TrophiesCell = ({ arena, trophies }) => {
+    const { playerArenaFromTrophies } = useContext(ConstantsContext);
+
     if (!arena && !trophies)
         return null;
 
-    const [arenaImage, setArenaImage] = useState(null);
-    const constants = useContext(ConstantsContext);
-
-    constants.then((data) => setArenaImage(playerArenaFromTrophies(data, trophies)));
+    if (!arena)
+        arena = playerArenaFromTrophies(trophies).arena;
 
     return (
         <React.Fragment>
-            { arenaImage && <Image src={ images.arena(arenaImage) }/> }
-            { Number(trophies).toLocaleString(locale) }
+            { arena && <Image src={ images.arena(arena) }/> }
+            { trophies && Number(trophies).toLocaleString(locale) }
         </React.Fragment>
     );
 };

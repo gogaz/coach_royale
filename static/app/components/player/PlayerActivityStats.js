@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import moment from "moment";
-import axios from "axios";
 import { withTheme } from "styled-components";
 
 import PlayerDiffStatsChart from "./charts/PlayerDiffStatsChart";
@@ -8,31 +7,11 @@ import PlayerRecentBattlesResultsChart from "./charts/PlayerRecentBattlesResults
 import PlayerWarResultsChart from "./charts/PlayerWarResultsChart";
 import Loading from "../ui/Loading";
 import PlayerWarResultCell from "../clan/cells/PlayerWarResultCell";
-import { handleErrors } from "../../helpers/api";
 import Table from "../ui/table/Table";
+import { useFetch } from "../../helpers/browser";
+import { Grid } from "../ui/Disposition";
 
 const PlayerActivityStats = ({ endpoint, theme }) => {
-    const [loading, setLoading] = useState(true);
-    const [stats, setStats] = useState(null);
-    const [clan, setClan] = useState(null);
-    const [warStats, setWarStats] = useState(null);
-    const [wars, setWars] = useState(null);
-
-    useEffect(() => {
-        const url = endpoint + '/activity';
-        axios.get(url)
-            .then(result => handleErrors(result))
-            .then(result => {
-                setStats(result.stats.reverse());
-                setClan(result.clan.reverse());
-                setWarStats(result.war_stats);
-                setWars(result.wars);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.log(error)
-            });
-    }, []);
     const columns = React.useMemo(() => [
         {
             Header: "War",
@@ -45,60 +24,58 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
             Cell: ({ row }) => <PlayerWarResultCell war={ row.original }/>,
         }
     ], [])
+    const { loading, data } = useFetch(endpoint + '/activity', {})
 
     if (loading)
         return <Loading/>;
 
+    if (!data)
+        return null;
+
+    const { stats, wars, war_stats: warStats } = data;
+
     return (
-        <div className="row">
-            <div className="col-12 col-xl-6 mt-2">
-                <PlayerWarResultsChart data={ warStats } title="Player wars"/>
-            </div>
-            <div className="col-12 col-xl-6 mt-2">
-                <PlayerDiffStatsChart
-                    data={ stats }
-                    title="Trophies"
-                    datasets={ [
-                        {
-                            label: "Trophies",
-                            id: "current_trophies",
-                            backgroundColor: theme.colors.yellow,
-                        },
-                    ] }
-                />
-            </div>
-            <div className="col-12 col-xl-6 mt-2">
-                <Table
-                    data={ wars }
-                    columns={ columns }
-                    initialPageSize={ 5 }
-                    showPagination
-                />
-            </div>
-            <div className="col-12 col-xl-6 mt-2" style={ {height: '350px'} }>
-                <PlayerRecentBattlesResultsChart
-                    data={ stats }
-                    title="Player battles"
-                    datasets={ [
-                        {
-                            label: "Draws + 2v2",
-                            id: "draws",
-                            backgroundColor: theme.colors.blue,
-                        },
-                        {
-                            label: "Losses",
-                            id: "losses",
-                            backgroundColor: theme.colors.orange,
-                        },
-                        {
-                            label: "Wins",
-                            id: "wins",
-                            backgroundColor: theme.colors.green,
-                        },
-                    ] }
-                />
-            </div>
-        </div>
+        <Grid columns={ { sm: 1, md: 2 } } style={ { padding: '1.25rem' } } gap="20px">
+            <PlayerWarResultsChart data={ warStats } title="Player wars"/>
+            <PlayerDiffStatsChart
+                data={ stats.reverse() }
+                title="Trophies"
+                datasets={ [
+                    {
+                        label: "Trophies",
+                        id: "current_trophies",
+                        backgroundColor: theme.colors.yellow,
+                    },
+                ] }
+            />
+            <Table
+                data={ wars }
+                columns={ columns }
+                initialPageSize={ 5 }
+                showPagination
+            />
+            <PlayerRecentBattlesResultsChart
+                data={ stats }
+                title="Player battles"
+                datasets={ [
+                    {
+                        label: "Draws + 2v2",
+                        id: "draws",
+                        backgroundColor: theme.colors.blue,
+                    },
+                    {
+                        label: "Losses",
+                        id: "losses",
+                        backgroundColor: theme.colors.orange,
+                    },
+                    {
+                        label: "Wins",
+                        id: "wins",
+                        backgroundColor: theme.colors.green,
+                    },
+                ] }
+            />
+        </Grid>
     );
 };
 

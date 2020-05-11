@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Bar } from "react-chartjs-2";
 
-import { Card, Header } from "../../ui/Card";
+import { Card, Header as CardHeader, Body as CardBody } from "../../ui/Card";
 
 const PlayerRecentBattlesResultsChart = ({ theme, data, height, datasets, title, cardHeader }) => {
     const width = window.innerWidth;
@@ -32,31 +32,33 @@ const PlayerRecentBattlesResultsChart = ({ theme, data, height, datasets, title,
 
     return (
         <Card>
-            { cardHeader && <Header>{ cardHeader }</Header> }
-            <Bar height={ height + (mobile ? 80 : 0) }
-                 data={ {
-                     datasets: datasets.map(e => {
-                         return { ...e, data: chartData(e.id) }
-                     }),
-                     labels,
-                 } }
-                 options={ {
-                     scales: {
-                         yAxes: [{
-                             display: true,
-                             stacked: true,
-                             stepSize: 1,
-                         }],
-                         xAxes: [{
-                             stacked: true,
-                         }]
-                     },
-                     title: {
-                         display: title.length > 0,
-                         text: title
-                     }
-                 } }
-            />
+            { cardHeader && <CardHeader>{ cardHeader }</CardHeader> }
+            <CardBody>
+                <Bar height={ height + (mobile ? 80 : 0) }
+                     data={ {
+                         datasets: datasets.map(e => {
+                             return { ...e, data: chartData(e.id) }
+                         }),
+                         labels,
+                     } }
+                     options={ {
+                         scales: {
+                             yAxes: [{
+                                 display: true,
+                                 stacked: true,
+                                 stepSize: 1,
+                             }],
+                             xAxes: [{
+                                 stacked: true,
+                             }]
+                         },
+                         title: {
+                             display: title.length > 0,
+                             text: title
+                         }
+                     } }
+                />
+            </CardBody>
         </Card>
     );
 };

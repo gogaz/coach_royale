@@ -27,13 +27,6 @@ button:disabled {
     font-size: 100%;
 }
 
-/** ReactTable **/
-#root .rt-noData {
-    text-align: center;
-    height: 100%;
-    width: 100%;
-    padding-top: 5rem;
-}
 /* DateRangeForm */
 .date-range input.form-control {
     width: 110px;

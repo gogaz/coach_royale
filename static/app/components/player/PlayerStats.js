@@ -1,21 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import styled from "styled-components";
-import axios from "axios";
 
-import { ConstantsContext, playerArenaFromTrophies } from "../../helpers/constants";
-import { handleErrors } from "../../helpers/api";
+import { ConstantsContext } from "../../helpers/constants";
 import { images } from "../../helpers/assets";
 
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
 import Loading from "../ui/Loading";
 import PlayersClan from "./PlayersClan";
 import LastRefreshInfo from "../ui/LastRefreshInfo";
-import { setTitle } from "../../helpers/browser";
+import { setTitle, useFetch } from "../../helpers/browser";
 import ReactTooltip from "react-tooltip";
 import TimeFromNow from "../ui/TimeFromNow";
+import { Header } from "../ui/Card";
+import { Flex, FlexWrapper } from "../ui/Disposition";
 
-const CardContainer = styled.div`
+const CardsContainer = styled.div`
     margin-top: .75rem;
     margin-left: 1.25rem;
     display: grid;
@@ -37,26 +37,12 @@ const CardContainer = styled.div`
 
 
 const PlayerStats = ({ endpoint }) => {
-    const [loading, setLoading] = useState(true);
-    const [player, setPlayer] = useState(null);
-    const [highestArenaImage, setHighestArenaImage] = useState(null);
-    const constants = useContext(ConstantsContext);
-
-    useEffect(() => {
-        setTitle("Player's profile");
-        axios.get(endpoint + '/')
-            .then((res) => handleErrors(res))
-            .then(
-                (result) => {
-                    setPlayer(result);
-                    constants.then((constants) => {
-                        setHighestArenaImage(playerArenaFromTrophies(constants, result.details.highest_trophies))
-                    });
-                    setLoading(false);
-                    setTitle(`${ result.name } (#${ result.tag })`);
-                })
-            .catch(error => console.log(error));
-    }, [endpoint]);
+    const { loading, data: player } = useFetch(
+        endpoint + '/',
+        null,
+        (p) => setTitle(`${ p.name } (#${ p.tag })`)
+    );
+    const { playerArenaFromTrophies } = useContext(ConstantsContext);
 
     if (loading) return <Loading/>;
 
@@ -71,37 +57,38 @@ const PlayerStats = ({ endpoint }) => {
 
     return (
         <React.Fragment>
-            <div className="card-header">
-                <div className="row">
-                    <div className="col-7">
+            <Header>
+                <FlexWrapper direction="row">
+                    <Flex grow={9}>
                         <h3 className="d-inline mr-2">{ player.name }</h3>
                         <LastRefreshInfo time={ player.details.last_refresh }/>
                         <PlayersClan player={ player }/>
-                    </div>
-                    { player.clan.details && (
-                        <div className="col-5">
-                            <img src={ player.clan.details.badge } style={ { float: 'right', height: '5pc' } }/>
-                        </div>
+                    </Flex>
+                    { player.clan.clan.details && (
+                        <Flex grow={3}>
+                            <img
+                                src={ player.clan.clan.details.badge }
+                                style={ { float: 'right', height: '5pc' } }
+                                alt="Clan badge"
+                            />
+                        </Flex>
                     ) }
-                </div>
-                <div className="mt-1 ml-md-3 ml-1" hidden={ player.details.last_refresh !== null }>
-                    No more information available
-                </div>
-            </div>
-            <CardContainer>
+                </FlexWrapper>
+            </Header>
+            <CardsContainer>
                 <ClashRoyaleStat title="Last seen" image={ images.static('activity') }
                                  value={ <LastSeen/> }/>
                 <ClashRoyaleStat title="Trophies"
                                  image={ player.details.current_trophies > 4000 ? images.arena(player.details.arena) : images.static('trophy') }
                                  value={ player.details.current_trophies }/>
                 <ClashRoyaleStat title="Highest"
-                                 image={ images.arena(highestArenaImage) }
+                                 image={ images.arena(playerArenaFromTrophies(player.details.highest_trophies)).arena }
                                  value={ player.details.highest_trophies }/>
                 <ClashRoyaleStat title="War wins" image={ images.static('warWon') }
                                  value={ player.details.war_day_wins }/>
                 <ClashRoyaleStat title="Cards found" image={ images.static('cards') }
                                  value={ player.details.cards_found }/>
-            </CardContainer>
+            </CardsContainer>
             <hr style={ { marginBottom: 0 } }/>
         </React.Fragment>
     );
