@@ -11,11 +11,14 @@ class BaseModel(models.Model):
         abstract = True
 
     @classmethod
-    def create_or_get(cls, **kwargs):
+    def create_or_get(cls, defaults=None, **kwargs):
+        if defaults is None:
+            defaults = dict()
+
         try:
             return cls.objects.get(**kwargs), False
         except cls.DoesNotExist:
-            return cls.objects.create(**kwargs), True
+            return cls.objects.create(**kwargs, **defaults), True
 
 
 class HistoryModel(BaseModel):

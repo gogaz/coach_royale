@@ -2,7 +2,21 @@ from box import Box
 from django.test import TestCase
 
 from backend.lib.models import int_difference_instances
-from backend.models import Card
+from backend.models import Player, Card
+from .factories.clashroyale import PlayerFactory
+
+
+class BaseModelTestCase(TestCase):
+    def test_create_or_get(self):
+        foo = PlayerFactory.create(tag='foo', name='Marry-Jane')
+        bar = PlayerFactory.create(tag='bar', name='Joe')
+        self.assertEquals(Player.create_or_get(tag='foo'), foo)
+        self.assertEquals(Player.create_or_get(tag='bar', name='Joe'), bar)
+        new_player = Player.create_or_get(tag='blah', defaults={'name': 'Dan'})
+        self.assertEquals(new_player.name, 'Dan')
+        self.assertEquals(new_player.tag, 'blah')
+        new_player2 = Player.create_or_get(tag='blah', defaults={'name': 'Jean-Michel'})
+        self.assertEquals(new_player2.name, 'Dan')
 
 
 class ModelsTestCase(TestCase):
