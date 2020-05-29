@@ -85,15 +85,22 @@ ROOT_URLCONF = 'coach_royale.urls'
 
 WSGI_APPLICATION = 'coach_royale.wsgi.application'
 
-# Celery settings
+# Celery Broker settings
 CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_BROKER_POOL_LIMIT = None
+CELERY_BROKER_CONNECTION_TIMEOUT = 20
+CELERY_BROKER_CONNECTION_RETRY = True
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 100
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True
 
 #: Only add pickle to this list if your broker is secured from unwanted access (see userguide/security.html)
-CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_ACCEPT_CONTENT = ['json', 'pickle']
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_RESULT_EXPIRES = 3600
 CELERY_TASK_SERIALIZER = 'json'
-# FIXME: move the schedule to another file, it should stay up to date
+# FIXME: move the schedule to another file, it should be easy to version
 CELERY_BEAT_SCHEDULE = {
     'launcher': {
         'task': 'backend.tasks.refresh_launcher_job',

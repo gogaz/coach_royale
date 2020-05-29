@@ -36,6 +36,7 @@ services:
   celery:
     image: coach_royale_base
     command: celery -A coach_royale worker -l info
+    user: nobody
     volumes:
       - .:/code
     depends_on:

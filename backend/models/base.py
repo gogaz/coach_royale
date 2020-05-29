@@ -19,6 +19,8 @@ class BaseModel(models.Model):
             return cls.objects.get(**kwargs), False
         except cls.DoesNotExist:
             return cls.objects.create(**kwargs, **defaults), True
+        except cls.MultipleObjectsReturned:
+            return cls.objects.filter(**kwargs).order_by('-id')[0], False
 
 
 class HistoryModel(BaseModel):

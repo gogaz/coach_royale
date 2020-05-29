@@ -10,13 +10,17 @@ class BaseModelTestCase(TestCase):
     def test_create_or_get(self):
         foo = PlayerFactory.create(tag='foo', name='Marry-Jane')
         bar = PlayerFactory.create(tag='bar', name='Joe')
-        self.assertEquals(Player.create_or_get(tag='foo'), foo)
-        self.assertEquals(Player.create_or_get(tag='bar', name='Joe'), bar)
-        new_player = Player.create_or_get(tag='blah', defaults={'name': 'Dan'})
+        self.assertEquals(Player.create_or_get(tag='foo'), (foo, False))
+        self.assertEquals(Player.create_or_get(tag='bar', name='Joe'), (bar, False))
+        new_player, created = Player.create_or_get(tag='blah', defaults={'name': 'Dan'})
+        self.assertTrue(created)
         self.assertEquals(new_player.name, 'Dan')
         self.assertEquals(new_player.tag, 'blah')
-        new_player2 = Player.create_or_get(tag='blah', defaults={'name': 'Jean-Michel'})
+        new_player2, created = Player.create_or_get(tag='blah', defaults={'name': 'Jean-Michel'})
+        self.assertFalse(created)
         self.assertEquals(new_player2.name, 'Dan')
+        Player.objects.create(tag='blah', name='Blah')
+        self.assertEquals(Player.create_or_get(tag='blah')[0].name, 'Blah')
 
 
 class ModelsTestCase(TestCase):
