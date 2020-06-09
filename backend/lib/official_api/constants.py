@@ -4,7 +4,7 @@ import urllib.request
 import json
 from pathlib import Path
 
-from box import Box
+from box import Box, BoxList
 from django.conf import settings
 
 from backend.models import Card
@@ -16,7 +16,7 @@ def download_and_read_json(url, filename):
     urllib.request.urlretrieve(url, file_path)
     with Path(file_path).open(encoding='utf8') as f:
         data = json.load(f)
-    return Box(data, camel_killer_box=True)
+    return BoxList(data, camel_killer_box=True) if type(data) == list else Box(data, camel_killer_box=True)
 
 
 class APIConsumer(BaseConsumer):
