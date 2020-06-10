@@ -52,8 +52,8 @@ class RepositoryTestCase(TestCase):
                                                            left_clan=None,
                                                            player=player,
                                                            clan=self.clans[0]))
-        for l in self.clan_history.values():
-            for pch in l:
+        for val in self.clan_history.values():
+            for pch in val:
                 pch.save()
 
     def test_player_in_clan(self):
