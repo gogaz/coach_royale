@@ -157,14 +157,6 @@ const subject = async (mockedData = {}) => {
     const rendered = render(
         '/player/1',
         {
-            '/static/constants/arenas.json': {
-                code: 200,
-                response: [
-                    { arena: 1, trophy_limit: 1000 },
-                    { arena: 2, trophy_limit: 5000 },
-                    { arena: 3, trophy_limit: 10000 },
-                ]
-            },
             '/api/player/1/': { code: 200, response: playerInfos },
             '/api/player/1/activity': { code: 200, response: playerActivity },
             ...mockedData

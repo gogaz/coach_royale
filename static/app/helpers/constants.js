@@ -8,6 +8,7 @@ export const ConstantsContext = React.createContext({
     error: null,
     arenas: [],
     clanRoles: CLAN_ROLES,
+    playerArenasFromTrophies: () => 0,
 });
 
 const ConstantsProvider = ({children}) => {

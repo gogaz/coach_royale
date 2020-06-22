@@ -28,7 +28,7 @@ export const useFetch = (url, defaultData, onFetch) => {
 };
 
 export function setTitle(title) {
-    document.title = "Coach Royale" + title.length ? ' - ' + title : '';
+    document.title = "Coach Royale" + (title.length ? ' - ' + title : '');
 }
 
 export function getCookie(name) {

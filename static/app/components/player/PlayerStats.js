@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import moment from 'moment';
 import styled from "styled-components";
 
-import { ConstantsContext } from "../../helpers/constants";
 import { images } from "../../helpers/assets";
 
 import ClashRoyaleStat from "../ui/ClashRoyaleStat";
@@ -42,7 +41,6 @@ const PlayerStats = ({ endpoint }) => {
         null,
         (p) => setTitle(`${ p.name } (#${ p.tag })`)
     );
-    const { playerArenaFromTrophies } = useContext(ConstantsContext);
 
     if (loading) return <Loading/>;
 
@@ -82,7 +80,7 @@ const PlayerStats = ({ endpoint }) => {
                                  image={ player.details.current_trophies > 4000 ? images.arena(player.details.arena) : images.static('trophy') }
                                  value={ player.details.current_trophies }/>
                 <ClashRoyaleStat title="Highest"
-                                 image={ images.arena(playerArenaFromTrophies(player.details.highest_trophies)).arena }
+                                 image={ images.arena(player.details.highest_arena) }
                                  value={ player.details.highest_trophies }/>
                 <ClashRoyaleStat title="War wins" image={ images.static('warWon') }
                                  value={ player.details.war_day_wins }/>

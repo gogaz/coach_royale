@@ -248,14 +248,6 @@ describe('Clan page', () => {
         const rendered = render(
             '/clan/ABCD',
             {
-                '/static/constants/arenas.json': {
-                    code: 200,
-                    response: [
-                        {arena: 1, trophy_limit: 1000},
-                        {arena: 2, trophy_limit: 5000},
-                        {arena: 3, trophy_limit: 10000},
-                    ]
-                },
                 '/api/clan/ABCD/': { code: 200, response: clanInfos },
                 '/api/clan/ABCD/members': { code: 200, response: clanMembers },
                 '/api/clan/ABCD/wars': { code: 200, response: clanWarInfos },

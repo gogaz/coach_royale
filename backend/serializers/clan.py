@@ -1,7 +1,8 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from backend.models import Clan, ClanHistory, PlayerClanStatsHistory, Player, ClanWar, PlayerClanWar, PlayerSeason
+from backend.models import Clan, ClanHistory, PlayerClanStatsHistory, Player, ClanWar, PlayerClanWar, PlayerSeason, \
+    Arena
 
 
 class ClanDetailsSerializer(HyperlinkedModelSerializer):
@@ -126,9 +127,20 @@ class PlayerClanSeasonSerializer(HyperlinkedModelSerializer):
     details = SerializerMethodField()
 
     def get_details(self, obj):
-        values = ('ending', 'highest', 'season__identifier')
-        fallback = {v: None for v in values}
-        return PlayerSeason.objects.filter(player=obj, season__id=obj.season_id).values(*values).first() or fallback
+        value_keys = ('ending', 'highest', 'season__identifier')
+        fallback = {v: None for v in value_keys}
+
+        values = PlayerSeason.objects.filter(player=obj, season__id=obj.season_id).values(*value_keys).first()
+        values_with_fallback = fallback if values is None else values
+
+        ending_arena = Arena.from_trophies(values_with_fallback['ending'])
+        highest_arena = Arena.from_trophies(values_with_fallback['highest'])
+
+        return {
+            **values_with_fallback,
+            'ending_arena': ending_arena.arena_id if ending_arena else None,
+            'highest_arena': highest_arena.arena_id if ending_arena else None,
+        }
 
     class Meta:
         model = Player

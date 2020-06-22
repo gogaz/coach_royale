@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import models
 from django.utils import timezone
 
@@ -17,9 +18,9 @@ class BaseModel(models.Model):
 
         try:
             return cls.objects.get(**kwargs), False
-        except cls.DoesNotExist:
+        except ObjectDoesNotExist:
             return cls.objects.create(**kwargs, **defaults), True
-        except cls.MultipleObjectsReturned:
+        except MultipleObjectsReturned:
             return cls.objects.filter(**kwargs).order_by('-id')[0], False
 
 

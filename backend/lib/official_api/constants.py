@@ -1,45 +1,34 @@
-import os
-
 import urllib.request
 import json
-from pathlib import Path
 
-from box import Box, BoxList
-from django.conf import settings
-
-from backend.models import Card
+from backend.models import Card, Arena
 from .base import APIConsumer as BaseConsumer
-
-
-def download_and_read_json(url, filename):
-    file_path = os.path.join(settings.CONSTANTS_DIR, filename)
-    urllib.request.urlretrieve(url, file_path)
-    with Path(file_path).open(encoding='utf8') as f:
-        data = json.load(f)
-    return BoxList(data, camel_killer_box=True) if type(data) == list else Box(data, camel_killer_box=True)
 
 
 class APIConsumer(BaseConsumer):
     CARD_CONSTANTS_URL = 'https://royaleapi.github.io/cr-api-data/json/cards.json'
     ARENA_CONSTANTS_URL = 'https://royaleapi.github.io/cr-api-data/json/arenas.json'
 
+    # from backend.lib.official_api import ConstantsConsumer;ConstantsConsumer().refresh_arenas()
     def refresh_constants(self):
         self.refresh_cards()
         self.refresh_arenas()
 
     # Cards are required to store levels for each player
     def refresh_cards(self):
-        cards = download_and_read_json(self.CARD_CONSTANTS_URL, self.CARD_CONSTANTS_URL.split('/')[-1])
-        for data in cards:
-            # FIXME: use card_id instead of key when all records are populated
-            card, created = Card.objects.get_or_create(key=data.key)
+        with urllib.request.urlopen(self.CARD_CONSTANTS_URL) as response:
+            cards = json.loads(response.read())
 
-            card.card_id = data.id
-            card.name = data.name
-            card.elixir = data.elixir
-            card.type = data.type
-            card.rarity = data.rarity
-            card.arena = data.arena
+        for data in cards:
+            card, created = Card.objects.get_or_create(key=data['key'])
+
+            card.card_id = data['id']
+            card.name = data['name']
+            card.elixir = data['elixir']
+            card.type = data['type']
+            card.rarity = data['rarity']
+            card.arena = data['arena']
+            card.blob = data
             card.save()
             if created:
                 self._log('New card released: ' + card.name)
@@ -48,4 +37,32 @@ class APIConsumer(BaseConsumer):
 
     # Arenas are required by the front-end
     def refresh_arenas(self):
-        download_and_read_json(self.ARENA_CONSTANTS_URL, self.ARENA_CONSTANTS_URL.split('/')[-1])
+        with urllib.request.urlopen(self.ARENA_CONSTANTS_URL) as response:
+            arenas = json.loads(response.read())
+
+        for data in arenas:
+            whitelisted_keys = {'name', 'key', 'arena', 'is_in_use'}
+
+            lose_trophy_score = data.get('lose_trophy_score')
+            if isinstance(lose_trophy_score, int):
+                trophy_limits = {'0': lose_trophy_score, '1': lose_trophy_score}
+            elif lose_trophy_score is None:
+                trophy_limits = {'0': data['trophy_limit'], '1': data['trophy_limit']}
+            else:
+                trophy_limits = lose_trophy_score
+
+            augmented_data = {
+                **{key: data[key] for key in data.keys() & whitelisted_keys},
+                'min_trophy_limit': trophy_limits['0'],
+                'max_trophy_limit': trophy_limits['1'],
+                'blob': data,
+            }
+
+            db_arena, created = Arena.create_or_get(
+                arena_id=data['id'],
+                defaults=augmented_data
+            )
+            db_arena.__dict__.update(**augmented_data)
+            db_arena.save()
+
+        self._log('Updated %d Arena entries' % len(arenas))

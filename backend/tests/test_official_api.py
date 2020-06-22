@@ -7,9 +7,8 @@ import clashroyale
 from box import BoxList, Box
 
 from django.test import TestCase
-from unittest.mock import mock_open, patch
 from backend.models import PlayerStatsHistory
-from backend.lib.official_api import BaseConsumer, ConstantsConsumer
+from backend.lib.official_api import BaseConsumer
 from backend.lib.official_api.clan import read_clan_ranking
 
 from .factories.clashroyale import PlayerStatsHistoryFactory, PlayerFactory, ClanHistoryFactory
@@ -78,12 +77,3 @@ class ClanConsumerTestCase(TestCase):
         )
         self.assertEquals(2, history.local_rank)
         self.assertEquals(42, history.prev_local_rank)
-
-
-class ConstantsConsumerTestCase(TestCase):
-    def test_refresh_cards(self):
-        m = mock_open(read_data='[{"id":1}]')
-        with patch('pathlib.Path.open', m):
-            subject = ConstantsConsumer().refresh_cards()
-            self.assertEquals(subject, [{"id": 1}])
-        m.assert_called_once_with('/code/static/constants/arenas.json', 'w')

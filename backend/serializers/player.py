@@ -2,6 +2,7 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
 from backend.models import (
+    Arena,
     Player,
     PlayerCardLevel,
     PlayerClanHistory,
@@ -14,15 +15,21 @@ from backend.serializers.misc import CardSerializer
 
 
 class PlayerStatsSerializer(HyperlinkedModelSerializer):
+    highest_arena = SerializerMethodField()
+
+    def get_highest_arena(self, obj: PlayerStatsHistory):
+        return Arena.from_trophies(obj.highest_trophies)
+
     class Meta:
         model = PlayerStatsHistory
         fields = (
             'timestamp', 'last_refresh',
             'level',
             'total_donations',
-            'highest_trophies', 'current_trophies',
+            'highest_trophies', 'highest_arena',
+            'current_trophies', 'arena',
             'challenge_cards_won', 'tourney_cards_won', 'cards_found',
-            'favorite_card', 'arena',
+            'favorite_card',
             'total_games', 'tournament_games',
             'wins', 'losses', 'draws', 'win_3_crowns',
             'clan_cards_collected', 'war_day_wins',
@@ -34,11 +41,10 @@ class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
     dates_in_clan = SerializerMethodField()
 
     def get_dates_in_clan(self, obj: PlayerClanStatsHistory):
-        return PlayerClanHistory.objects\
-            .filter(player=obj.player, clan=obj.clan)\
-            .order_by('-id')\
-            .values('joined_clan', 'left_clan')\
-            .first()
+        return PlayerClanHistory.objects.filter(
+            player=obj.player,
+            clan=obj.clan
+        ).order_by('-id').values('joined_clan', 'left_clan').first()
 
     def get_clan(self, obj: PlayerClanStatsHistory):
         return ClanWithDetailsSerializer(obj.clan).data
@@ -51,15 +57,20 @@ class PlayerClanStatsSerializer(HyperlinkedModelSerializer):
 
 
 class PlayerStatsHistorySerializer(HyperlinkedModelSerializer):
+    highest_arena = SerializerMethodField()
+
+    def get_highest_arena(self, obj: PlayerStatsHistory):
+        return Arena.from_trophies(obj.highest_trophies)
+
     class Meta:
         model = PlayerStatsHistory
         fields = ('timestamp', 'last_refresh',
                   'level',
                   'total_donations',
-                  'highest_trophies', 'current_trophies',
+                  'highest_trophies', 'highest_arena',
+                  'current_trophies', 'arena',
                   'challenge_cards_won', 'tourney_cards_won',
                   'cards_found', 'favorite_card',
-                  'arena',
                   'total_games', 'tournament_games',
                   'wins', 'losses', 'draws', 'win_3_crowns',
                   'clan_cards_collected', 'war_day_wins')

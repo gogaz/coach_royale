@@ -1,5 +1,6 @@
 import logging
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 from django.db.models import Q, F
 from django.utils import timezone
 
@@ -8,9 +9,39 @@ from .base import BaseModel, HistoryModel, EditableModel
 logger = logging.getLogger(__name__)
 
 
+class Arena(EditableModel):
+    name = models.CharField(max_length=256)
+    key = models.CharField(max_length=256)
+    arena = models.IntegerField()
+    arena_id = models.IntegerField(unique=True)
+    min_trophy_limit = models.IntegerField()
+    max_trophy_limit = models.IntegerField()
+    is_in_use = models.IntegerField(default=False)
+    blob = JSONField()
+
+    @classmethod
+    def in_use(cls):
+        return cls.objects.filter(is_in_use=True)
+
+    @classmethod
+    def from_trophies(cls, trophies):
+        if trophies is None:
+            return None
+        return cls.objects.filter(min_trophy_limit__lte=trophies, max_trophy_limit__gt=trophies).first()
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.arena)
+
+    def __getattr__(self, item):
+        if item in self.blob.keys():
+            return self.blob[item]
+        else:
+            return super(Arena, self).__getattr__(item)
+
+
 class Card(EditableModel):
-    card_id = models.IntegerField(null=True)
-    key = models.CharField(max_length=64)
+    card_id = models.IntegerField(null=True, unique=True)
+    key = models.CharField(max_length=64, unique=True)
     name = models.CharField(max_length=255)
     rarity = models.CharField(max_length=64)
     arena = models.IntegerField(null=True)
@@ -18,6 +49,7 @@ class Card(EditableModel):
     max_level = models.IntegerField(null=True)
     type = models.CharField(max_length=64)
     image = models.CharField(max_length=512)
+    blob = JSONField(null=True)
 
     def __str__(self):
         return self.name
@@ -49,6 +81,12 @@ class Card(EditableModel):
             card.save()
 
         return card
+
+    def __getattr__(self, item):
+        if item in self.blob.keys():
+            return self.blob[item]
+        else:
+            return super().__getattr__(item)
 
 
 class PlayerCardLevel(HistoryModel):

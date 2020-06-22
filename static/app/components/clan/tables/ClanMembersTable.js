@@ -51,7 +51,7 @@ const getBaseColumns = (theme) => [
         id: "trophies",
         accessor: (data) => data.details.trophies.toLocaleString(),
         width: 90,
-        Cell: ({ row }) => <TrophiesCell trophies={row.original.details.trophies} />,
+        Cell: ({ row }) => <TrophiesCell trophies={row.original.details.trophies} arena={row.original.details.arena} />,
     },
     {
         Header: "Level",
@@ -105,7 +105,7 @@ const getBaseColumns = (theme) => [
         accessor: "details.ending",
         width: 90,
         Cell: ({ row }) => (
-            <TrophiesCell trophies={ row.values.ending } arena={ row.original.details.arena }/>
+            <TrophiesCell trophies={ row.values.ending } arena={ row.original.details.ending_arena }/>
         )
     },
     {
@@ -113,7 +113,7 @@ const getBaseColumns = (theme) => [
         Header: "Highest",
         accessor: "details.highest",
         width: 90,
-        Cell: ({ row }) => <TrophiesCell trophies={ row.values.highest }/>
+        Cell: ({ row }) => <TrophiesCell trophies={ row.values.highest } arena={row.values.highest_arena}/>
     },
 ];
 
