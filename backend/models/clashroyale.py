@@ -68,7 +68,7 @@ class Card(EditableModel):
         # In most cases, Cards shouldn't be created from here, but it can happen when a new card is released in the game
         if created:
             # card.key = data.key if 'key' in data.keys() else cls.key_from_name(data.name)
-            card.id = data.id
+            card.card_id = data.id
             card.name = data.name
             card.save()
 
