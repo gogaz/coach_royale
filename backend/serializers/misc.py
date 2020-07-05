@@ -27,7 +27,7 @@ def form_error(form: Form, status=403):
 class ArenaSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Arena
-        fields = ('key', 'name', 'arena_id', 'min_trophy_limit', 'max_trophy_limit')
+        fields = ('key', 'name', 'arena', 'min_trophy_limit', 'max_trophy_limit')
 
 
 class CardSerializer(HyperlinkedModelSerializer):

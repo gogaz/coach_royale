@@ -138,8 +138,8 @@ class PlayerClanSeasonSerializer(HyperlinkedModelSerializer):
 
         return {
             **values_with_fallback,
-            'ending_arena': ending_arena.arena_id if ending_arena else None,
-            'highest_arena': highest_arena.arena_id if ending_arena else None,
+            'ending_arena': ending_arena.arena if ending_arena else None,
+            'highest_arena': highest_arena.arena if ending_arena else None,
         }
 
     class Meta:
