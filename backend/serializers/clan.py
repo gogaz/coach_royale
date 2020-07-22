@@ -1,8 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
-from backend.models import Clan, ClanHistory, PlayerClanStatsHistory, Player, ClanWar, PlayerClanWar, PlayerSeason, \
-    Arena
+from backend.models import Clan, ClanHistory, PlayerClanStatsHistory, Player, ClanWar, PlayerClanWar, PlayerSeason, Arena
 
 
 class ClanDetailsSerializer(HyperlinkedModelSerializer):
