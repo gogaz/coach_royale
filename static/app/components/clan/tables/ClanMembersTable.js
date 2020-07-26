@@ -1,17 +1,19 @@
 import React, { useContext, useMemo } from 'react';
+import moment from 'moment'
+
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types'
-import Table from "../../ui/table/Table";
 import styled, { withTheme } from "styled-components";
 
+import Table from "../../ui/table/Table";
 import { images } from "../../../helpers/assets"
-
 import DonationCell from "../cells/DonationCell";
 import Loading from "../../ui/Loading";
 import TrophiesCell from "../cells/TrophiesCell";
 import { useFetch } from "../../../helpers/browser";
 import { SelectColumnFilter } from "../../ui/table/filters";
 import { ConstantsContext } from "../../../helpers/constants";
+import TimeFromNow from "../../ui/TimeFromNow";
 
 const PlayerLevelCell = styled.span`
     display: block;
@@ -52,6 +54,15 @@ const getBaseColumns = (theme) => [
         accessor: (data) => data.details.trophies.toLocaleString(),
         width: 90,
         Cell: ({ row }) => <TrophiesCell trophies={row.original.details.trophies} arena={row.original.details.arena} />,
+    },
+    {
+        Header: "Last seen",
+        id: 'last_seen',
+        accessor: (data) => moment(data.details.last_seen),
+        width: 120,
+        Cell: ({ row }) => (
+            <TimeFromNow time={row.values.last_seen} update={120} />
+        )
     },
     {
         Header: "Level",
@@ -172,6 +183,7 @@ ClanMembersTable.defaultProps = {
     columns: [
         'rank',
         'name',
+        'last_seen',
         'trophies',
         'level',
         'role',
