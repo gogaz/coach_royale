@@ -1,13 +1,15 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import ClanDetails from "./ClanDetails";
-import ClanWarMembers from "./tables/ClanWarMembers";
-import ClanMembersTable from "./tables/ClanMembersTable";
-import ClanSeasons from "./ClanSeasons";
-import ErrorBoundary from "../errors/ErrorBoundary";
-import { Card } from "../ui/Card";
-import { TabsContainer, Tab, TabLink } from "../ui/Tabs";
-import Separator from "../ui/Separator";
+
+import ErrorBoundary from 'components/errors/ErrorBoundary'
+import Separator from 'components/ui/Separator'
+import { Card } from 'components/ui/Card'
+import { TabsContainer, Tab, TabLink } from 'components/ui/Tabs'
+
+import ClanDetails from './ClanDetails'
+import ClanWarMembers from './tables/ClanWarMembers'
+import ClanMembersTable from './tables/ClanMembersTable'
+import ClanSeasons from './ClanSeasons'
 
 const ClanPage = ({ match }) => {
     const endPoint = `/api/clan/${ match.params.tag }`;

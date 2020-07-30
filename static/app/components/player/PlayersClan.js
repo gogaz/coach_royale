@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment'
-import { Link } from "react-router-dom";
-import styled, { withTheme } from "styled-components";
+import { Link } from 'react-router-dom'
+import styled, { withTheme } from 'styled-components'
 
-import DonationCell from "../clan/cells/DonationCell";
-import FontAwesomeIcon from "../ui/FontAwesome";
+import DonationCell from 'components/clan/cells/DonationCell'
+import FontAwesomeIcon from 'components/ui/FontAwesome'
 
 const PlayerClanInfo = styled.div`
     display: inline-block;

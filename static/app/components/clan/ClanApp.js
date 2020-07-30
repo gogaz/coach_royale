@@ -1,10 +1,11 @@
-import React from "react"
-import { Route, Switch } from "react-router-dom";
-import ClanPage from "./ClanPage";
-import { setTitle, useFetch } from "../../helpers/browser";
-import Loading from "../ui/Loading";
-import { Card, Header } from "../ui/Card";
-import ClanDetails from "./ClanDetails";
+import React from 'react'
+import { Route, Switch } from 'react-router-dom'
+
+import { setTitle, useFetch } from 'helpers/browser';
+import Loading from 'components/ui/Loading'
+import { Card } from 'components/ui/Card'
+import ClanPage from './ClanPage'
+import ClanDetails from './ClanDetails'
 
 const ClanList = ({ match }) => {
     setTitle("All known clans");

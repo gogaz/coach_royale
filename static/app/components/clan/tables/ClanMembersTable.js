@@ -1,19 +1,20 @@
 import React, { useContext, useMemo } from 'react';
 import moment from 'moment'
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import styled, { withTheme } from "styled-components";
+import styled, { withTheme } from 'styled-components'
 
-import Table from "../../ui/table/Table";
-import { images } from "../../../helpers/assets"
-import DonationCell from "../cells/DonationCell";
-import Loading from "../../ui/Loading";
-import TrophiesCell from "../cells/TrophiesCell";
-import { useFetch } from "../../../helpers/browser";
-import { SelectColumnFilter } from "../../ui/table/filters";
-import { ConstantsContext } from "../../../helpers/constants";
-import TimeFromNow from "../../ui/TimeFromNow";
+import { images } from 'helpers/assets'
+import { useFetch } from 'helpers/browser'
+import { ConstantsContext } from 'helpers/constants'
+
+import Loading from 'components/ui/Loading'
+import TimeFromNow from 'components/ui/TimeFromNow'
+import Table from 'components/ui/table/Table'
+import { SelectColumnFilter } from 'components/ui/table/filters'
+import DonationCell from 'components/clan/cells/DonationCell'
+import TrophiesCell from 'components/clan/cells/TrophiesCell'
 
 const PlayerLevelCell = styled.span`
     display: block;

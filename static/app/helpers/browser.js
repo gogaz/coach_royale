@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { handleErrors } from "./api";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { handleErrors } from './api'
 
 export const useFetch = (url, defaultData, onFetch) => {
     const [data, setData] = useState(defaultData);
@@ -9,6 +9,7 @@ export const useFetch = (url, defaultData, onFetch) => {
 
     useEffect(() => {
         (async () => {
+            window.console.log(url)
             axios
                 .get(url)
                 .then((res) => {

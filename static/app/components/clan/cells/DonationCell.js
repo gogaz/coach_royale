@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { withTheme } from "styled-components";
+import styled, { withTheme } from 'styled-components'
 
-import { images } from "../../../helpers/assets";
-import FontAwesomeIcon from "../../ui/FontAwesome";
+import { images } from 'helpers/assets'
+import FontAwesomeIcon from 'components/ui/FontAwesome'
 
 const Image = styled.img`
     vertical-align: top;

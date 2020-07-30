@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Doughnut } from "react-chartjs-2";
-import { withTheme } from "styled-components";
-import { Body, Card, Header } from "../../ui/Card";
+import { Doughnut } from 'react-chartjs-2'
+import { withTheme } from 'styled-components'
+import { Body, Card, Header } from '../../ui/Card'
 
 const PlayerWarResultsChart = ({ theme, height, title, cardHeader, data }) => {
     const width = window.innerWidth;

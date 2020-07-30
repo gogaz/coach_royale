@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react'
 import styled, { withTheme } from 'styled-components'
 
-import { setTitle, useFetch } from "../../helpers/browser";
-import { images } from "../../helpers/assets";
+import { setTitle, useFetch } from 'helpers/browser'
+import { images } from 'helpers/assets'
 
-import { Flex, FlexWrapper, Grid } from "../ui/Disposition";
-import Loading from "../ui/Loading";
-import ClashRoyaleStat from "../ui/ClashRoyaleStat";
-import LastRefreshInfo from "../ui/LastRefreshInfo";
-import { Header } from "../ui/Card";
+import { Flex, FlexWrapper, Grid } from 'components/ui/Disposition'
+import Loading from 'components/ui/Loading'
+import ClashRoyaleStat from 'components/ui/ClashRoyaleStat'
+import LastRefreshInfo from 'components/ui/LastRefreshInfo'
+import { Header } from 'components/ui/Card'
 
 const CardContainer = styled(Grid)`
     margin-top: .75rem;

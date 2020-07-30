@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CriticalError from "./CriticalError";
+import CriticalError from './CriticalError'
 
 export default class ErrorBoundary extends React.Component {
     constructor(props) {

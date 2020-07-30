@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Line } from "react-chartjs-2";
-import { Body, Card, Header } from "../../ui/Card";
+import { Line } from 'react-chartjs-2'
+import { Body, Card, Header } from '../../ui/Card'
 
 const PlayerDiffStatsChart = ({ height, datasets, title, cardHeader, data, legend }) => {
     const width = window.innerWidth;

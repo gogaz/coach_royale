@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import moment from 'moment'
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
-import axios from "axios";
-import { withTheme } from "styled-components";
+import axios from 'axios'
+import { withTheme } from 'styled-components'
 
-import { handleErrors } from "../../helpers/api";
+import { handleErrors } from 'helpers/api'
 
 import FontAwesomeIcon from './FontAwesome';
-import TimeFromNow from "./TimeFromNow";
+import TimeFromNow from './TimeFromNow'
 
 const LastRefreshInfo = ({ theme, refreshable, time, url, allowRefreshAfter, handleData }) => {
     const [data, setData] = useState({});

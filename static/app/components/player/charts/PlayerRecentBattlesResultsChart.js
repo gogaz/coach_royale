@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Bar } from "react-chartjs-2";
+import { Bar } from 'react-chartjs-2'
 
-import { Card, Header as CardHeader, Body as CardBody } from "../../ui/Card";
+import { Card, Header as CardHeader, Body as CardBody } from '../../ui/Card'
 
 const PlayerRecentBattlesResultsChart = ({ theme, data, height, datasets, title, cardHeader }) => {
     const width = window.innerWidth;

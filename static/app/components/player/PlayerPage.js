@@ -1,7 +1,7 @@
-import React from "react";
-import PlayerStats from "./PlayerStats";
-import PlayerActivityStats from "./PlayerActivityStats";
-import ErrorBoundary from "../errors/ErrorBoundary";
+import React from 'react'
+import PlayerStats from './PlayerStats'
+import PlayerActivityStats from './PlayerActivityStats'
+import ErrorBoundary from 'components/errors/ErrorBoundary'
 
 const PlayerPage = ({ match }) => {
     const endpoint = "/api/player/" + match.params.tag;

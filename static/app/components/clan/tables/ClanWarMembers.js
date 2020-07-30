@@ -1,17 +1,18 @@
 import React, { useContext } from 'react';
 import moment from 'moment'
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
-import Loading from "../../ui/Loading";
-import PlayerWarResultCell from "../cells/PlayerWarResultCell";
-import { locale, useFetch } from "../../../helpers/browser";
-import { images } from "../../../helpers/assets";
-import DateRangeForm from "../../forms/DateRangeForm";
-import TrophiesCell from "../cells/TrophiesCell";
-import Table from "../../ui/table/Table";
-import { SelectColumnFilter, WinRateColumnFilter } from "../../ui/table/filters";
-import { ConstantsContext } from "../../../helpers/constants";
+import { images } from 'helpers/assets'
+import { ConstantsContext } from 'helpers/constants'
+import { locale, useFetch } from 'helpers/browser'
+
+import Loading from 'components/ui/Loading'
+import Table from 'components/ui/table/Table'
+import { SelectColumnFilter, WinRateColumnFilter } from 'components/ui/table/filters'
+import PlayerWarResultCell from 'components/clan/cells/PlayerWarResultCell'
+import TrophiesCell from 'components/clan/cells/TrophiesCell'
+import DateRangeForm from 'components/forms/DateRangeForm'
 
 const Indicator = styled.div`
     position: absolute;

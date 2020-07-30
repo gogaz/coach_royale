@@ -40,16 +40,7 @@
     "react-tooltip": "^3.10.1",
     "styled-components": "^4.4.1",
     "underscore": "^1.9.1",
-    "whatwg-fetch": "^3.0.0"
-  },
-  "scripts": {
-    "build-dev": "node_modules/.bin/webpack --config webpack.dev.js",
-    "build": "node_modules/.bin/webpack --config webpack.prod.js",
-    "test": "node_modules/.bin/jest",
-    "coverage": "node_modules/.bin/codecov --root=..",
-    "start-dev": "node_modules/.bin/webpack-dev-server --config webpack.dev.js"
-  },
-  "devDependencies": {
+    "whatwg-fetch": "^3.0.0",
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
@@ -80,5 +71,12 @@
     "webpack-cli": "^3.3.1",
     "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.2"
+  },
+  "scripts": {
+    "build-dev": "node_modules/.bin/webpack --config webpack.dev.js",
+    "build": "node_modules/.bin/webpack --config webpack.prod.js",
+    "test": "node_modules/.bin/jest",
+    "coverage": "node_modules/.bin/codecov --root=..",
+    "start-dev": "node_modules/.bin/webpack-dev-server --config webpack.dev.js"
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withTheme } from "styled-components";
+import { withTheme } from 'styled-components'
 
 const FontAwesomeIcon = ({ theme, library, icon, spin, pulse, rotate, flip, scale, color, style }) => {
     let classNames = [library, 'fa-' + icon];

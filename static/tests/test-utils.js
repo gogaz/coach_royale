@@ -1,13 +1,13 @@
 import "regenerator-runtime/runtime";
 import "@testing-library/jest-dom/extend-expect"
 
-import React from "react";
-import { Router as Router } from "react-router-dom";
+import React from 'react'
+import { Router as Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history';
-import { ThemeProvider } from "styled-components";
-import mock from "./axiosMock";
-import ConstantsProvider from "../app/helpers/constants";
-import App from "../app/components/App";
+import { ThemeProvider } from 'styled-components'
+import mock from './axiosMock'
+import ConstantsProvider from '../app/helpers/constants'
+import App from '../app/components/App'
 
 const reactTestingLibrary = require('@testing-library/react');
 

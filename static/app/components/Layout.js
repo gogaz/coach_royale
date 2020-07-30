@@ -1,10 +1,9 @@
 import React from 'react'
-import { Redirect, Route, Switch } from "react-router-dom"
-import ClanApp from "./clan/ClanApp";
-import TopBar from "./ui/TopBar";
-import PlayerApp from "./player/PlayerApp";
-import CriticalError from "./errors/CriticalError";
-import Loading from "./ui/Loading";
+import { Redirect, Route, Switch } from 'react-router-dom'
+import ClanApp from './clan/ClanApp'
+import TopBar from './ui/TopBar'
+import PlayerApp from './player/PlayerApp'
+import CriticalError from './errors/CriticalError'
 
 const Layout = ({ user }) => (
     <React.Fragment>

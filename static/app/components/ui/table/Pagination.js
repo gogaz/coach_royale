@@ -1,6 +1,6 @@
-import React from "react";
-import styled, { withTheme } from "styled-components";
-import FontAwesomeIcon from "../FontAwesome";
+import React from 'react'
+import styled, { withTheme } from 'styled-components'
+import FontAwesomeIcon from 'components/ui/FontAwesome'
 
 const PaginationControls = styled.div`
     display: flex;

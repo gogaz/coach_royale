@@ -1,18 +1,18 @@
 import React from 'react';
 import moment from 'moment';
-import styled from "styled-components";
+import styled from 'styled-components'
+import ReactTooltip from 'react-tooltip'
 
-import { images } from "../../helpers/assets";
+import { images } from 'helpers/assets'
+import { setTitle, useFetch } from 'helpers/browser'
+import ClashRoyaleStat from 'components/ui/ClashRoyaleStat'
+import Loading from 'components/ui/Loading'
+import { Header } from 'components/ui/Card'
+import TimeFromNow from 'components/ui/TimeFromNow'
+import LastRefreshInfo from 'components/ui/LastRefreshInfo'
+import { Flex, FlexWrapper } from 'components/ui/Disposition'
 
-import ClashRoyaleStat from "../ui/ClashRoyaleStat";
-import Loading from "../ui/Loading";
-import PlayersClan from "./PlayersClan";
-import LastRefreshInfo from "../ui/LastRefreshInfo";
-import { setTitle, useFetch } from "../../helpers/browser";
-import ReactTooltip from "react-tooltip";
-import TimeFromNow from "../ui/TimeFromNow";
-import { Header } from "../ui/Card";
-import { Flex, FlexWrapper } from "../ui/Disposition";
+import PlayersClan from './PlayersClan'
 
 const CardsContainer = styled.div`
     margin-top: .75rem;

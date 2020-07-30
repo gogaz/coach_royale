@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react'
 import PropTypes from 'prop-types'
-import { useFilters, usePagination, useTable, useSortBy } from "react-table";
-import styled, { withTheme } from "styled-components";
+import { useFilters, usePagination, useTable, useSortBy } from 'react-table'
+import styled, { withTheme } from 'styled-components'
 
+import FontAwesomeIcon from 'components/ui/FontAwesome'
 import { winRateFilterMethod } from './filters'
-import FontAwesomeIcon from "../FontAwesome";
-import Pagination from "./Pagination";
+import Pagination from './Pagination'
 
 const StyledTable = styled.table`
     width: 100%;

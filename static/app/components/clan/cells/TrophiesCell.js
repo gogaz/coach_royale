@@ -1,7 +1,7 @@
 import React from 'react';
-import styled from "styled-components";
-import { images } from "../../../helpers/assets";
-import { locale } from "../../../helpers/browser";
+import styled from 'styled-components'
+import { images } from 'helpers/assets';
+import { locale } from 'helpers/browser';
 
 const Image = styled.img`
     height: 1.5rem;

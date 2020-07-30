@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import moment from "moment";
+import moment from 'moment'
 
 const useForceUpdate = () => {
     const [value, setValue] = useState(0); // integer state

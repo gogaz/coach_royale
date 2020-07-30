@@ -1,7 +1,8 @@
 import React from 'react'
-import { images } from "../../../helpers/assets";
 import PropTypes from 'prop-types';
-import styled from "styled-components";
+import styled from 'styled-components';
+
+import { images } from 'helpers/assets';
 
 const WarResult = styled.div`
     display: flex;

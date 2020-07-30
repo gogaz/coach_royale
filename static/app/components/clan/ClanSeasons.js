@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import moment from "moment";
-import styled from "styled-components";
+import moment from 'moment'
+import styled from 'styled-components'
 
-import { Card, Header } from "../ui/Card";
-import { Flex, FlexWrapper, Grid } from "../ui/Disposition";
-import ClanMembersTable from "./tables/ClanMembersTable";
-import TrophiesCell from "./cells/TrophiesCell";
-import ErrorBoundary from "../errors/ErrorBoundary";
+import { Card, Header } from 'components/ui/Card'
+import { Flex, Grid } from 'components/ui/Disposition'
+import ClanMembersTable from './tables/ClanMembersTable'
+import ErrorBoundary from '../errors/ErrorBoundary'
 
 const Data = styled(Flex)`
     margin-top: .5rem;

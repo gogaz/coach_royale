@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled, { withTheme } from "styled-components"
+import styled, { withTheme } from 'styled-components'
 
-import { locale } from "../../helpers/browser";
-import FontAwesomeIcon from "./FontAwesome";
+import { locale } from 'helpers/browser'
+import FontAwesomeIcon from './FontAwesome'
 
 const CardContent = styled.div`
     background: url("${ ({ image }) => image }") no-repeat center left;

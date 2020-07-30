@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 import moment from 'moment'
-import axios from "axios";
-import DatePicker from "react-datepicker";
+import axios from 'axios'
+import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { handleErrors } from "../../helpers/api";
-import { cookies, getLocaleDateString } from "../../helpers/browser";
-import FontAwesomeIcon from "../ui/FontAwesome";
+import { handleErrors } from 'helpers/api'
+import { cookies, getLocaleDateString } from 'helpers/browser'
+import FontAwesomeIcon from 'components/ui/FontAwesome'
 
 
 const DateRangeForm = ({ start, end, endpoint, handleData }) => {

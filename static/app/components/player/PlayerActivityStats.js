@@ -1,15 +1,16 @@
 import React from 'react';
-import moment from "moment";
-import { withTheme } from "styled-components";
+import moment from 'moment'
+import { withTheme } from 'styled-components'
 
-import PlayerDiffStatsChart from "./charts/PlayerDiffStatsChart";
-import PlayerRecentBattlesResultsChart from "./charts/PlayerRecentBattlesResultsChart";
-import PlayerWarResultsChart from "./charts/PlayerWarResultsChart";
-import Loading from "../ui/Loading";
-import PlayerWarResultCell from "../clan/cells/PlayerWarResultCell";
-import Table from "../ui/table/Table";
-import { useFetch } from "../../helpers/browser";
-import { Grid } from "../ui/Disposition";
+import { useFetch } from 'helpers/browser'
+import Loading from 'components/ui/Loading'
+import Table from 'components/ui/table/Table'
+import { Grid } from 'components/ui/Disposition'
+import PlayerWarResultCell from 'components/clan/cells/PlayerWarResultCell'
+
+import PlayerDiffStatsChart from './charts/PlayerDiffStatsChart'
+import PlayerRecentBattlesResultsChart from './charts/PlayerRecentBattlesResultsChart'
+import PlayerWarResultsChart from './charts/PlayerWarResultsChart'
 
 const PlayerActivityStats = ({ endpoint, theme }) => {
     const columns = React.useMemo(() => [

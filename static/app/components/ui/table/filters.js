@@ -1,5 +1,5 @@
-import React from "react";
-import { withTheme } from "styled-components";
+import React from 'react'
+import { withTheme } from 'styled-components'
 
 // Basic string search
 const DefaultColumnFilter = ({ column: { filterValue, setFilter }, }) => (

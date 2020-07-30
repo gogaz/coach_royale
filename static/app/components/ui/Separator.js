@@ -1,5 +1,5 @@
-import React from "react";
-import styled, { withTheme } from "styled-components";
+import React from 'react'
+import styled, { withTheme } from 'styled-components'
 
 const Separator = styled.div`
     height: 0;
