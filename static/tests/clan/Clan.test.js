@@ -12,7 +12,7 @@ import {
 } from '../test-utils'
 import "@testing-library/jest-dom/extend-expect"
 
-import { CLAN_ROLES } from '../../app/helpers/constants'
+import { CLAN_ROLES } from 'helpers/constants'
 
 const clanMembers = [
     {
@@ -26,6 +26,8 @@ const clanMembers = [
             level: 13,
             trophies: 9999,
             arena: 22,
+            highest_trophies: 11111,
+            highest_arena: 23,
             last_seen: new Date().toISOString()
         },
     },
@@ -40,6 +42,8 @@ const clanMembers = [
             level: 12,
             trophies: 6543,
             arena: 20,
+            highest_trophies: 7654,
+            highest_arena: 21,
             last_seen: new Date().toISOString()
         },
     },
@@ -54,6 +58,8 @@ const clanMembers = [
             level: 13,
             trophies: 7777,
             arena: 21,
+            highest_trophies: 7777,
+            highest_arena: 21,
             last_seen: new Date().toISOString()
         },
     },
@@ -67,7 +73,9 @@ const clanMembers = [
             donations_received: 40,
             level: 10,
             trophies: 1234,
-            arena: 16,
+            arena: 6,
+            highest_trophies: 1264,
+            highest_arena: 6,
             last_seen: new Date().toISOString()
         },
     },
@@ -238,7 +246,9 @@ const clanSeason = clanMembers.map((e) => ({
     name: e.name,
     details: {
         ending: e.details.trophies,
+        ending_arena: e.details.arena,
         highest: e.details.trophies,
+        highest_arena: e.details.arena + 1,
         season__identifier: "2020-01",
     },
 }));
@@ -362,6 +372,7 @@ describe('Clan page', () => {
         test("it renders an orderable table of members and wars in war log section", async () => {
             const rendered = await subject();
             fireEvent.click(rendered.getByText('War log'));
+            window.console.log("here?")
             await wait(() => rendered.getByRole('table'))
 
             const [header, ...rows] = rendered.getAllByRole('row');
@@ -405,6 +416,7 @@ describe('Clan page', () => {
             // Re-order by name (click 2 times for descending order)
             fireEvent.click(rendered.getByAltText('Battles'));
             fireEvent.click(rendered.getByAltText('Battles'));
+            window.console.log(rendered.getAllByRole('row'))
             await wait(() => getByText(rendered.getAllByRole('row')[2], clanWarInfos.members[1].name))
             const [_, ...rowsByTotal] = rendered.getAllByRole('row');
             memberExpectations(rowsByTotal[0], clanWarInfos.members[0]);

@@ -10,7 +10,6 @@ import { locale } from 'helpers/browser'
 import App from 'components/App'
 import { defaultTheme } from 'style/theme'
 import { BrowserRouter as Router } from 'react-router-dom'
-import ConstantsProvider from 'helpers/constants'
 
 
 const momentDurationFormatSetup = require("moment-duration-format");
@@ -20,11 +19,9 @@ moment.locale(locale);
 ReactDOM.render(
     (
         <ThemeProvider theme={ defaultTheme }>
-            <ConstantsProvider>
-                <Router>
-                    <App/>
-                </Router>
-            </ConstantsProvider>
+            <Router>
+                <App/>
+            </Router>
         </ThemeProvider>
     ),
     document.getElementById("root")

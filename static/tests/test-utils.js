@@ -5,9 +5,8 @@ import React from 'react'
 import { Router as Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history';
 import { ThemeProvider } from 'styled-components'
+import App from 'components/App'
 import mock from './axiosMock'
-import ConstantsProvider from '../app/helpers/constants'
-import App from '../app/components/App'
 
 const reactTestingLibrary = require('@testing-library/react');
 
@@ -15,11 +14,9 @@ window.GLOBAL_rootURL = "/clan/ABCD";
 window.GLOBAL_mainClan = "ABCD";
 
 const AllTheProviders = ({ children }) => (
-    <ConstantsProvider>
-        <ThemeProvider theme={ { colors: {}, breakpoints: {} } }>
-            { children }
-        </ThemeProvider>
-    </ConstantsProvider>
+    <ThemeProvider theme={ { colors: {}, breakpoints: {} } }>
+        { children }
+    </ThemeProvider>
 );
 
 const customRender = (route, mockedData, options)  => {

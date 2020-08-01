@@ -7,7 +7,7 @@ import styled, { withTheme } from 'styled-components'
 
 import { images } from 'helpers/assets'
 import { useFetch } from 'helpers/browser'
-import { ConstantsContext } from 'helpers/constants'
+import { CLAN_ROLES } from 'helpers/constants'
 
 import Loading from 'components/ui/Loading'
 import TimeFromNow from 'components/ui/TimeFromNow'
@@ -61,9 +61,7 @@ const getBaseColumns = (theme) => [
         id: 'last_seen',
         accessor: (data) => moment(data.details.last_seen),
         width: 120,
-        Cell: ({ row }) => (
-            <TimeFromNow time={row.values.last_seen} update={120} />
-        )
+        Cell: ({ row }) => <TimeFromNow time={row.values.last_seen} update={120} />
     },
     {
         Header: "Level",
@@ -79,10 +77,7 @@ const getBaseColumns = (theme) => [
         id: "role",
         Filter: SelectColumnFilter,
         accessor: (data) => data.details.clan_role,
-        Cell: ({ row }) => {
-            const { clanRoles } = useContext(ConstantsContext)
-            return clanRoles[row.values.role]
-        },
+        Cell: ({ row }) => CLAN_ROLES[row.values.role],
         width: 100,
     },
     {

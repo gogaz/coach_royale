@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React  from 'react';
 import moment from 'moment'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
 import { images } from 'helpers/assets'
-import { ConstantsContext } from 'helpers/constants'
+import { CLAN_ROLES } from 'helpers/constants'
 import { locale, useFetch } from 'helpers/browser'
 
 import Loading from 'components/ui/Loading'
@@ -58,8 +58,7 @@ const BASE_COLUMNS = [
         id: 'role',
         accessor: (data) => data.details.clan_role,
         Cell: ({ row }) => {
-            const { clanRoles } = useContext(ConstantsContext)
-            return clanRoles[row.values.role]
+            return CLAN_ROLES[row.values.role]
         },
         width: 85,
         Filter: SelectColumnFilter

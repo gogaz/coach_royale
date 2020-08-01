@@ -9,7 +9,6 @@ export const useFetch = (url, defaultData, onFetch) => {
 
     useEffect(() => {
         (async () => {
-            window.console.log(url)
             axios
                 .get(url)
                 .then((res) => {
