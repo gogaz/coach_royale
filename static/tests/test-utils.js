@@ -19,7 +19,7 @@ const AllTheProviders = ({ children }) => (
     </ThemeProvider>
 );
 
-const customRender = (route, mockedData, options)  => {
+const customRender = (route, mockedData, options) => {
     // mock provided data
     Object.keys(mockedData).map((url) => mock.onGet(url).reply(mockedData[url].code, mockedData[url].response));
     // render the component with given route and options

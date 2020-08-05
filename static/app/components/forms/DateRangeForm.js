@@ -33,9 +33,9 @@ const DateRangeForm = ({ start, end, endpoint, handleData }) => {
     const catchErrors = (error) => {
         setError(true);
         if (error.status === 403 || error.status === 404)
-            error.then(res => console.log(res));
+            error.then(res => console.warn(res));
         else
-            console.log(error);
+            console.warn(error);
     };
 
     const handleSubmit = (event) => {

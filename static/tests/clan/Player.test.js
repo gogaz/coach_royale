@@ -1,15 +1,6 @@
 import React from 'react'
 
-import {
-    render,
-    wait,
-    fireEvent,
-    getByText,
-    getAllByText,
-    getByAltText,
-    getAllByRole,
-    queryByText,
-} from '../test-utils'
+import { getByText, render, waitFor } from '../test-utils'
 import "@testing-library/jest-dom/extend-expect"
 
 const playerWars = [
@@ -162,7 +153,7 @@ const subject = async (mockedData = {}) => {
             ...mockedData
         },
     );
-    await wait(() => rendered.getByText(playerInfos.name));
+    await waitFor(() => expect(rendered.queryByAltText('Loading...')).not.toBeInTheDocument());
     return rendered;
 };
 

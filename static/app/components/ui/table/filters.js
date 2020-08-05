@@ -54,7 +54,7 @@ const winRateFilterMethod = (rows, id, filterValue) => {
 };
 winRateFilterMethod.autoRemove = val => !val
 
-const WinRateColumnFilter = withTheme(({ theme, column: { filterValue, setFilter }, }) => {
+const WinRateColumnFilter = ({ column: { filterValue, setFilter }, }) => {
     return (
         <select
             onChange={ e => setFilter(e.target.value) }
@@ -62,11 +62,11 @@ const WinRateColumnFilter = withTheme(({ theme, column: { filterValue, setFilter
         >
             <option value="">All</option>
             <option value="grey">No battles</option>
-            <option value="green" style={ { backgroundColor: theme.colors.lightGreen } }>&gt;= 50%</option>
-            <option value="red" style={ { backgroundColor: theme.colors.lightRed } }>&lt; 50%</option>
+            <option value="green">&gt;= 50%</option>
+            <option value="red">&lt; 50%</option>
         </select>
     )
-})
+}
 
 export {
     DefaultColumnFilter,

@@ -2,7 +2,7 @@ import React from 'react'
 
 import {
     render,
-    wait,
+    waitFor,
     fireEvent,
     getByText,
     getAllByText,
@@ -266,7 +266,7 @@ describe('Clan page', () => {
                 ...mockedData
             },
         );
-        await wait(() => rendered.getByText(clanInfos.name));
+        await waitFor(() => expect(rendered.queryByAltText('Loading...')).not.toBeInTheDocument());
         return rendered;
     };
 
@@ -362,7 +362,7 @@ describe('Clan page', () => {
             // Re-order by total donations (click 2 times for descending order)
             fireEvent.click(rendered.getByText('Total'));
             fireEvent.click(rendered.getByText('Total'));
-            await wait(() => getByText(rendered.getAllByRole('row')[1], clanMembers[2].name))
+            await waitFor(() => getByText(rendered.getAllByRole('row')[1], clanMembers[2].name))
             const [_, ...rowsByTotal] = rendered.getAllByRole('row');
             memberExpectations(rowsByTotal[0], clanMembers[2]);
             memberExpectations(rowsByTotal[1], clanMembers[3]);
@@ -372,8 +372,7 @@ describe('Clan page', () => {
         test("it renders an orderable table of members and wars in war log section", async () => {
             const rendered = await subject();
             fireEvent.click(rendered.getByText('War log'));
-            window.console.log("here?")
-            await wait(() => rendered.getByRole('table'))
+            await waitFor(() => rendered.getByRole('table'))
 
             const [header, ...rows] = rendered.getAllByRole('row');
             expect(rendered.getAllByRole('columnheader').length).toBe(8)
@@ -416,8 +415,7 @@ describe('Clan page', () => {
             // Re-order by name (click 2 times for descending order)
             fireEvent.click(rendered.getByAltText('Battles'));
             fireEvent.click(rendered.getByAltText('Battles'));
-            window.console.log(rendered.getAllByRole('row'))
-            await wait(() => getByText(rendered.getAllByRole('row')[2], clanWarInfos.members[1].name))
+            await waitFor(() => getByText(rendered.getAllByRole('row')[2], clanWarInfos.members[1].name))
             const [_, ...rowsByTotal] = rendered.getAllByRole('row');
             memberExpectations(rowsByTotal[0], clanWarInfos.members[0]);
             memberExpectations(rowsByTotal[1], clanWarInfos.members[1]);
@@ -427,7 +425,7 @@ describe('Clan page', () => {
         test("it renders one table for previous season and another for previous week in seasons section", async () => {
             const rendered = await subject();
             fireEvent.click(rendered.getByText('Seasons'));
-            await wait(() => rendered.getByText('Previous week'));
+            await waitFor(() => rendered.getByText('Previous week'));
             const [weekTable, seasonTable] = rendered.getAllByRole('table');
             const [weekTableHeader, ...weekTableRows] = getAllByRole(weekTable, 'row')
             getByText(weekTableHeader, 'Player');

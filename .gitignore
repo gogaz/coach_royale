@@ -3,6 +3,7 @@
 # Trash files
 __pycache__
 .pytest_cache
+.DS_Store
 # External libraries
 venv
 node_modules
