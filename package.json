@@ -4,7 +4,7 @@
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "static/app/**/**/*.{js,jsx}"
+      "static/app/**/**/*.js"
     ],
     "moduleDirectories": [
       "node_modules",
