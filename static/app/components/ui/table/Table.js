@@ -23,15 +23,15 @@ const StyledTable = styled.table`
     tbody {
         tr {
             &:not(:last-child) {
-                border-bottom: 1px solid ${ ({ theme }) => theme.colors.light2 };
+                border-bottom: 1px solid ${({ theme }) => theme.colors.light2};
             }
             
             &:nth-of-type(odd) {
-                background-color: ${ ({ theme }) => theme.colors.light };
+                background-color: ${({ theme }) => theme.colors.light};
             }
             
             &:hover, &:nth-of-type(odd):hover {
-                background-color: ${ ({ theme }) => theme.colors.light3 };
+                background-color: ${({ theme }) => theme.colors.light3};
             }
             
             & > td {
@@ -46,6 +46,12 @@ const StyledHeaderCell = styled.th`
     overflow: hidden;
     white-space: nowrap;
 `;
+
+const CenteredHeader = styled.span`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`
 
 const StyledBodyCell = styled.td`
     // Useful when we want to use all the available space
@@ -91,66 +97,67 @@ const Table = ({
 
     return (
         <div>
-            <StyledTable { ...getTableProps() }>
+            <StyledTable {...getTableProps()}>
                 <thead>
-                { headerGroups.map(headerGroup => (
-                    <tr { ...headerGroup.getHeaderGroupProps() }>
-                        { headerGroup.headers.map(column => {
+                {headerGroups.map(headerGroup => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => {
                             const Header = column.render('Header');
                             const hasFilter = !disableFilters && !!column.Filter;
                             return (
                                 <StyledHeaderCell
-                                    width={ column.width }
-                                    { ...column.getHeaderProps() }
+                                    width={column.width}
+                                    {...column.getHeaderProps()}
                                 >
-                                    <span { ...column.getSortByToggleProps() }>
-                                        { Header }
-                                    </span>
-                                    { column.isSorted && (column.isSortedDesc
-                                            ? <FontAwesomeIcon icon="angle-down"/>
-                                            : <FontAwesomeIcon icon="angle-up"/>
-                                    ) }
-                                    { hasFilter &&
-                                        <div role="filter">{ column.render('Filter') }</div>
+                                    <CenteredHeader {...column.getSortByToggleProps()}>
+                                        {Header}
+                                        {column.isSorted && (column.isSortedDesc
+                                                ? <FontAwesomeIcon icon="angle-down"/>
+                                                : <FontAwesomeIcon icon="angle-up"/>
+                                        )}
+                                    </CenteredHeader>
+
+                                    {hasFilter &&
+                                    <div role="filter">{column.render('Filter')}</div>
                                     }
                                 </StyledHeaderCell>
                             );
-                        }) }
+                        })}
                     </tr>
-                )) }
+                ))}
                 </thead>
-                <tbody { ...getTableBodyProps() }>
-                { page.map(row => {
+                <tbody {...getTableBodyProps()}>
+                {page.map(row => {
                     prepareRow(row);
                     return (
-                        <tr { ...row.getRowProps() }>
-                            { row.cells.map(cell => {
-                                let cellProps = {...cell.getCellProps()};
+                        <tr {...row.getRowProps()}>
+                            {row.cells.map(cell => {
+                                let cellProps = { ...cell.getCellProps() };
                                 if (cell.column.cellProps)
-                                    cellProps = {...cellProps, ...cell.column.cellProps};
+                                    cellProps = { ...cellProps, ...cell.column.cellProps };
                                 return (
-                                    <StyledBodyCell { ...cellProps } value={cell.value}>
-                                        { cell.render('Cell') }
+                                    <StyledBodyCell {...cellProps} value={cell.value}>
+                                        {cell.render('Cell')}
                                     </StyledBodyCell>
                                 )
-                            }) }
+                            })}
                         </tr>
                     )
-                }) }
+                })}
                 </tbody>
             </StyledTable>
-            { showPagination && (
+            {showPagination && (
                 <Pagination
-                    canPreviousPage={ canPreviousPage }
-                    canNextPage={ canNextPage }
-                    gotoPage={ gotoPage }
-                    nextPage={ nextPage }
-                    pageCount={ pageCount }
-                    pageIndex={ pageIndex }
-                    pageOptions={ pageOptions }
-                    previousPage={ previousPage }
+                    canPreviousPage={canPreviousPage}
+                    canNextPage={canNextPage}
+                    gotoPage={gotoPage}
+                    nextPage={nextPage}
+                    pageCount={pageCount}
+                    pageIndex={pageIndex}
+                    pageOptions={pageOptions}
+                    previousPage={previousPage}
                 />
-            ) }
+            )}
         </div>
     );
 }

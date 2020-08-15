@@ -29,7 +29,9 @@ const ClanSeasons = ({ endpoint }) => {
                 </ErrorBoundary>
             </Card>
             <Card style={ { marginTop: '.5rem', height: '100%' } }>
-                <Header><h4>Previous Season{ previousSeason && ` (${ previousSeason.format('MMM YYYY') })` }</h4></Header>
+                <Header>
+                    <h4>Previous Season{ previousSeason && ` (${ previousSeason.format('MMM YYYY') })` }</h4>
+                </Header>
                 <ErrorBoundary>
                     <ClanMembersTable
                         endpoint={ endpoint + '/season' }

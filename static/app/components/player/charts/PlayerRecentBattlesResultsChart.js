@@ -22,7 +22,7 @@ const PlayerRecentBattlesResultsChart = ({ theme, data, height, datasets, title,
                 if (isNaN(elem[field])) {
                     result.push(elem[field]);
                 } else {
-                    let diff = Number(elem[field]) - Number(data[i - 1][field]);
+                    const diff = Number(elem[field]) - Number(data[i - 1][field]);
                     result.push(diff)
                 }
             }

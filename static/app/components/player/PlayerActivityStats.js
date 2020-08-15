@@ -17,12 +17,18 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
         {
             Header: "War",
             id: "war",
-            accessor: e => moment(e.clan_war.date_start).format('DD/MM'),
+            accessor: e => moment(e.clan_war.date_start),
+            Cell: ({ row }) => {
+                const currentDate = moment();
+                if (currentDate.format('YYYY') !== row.values.war.format('YYYY'))
+                    return row.values.war.format('L');
+                return row.values.war.format('DD/MM');
+            }
         },
         {
             Header: "Result",
             id: "result",
-            Cell: ({ row }) => <PlayerWarResultCell war={ row.original }/>,
+            Cell: ({ row }) => <PlayerWarResultCell war={row.original}/>,
         }
     ], [])
     const { loading, data } = useFetch(endpoint + '/activity', {})
@@ -34,31 +40,36 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
         return null;
 
     const { stats, wars, war_stats: warStats } = data;
+    const WarsTable = () => (
+        <Table
+            data={wars}
+            columns={columns}
+            initialPageSize={5}
+            showPagination
+        />
+    )
 
     return (
-        <Grid columns={ { sm: 1, md: 2 } } style={ { padding: '1.25rem' } } gap="20px">
-            <PlayerWarResultsChart data={ warStats } title="Player wars"/>
+        <Grid columns={{ sm: 1, md: 2 }} style={{ padding: '1.25rem' }} gap="20px">
+            <PlayerWarResultsChart data={warStats} title="Player wars"/>
             <PlayerDiffStatsChart
-                data={ stats.reverse() }
+                data={stats.reverse()}
                 title="Trophies"
-                datasets={ [
+                datasets={[
                     {
                         label: "Trophies",
                         id: "current_trophies",
                         backgroundColor: theme.colors.yellow,
                     },
-                ] }
+                ]}
             />
-            <Table
-                data={ wars }
-                columns={ columns }
-                initialPageSize={ 5 }
-                showPagination
-            />
+
+            <WarsTable/>
+
             <PlayerRecentBattlesResultsChart
-                data={ stats }
+                data={stats}
                 title="Player battles"
-                datasets={ [
+                datasets={[
                     {
                         label: "Draws + 2v2",
                         id: "draws",
@@ -74,7 +85,7 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
                         id: "wins",
                         backgroundColor: theme.colors.green,
                     },
-                ] }
+                ]}
             />
         </Grid>
     );
