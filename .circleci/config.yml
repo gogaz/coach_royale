@@ -44,7 +44,7 @@ jobs:
             coverage run manage.py test --noinput
             coverage report
       - run:
-          name: jest
+          name: jest --ci --reporters=default --reporters=jest-junit
           command: yarn run test && yarn run coverage
       - store_artifacts:
           path: test-reports

@@ -6,6 +6,7 @@
     "collectCoverageFrom": [
       "static/app/**/**/*.js"
     ],
+    "testResultsProcessor": "jest-junit",
     "moduleDirectories": [
       "node_modules",
       "static/tests",
@@ -15,6 +16,11 @@
       "\\.css$": "identity-obj-proxy"
     },
     "testEnvironment": "jest-environment-jsdom-fifteen"
+  },
+  "jest-junit": {
+    "outputDirectory": "test-reports",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}"
   },
   "dependencies": {
     "@babel/core": "^7.6.0",
@@ -42,6 +48,7 @@
     "gulp-babel": "^8.0.0",
     "jest": "^26.2.2",
     "jest-environment-jsdom-fifteen": "^1.0.2",
+    "jest-junit": "^11.1.0",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^0.8.0",
     "moment": "^2.22.2",
