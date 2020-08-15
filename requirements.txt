@@ -14,3 +14,4 @@ django-celery-results
 django-celery-beat
 unittest-xml-reporting
 python-dateutil
+sentry-sdk

@@ -11,30 +11,44 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 import codecs
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 from celery.schedules import crontab
 
 from django.utils import timezone
 
-# Hack to handle emojis
+# Hack to handle emojis under MySQL
 codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else None)
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+## Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# SECURITY WARNING: keep the secret key used in production secret!
+## SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'secret!'
 
-# Clash Royale API configuration
+## Clash Royale API configuration
 CLASHROYALE_API_KEY = os.environ.get('CLASHROYALE_API_KEY') or "YOUR_API_KEY"
 REFRESH_RATE = timezone.timedelta(minutes=5)
 MAIN_CLAN = "2GJU9Y2G"  # omit the '#'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+## SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
-# Database
+## Sentry SDK configuration - Optional
+SENTRY_DSN = ""  # Replace with your sentry DSN in the form https://abcdef.ingest.sentry.io/1234
+## Uncomment the following lines to enable Sentry
+# sentry_sdk.init(
+#     dsn=SENTRY_DSN,
+#     integrations=[DjangoIntegration()],
+#
+#     # If you wish to associate users to errors (assuming you are using
+#     # django.contrib.auth) you may enable sending PII data.
+#     send_default_pii=True
+# )
+
+## Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 DATABASES = {
     'default': {
@@ -50,7 +64,7 @@ DATABASES = {
 TEST_RUNNER = 'xmlrunner.extra.djangotestrunner.XMLTestRunner'
 TEST_OUTPUT_DIR = os.path.join('.', 'test-reports')
 
-# Application definition
+## Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -85,7 +99,7 @@ ROOT_URLCONF = 'coach_royale.urls'
 
 WSGI_APPLICATION = 'coach_royale.wsgi.application'
 
-# Celery Broker settings
+## Celery and Broker settings
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_BROKER_POOL_LIMIT = None
 CELERY_BROKER_CONNECTION_TIMEOUT = 20
@@ -93,8 +107,6 @@ CELERY_BROKER_CONNECTION_RETRY = True
 CELERY_BROKER_CONNECTION_MAX_RETRIES = 100
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
-
-#: Only add pickle to this list if your broker is secured from unwanted access (see userguide/security.html)
 CELERY_ACCEPT_CONTENT = ['json', 'pickle']
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_RESULT_SERIALIZER = 'json'
