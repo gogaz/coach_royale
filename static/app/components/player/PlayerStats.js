@@ -4,7 +4,8 @@ import styled from 'styled-components'
 import ReactTooltip from 'react-tooltip'
 
 import { images } from 'helpers/assets'
-import { setTitle, useFetch } from 'helpers/browser'
+import { setTitle } from 'helpers/browser'
+import { useAutoFetch } from 'hooks/useAxios'
 import ClashRoyaleStat from 'components/ui/ClashRoyaleStat'
 import Loading from 'components/ui/Loading'
 import { Header } from 'components/ui/Card'
@@ -36,7 +37,7 @@ const CardsContainer = styled.div`
 
 
 const PlayerStats = ({ endpoint }) => {
-    const { loading, data: player } = useFetch(
+    const { loading, response: player } = useAutoFetch(
         endpoint + '/',
         null,
         (p) => setTitle(`${ p.name } (#${ p.tag })`)

@@ -5,7 +5,6 @@ from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from backend.forms import DateRangeForm, WeekForm
 from backend.lib.clan_rule_matcher.models import PlayerClanRuleGoal
 from backend.lib.clan_rule_matcher.serializers import PlayerClanRuleSerializer, PlayerClanRuleGoalSerializer
 from backend.models import Clan, PlayerClanStatsHistory, ClanWar, LeagueSeason
@@ -13,7 +12,7 @@ from backend.serializers.clan import (ClanWithDetailsSerializer,
                                       PlayerClanDetailsSerializer,
                                       PlayerInClanWarSerializer,
                                       ClanWarSerializer, PlayerWeeklyDonationsSerializer, PlayerClanSeasonSerializer)
-from backend.serializers.misc import not_found_error, form_error
+from backend.serializers.misc import not_found_error
 from backend.serializers.player import PlayerSerializer
 
 
@@ -65,19 +64,8 @@ def clan_wars(request, tag):
     except Clan.DoesNotExist:
         return not_found_error("clan", tag)
 
-    wars = ClanWar.objects.filter(clan=clan).order_by('-date_start')
+    wars = ClanWar.objects.filter(clan=clan).order_by('-date_start')[:10]
     players = clan.get_players()
-
-    form = DateRangeForm(request.POST)
-    if form.is_valid():
-        range_start = form.cleaned_data["start"]
-        range_end = form.cleaned_data["end"]
-        wars = wars.filter(date_start__gte=range_start, date_start__lte=range_end)
-    else:
-        wars = wars[:10]
-
-    if request.method == "POST" and not form.is_valid():
-        return form_error(form)
 
     wars_json = ClanWarSerializer(wars, many=True)
     players_json = PlayerInClanWarSerializer(players, wars=wars, many=True)
@@ -92,11 +80,7 @@ def clan_weekly_season(request, tag):
     except Clan.DoesNotExist:
         return not_found_error("clan", tag)
 
-    form = WeekForm(request.POST)
-    if form.is_valid():  # TODO: make this available from front-end
-        now = form.cleaned_data['week']
-    else:
-        now = timezone.now()
+    now = timezone.now()
 
     month = timezone.datetime.strptime("%s-W%s-1 03:00" % (now.year, now.isocalendar()[1]), "%Y-W%W-%w %H:%M")
     date = timezone.make_aware(month) - timezone.timedelta(weeks=1)

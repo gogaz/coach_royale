@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import styled, { withTheme } from 'styled-components'
 
 import { images } from 'helpers/assets'
-import { useFetch } from 'helpers/browser'
+import { useAutoFetch } from 'hooks/useAxios'
 import { CLAN_ROLES } from 'helpers/constants'
 
 import Loading from 'components/ui/Loading'
@@ -143,7 +143,7 @@ const ClanMembersTable = ({
     showPagination,
     onFetchData
 }) => {
-    const { data, loading } = useFetch(endpoint, [], onFetchData);
+    const { response: data, loading } = useAutoFetch(endpoint, [], onFetchData);
     const tableColumns = useMemo(() => getColumns(theme, columns), [theme, columns]);
 
     if (loading)

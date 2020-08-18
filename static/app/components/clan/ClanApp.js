@@ -1,7 +1,8 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import { setTitle, useFetch } from 'helpers/browser';
+import { setTitle } from 'helpers/browser';
+import { useAutoFetch } from 'hooks/useAxios'
 import Loading from 'components/ui/Loading'
 import { Card } from 'components/ui/Card'
 import ClanPage from './ClanPage'
@@ -9,7 +10,7 @@ import ClanDetails from './ClanDetails'
 
 const ClanList = ({ match }) => {
     setTitle("All known clans");
-    const { loading, data } = useFetch('/api/clan/all')
+    const { loading, response: data } = useAutoFetch('/api/clan/all')
 
     if (loading) return <Loading />;
 

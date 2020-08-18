@@ -1,7 +1,8 @@
 import React from 'react'
 import styled, { withTheme } from 'styled-components'
 
-import { setTitle, useFetch } from 'helpers/browser'
+import { setTitle } from 'helpers/browser'
+import { useAutoFetch } from 'hooks/useAxios'
 import { images } from 'helpers/assets'
 
 import { Flex, FlexWrapper, Grid } from 'components/ui/Disposition'
@@ -18,7 +19,7 @@ const CardContainer = styled(Grid)`
 `;
 
 const ClanDetails = ({ tag }) => {
-    const { data, loading } = useFetch(
+    const { response: data, loading } = useAutoFetch(
         `/api/clan/${tag}/`,
         {},
         (result) => setTitle(`${ result.name } (#${ result.tag })`)

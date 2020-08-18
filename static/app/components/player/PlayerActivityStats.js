@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment'
 import { withTheme } from 'styled-components'
 
-import { useFetch } from 'helpers/browser'
+import { useAutoFetch } from 'hooks/useAxios'
 import Loading from 'components/ui/Loading'
 import Table from 'components/ui/table/Table'
 import { Grid } from 'components/ui/Disposition'
@@ -31,7 +31,7 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
             Cell: ({ row }) => <PlayerWarResultCell war={row.original}/>,
         }
     ], [])
-    const { loading, data } = useFetch(endpoint + '/activity', {})
+    const { loading, response: data } = useAutoFetch(endpoint + '/activity', {})
 
     if (loading)
         return <Loading/>;

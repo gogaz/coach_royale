@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom'
 
 import { images } from 'helpers/assets'
 import { CLAN_ROLES } from 'helpers/constants'
-import { locale, useFetch } from 'helpers/browser'
+import { locale } from 'helpers/browser'
+import { useAutoFetch } from 'hooks/useAxios'
 
 import Loading from 'components/ui/Loading'
 import Table from 'components/ui/table/Table'
 import { SelectColumnFilter, WinRateColumnFilter } from 'components/ui/table/filters'
 import PlayerWarResultCell from 'components/clan/cells/PlayerWarResultCell'
 import TrophiesCell from 'components/clan/cells/TrophiesCell'
-import DateRangeForm from 'components/forms/DateRangeForm'
 
 const Indicator = styled.div`
     position: absolute;
@@ -121,7 +121,7 @@ const BASE_COLUMNS = [
 ];
 
 const ClanWarMembers = ({ endpoint }) => {
-    const { data, loading } = useFetch(endpoint + '/wars', {});
+    const { response: data, loading } = useAutoFetch(endpoint + '/wars', {});
     const { wars, members } = data;
     const columns = React.useMemo(() => {
         if (!wars)
@@ -153,19 +153,12 @@ const ClanWarMembers = ({ endpoint }) => {
     const endDate = wars.reduce((acc, e) => e.date_start, 0);
 
     return (
-        <React.Fragment>
-            <DateRangeForm endpoint={ endpoint }
-                           handleData={ (data) => setData(data) }
-                           start={ moment(endDate) }
-            />
-
-            <Table
-                data={ members }
-                columns={ columns }
-                sortBy={ [{ id: 'trophies', desc: true }] }
-                showPagination={ false }
-            />
-        </React.Fragment>
+        <Table
+            data={ members }
+            columns={ columns }
+            sortBy={ [{ id: 'trophies', desc: true }] }
+            showPagination={ false }
+        />
     );
 };
 
