@@ -1,12 +1,9 @@
-import logging
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.db.models import Q, F
 from django.utils import timezone
 
 from .base import BaseModel, HistoryModel, EditableModel
-
-logger = logging.getLogger(__name__)
 
 
 class Arena(EditableModel):
@@ -435,11 +432,6 @@ class Battle(BaseModel):
         except ClanWar.DoesNotExist:
             return None
         except ClanWar.MultipleObjectsReturned:
-            filters = "date_start <= $1 and date_end >= $1 [$1: %s]" % (self.time.isoformat())
-            logger.log(
-                logging.ERROR,
-                "could not find unique war matching %s for <Battle:%d> and <Clan: %s>" % (filters, self.id, clan.id)
-            )
             return None
 
     def get_war_for_final_day(self, clan, war=None):
