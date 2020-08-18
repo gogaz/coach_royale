@@ -35,7 +35,7 @@ const useAxios = (
     return { response, error, loading, sendRequest }
 }
 
-const useFetch = (url, defaultData, onFetch, initiallyLoading = false, ...opts) => {
+export const useFetch = (url, defaultData, onFetch, initiallyLoading = false, ...opts) => {
     const axiosOpts = { method: 'GET', url }
     const { sendRequest, ...hookBag } = useAxios(defaultData, onFetch, initiallyLoading, ...opts)
 
@@ -45,7 +45,7 @@ const useFetch = (url, defaultData, onFetch, initiallyLoading = false, ...opts) 
     }
 }
 
-const useAutoFetch = (url, defaultData, onFetch, ...opts) => {
+export const useAutoFetch = (url, defaultData, onFetch, ...opts) => {
     const { sendRequest, ...hookBag } = useFetch(url, defaultData, onFetch, true, ...opts)
 
     useEffect(sendRequest, [])
@@ -54,7 +54,3 @@ const useAutoFetch = (url, defaultData, onFetch, ...opts) => {
 }
 
 export default useAxios
-module.exports = {
-    useFetch,
-    useAutoFetch,
-}

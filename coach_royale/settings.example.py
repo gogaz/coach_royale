@@ -13,6 +13,8 @@ import codecs
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 from celery.schedules import crontab
 
 from django.utils import timezone
@@ -41,7 +43,7 @@ SENTRY_DSN = ""  # Replace with your sentry DSN in the form https://abcdef.inges
 ## Uncomment the following lines to enable Sentry
 # sentry_sdk.init(
 #     dsn=SENTRY_DSN,
-#     integrations=[DjangoIntegration()],
+#     integrations=[DjangoIntegration(), CeleryIntegration(), RedisIntegration()],
 #
 #     # If you wish to associate users to errors (assuming you are using
 #     # django.contrib.auth) you may enable sending PII data.
