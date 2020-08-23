@@ -1,16 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as Sentry from "@sentry/react";
 import CriticalError from './CriticalError'
 
 export default class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = { hasError: false };
-    }
-
-    static getDerivedStateFromError() {
-        return { hasError: true }
     }
 
     componentDidCatch(error, info) {
@@ -20,9 +15,8 @@ export default class ErrorBoundary extends React.Component {
 
     render() {
         const { children, errorProps } = this.props;
-        const { hasError } = this.state;
 
-        return hasError ? <CriticalError { ...errorProps } /> : children;
+        return <Sentry.ErrorBoundary fallback={() => <CriticalError {...errorProps}/>}>{children}</Sentry.ErrorBoundary>;
     }
 }
 
