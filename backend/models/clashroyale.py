@@ -369,6 +369,7 @@ class ClanHistory(HistoryModel):
     region_code = models.CharField(max_length=2)
     region_id = models.IntegerField(null=True)
     badge = models.CharField(max_length=512)
+    # Unused as of CR Update of 09/2020
     trophies = models.IntegerField(null=True)
     prev_local_rank = models.IntegerField(null=True)
     local_rank = models.IntegerField(null=True)
@@ -380,7 +381,7 @@ class ClanHistory(HistoryModel):
     global_war_rank = models.IntegerField(null=True)
     # Wars
     war_state = models.CharField(max_length=512, null=True)
-    # Synchronization configuration
+    clan_war_trophies = models.IntegerField(null=True)
 
     def __str__(self):
         return "History for clan {0.clan} ({0.last_refresh})".format(self)
@@ -463,9 +464,13 @@ class ClanWar(BaseModel):
     total_trophies = models.IntegerField(null=True)
     trophies = models.IntegerField(null=True)
     season = models.IntegerField(null=True)
+    fame = models.IntegerField(default=0)
+    repair_points = models.IntegerField(default=0)
+    finish_time = models.IntegerField(null=True)
+    is_river_race = models.BooleanField(default=False)
 
     def __str__(self):
-        return "Clan {} started war on {}".format(self.clan, self.date_start.strftime("%Y-%m-%d"))
+        return "Clan {} started war on {} (#{})".format(self.clan, self.date_start.strftime("%Y-%m-%d"), self.final_position)
 
     def is_battle_during_collection_day(self, battle: Battle):
         date_start = self.date_start - timezone.timedelta(hours=1)
@@ -485,7 +490,8 @@ class PlayerClanWar(BaseModel):
     collections_battles = models.IntegerField(null=True, default=0)
     collections_battles_done = models.IntegerField(null=True)
     collections_battles_wins = models.IntegerField(null=True, default=0)
+    fame = models.IntegerField(default=0)
+    repair_points = models.IntegerField(default=0)
 
     def __str__(self):
-        return "{0.player} in {0.clan_war} ({1} | {0.collections_cards_earned} cards)" \
-            .format(self, "Win" if self.final_battles_wins else "Lose" if self.final_battles_done else "Yet!")
+        return "{0.player} in {0.clan_war} ({0.fame} fame | {0.repair_points} repair pts)".format(self)

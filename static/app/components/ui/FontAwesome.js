@@ -1,8 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withTheme } from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 
-const FontAwesomeIcon = ({ theme, library, icon, spin, pulse, rotate, flip, scale, color, style }) => {
+const StyledIcon = styled.i`
+    display: flex;
+    align-items: center;
+    font-size: ${({ size }) => size}
+`
+
+const FontAwesomeIcon = ({ theme, library, icon, spin, pulse, rotate, flip, scale, color, style, size }) => {
     let classNames = [library, 'fa-' + icon];
     if (spin) classNames = [...classNames, 'fa-spin'];
     if (pulse) classNames = [...classNames, 'fa-pulse'];
@@ -19,7 +25,7 @@ const FontAwesomeIcon = ({ theme, library, icon, spin, pulse, rotate, flip, scal
         }
     };
 
-    return <i className={ classNames.join(' ') } { ...iconProps } />
+    return <StyledIcon className={ classNames.join(' ') } { ...iconProps } size={size} />
 };
 
 FontAwesomeIcon.defaultProps = {
@@ -29,6 +35,7 @@ FontAwesomeIcon.defaultProps = {
     flip: false,
     scale: 1,
     library: 'fas',
+    size: '1rem',
 };
 FontAwesomeIcon.propTypes = {
     icon: PropTypes.string.isRequired,

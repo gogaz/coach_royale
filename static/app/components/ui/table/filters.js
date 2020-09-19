@@ -43,6 +43,9 @@ function SelectColumnFilter({
     )
 }
 
+/*
+ Unused as of September 2020 update
+
 const winRateFilterMethod = (rows, id, filterValue) => {
     if (filterValue === "all")
         return rows;
@@ -53,24 +56,9 @@ const winRateFilterMethod = (rows, id, filterValue) => {
     return rows.filter(row => row.values[id] >= 50);
 };
 winRateFilterMethod.autoRemove = val => !val
-
-const WinRateColumnFilter = ({ column: { filterValue, setFilter }, }) => {
-    return (
-        <select
-            onChange={ e => setFilter(e.target.value) }
-            value={ filterValue }
-        >
-            <option value="">All</option>
-            <option value="grey">No battles</option>
-            <option value="green">&gt;= 50%</option>
-            <option value="red">&lt; 50%</option>
-        </select>
-    )
-}
+*/
 
 export {
     DefaultColumnFilter,
     SelectColumnFilter,
-    WinRateColumnFilter,
-    winRateFilterMethod,
 }

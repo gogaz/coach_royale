@@ -83,7 +83,7 @@ const ClanDetails = ({ tag }) => {
                 <ClashRoyaleStat
                     image={ images.static('clanWarTrophy') }
                     title="Trophies"
-                    value={ data.details.trophies }
+                    value={ data.details.clan_war_trophies }
                 />
                 <ClashRoyaleStat
                     title="Members"

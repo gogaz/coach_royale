@@ -6,10 +6,7 @@ import { Body, Card, Header } from '../../ui/Card'
 
 const PlayerWarResultsChart = ({ theme, height, title, cardHeader, data }) => {
     const width = window.innerWidth;
-    let mobile = false;
-    if (width <= 768) {
-        mobile = true;
-    }
+    let mobile = width <= 768;
     return (
         <Card>
             { cardHeader && <Header>{ cardHeader }</Header> }

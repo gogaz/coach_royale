@@ -21,6 +21,12 @@ class APIConsumer:
         self.verbose = options.pop('verbose', True)
         self._update_current_time()
 
+    def get_datetime(self, datetime):
+        return timezone.make_aware(
+            self.client.get_datetime(datetime, unix=False),
+            timezone=timezone.timezone.utc
+        )
+
     def _update_current_time(self):
         """
         We may consume several API endpoints before actually saving a record in database, since we want to ignore this

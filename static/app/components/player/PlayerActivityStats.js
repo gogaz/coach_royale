@@ -10,7 +10,6 @@ import PlayerWarResultCell from 'components/clan/cells/PlayerWarResultCell'
 
 import PlayerDiffStatsChart from './charts/PlayerDiffStatsChart'
 import PlayerRecentBattlesResultsChart from './charts/PlayerRecentBattlesResultsChart'
-import PlayerWarResultsChart from './charts/PlayerWarResultsChart'
 
 const PlayerActivityStats = ({ endpoint, theme }) => {
     const columns = React.useMemo(() => [
@@ -26,7 +25,7 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
             }
         },
         {
-            Header: "Result",
+            Header: "Fame",
             id: "result",
             Cell: ({ row }) => <PlayerWarResultCell war={row.original}/>,
         }
@@ -51,7 +50,6 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
 
     return (
         <Grid columns={{ sm: 1, md: 2 }} style={{ padding: '1.25rem' }} gap="20px">
-            <PlayerWarResultsChart data={warStats} title="Player wars"/>
             <PlayerDiffStatsChart
                 data={stats.reverse()}
                 title="Trophies"

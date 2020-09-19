@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeProvider } from 'styled-components'
-import moment from 'moment'
+import moment from 'moment-shortformat'
 import "react-datepicker/dist/react-datepicker.css";
 
 import { locale } from 'helpers/browser'

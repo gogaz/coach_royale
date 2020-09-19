@@ -8,7 +8,7 @@ class ClanDetailsSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = ClanHistory
         fields = ('timestamp', 'last_refresh',
-                  'score', 'trophies',
+                  'score', 'trophies', 'clan_war_trophies',
                   'member_count',
                   'donations',
                   'region', 'region_code',
@@ -66,6 +66,9 @@ class ClanWarSerializer(HyperlinkedModelSerializer):
             'trophies',
             'total_trophies',
             'season',
+            'fame',
+            'repair_points',
+            'finish_time',
         )
 
 
@@ -83,6 +86,8 @@ class PlayerClanWarSerializer(HyperlinkedModelSerializer):
             'collections_battles',
             'collections_battles_done',
             'collections_battles_wins',
+            'fame',
+            'repair_points',
         )
 
 

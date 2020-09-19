@@ -3,30 +3,53 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { images } from 'helpers/assets';
+import { locale } from 'helpers/browser';
 
 const WarResult = styled.div`
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-end;
     justify-content: center;
     
-    & > img {
-        height: 30px;
+    &:not(:last-child) {
+      border-bottom: 1px solid ${({ theme }) => theme.colors.light};
     }
 `;
 
+const WarMetric = styled.div`
+    display: flex;
+    justify-content: center;
+
+    & > img {
+        height: 20px;
+        display: block;
+    }
+`
+
+const Metric = ({ metric, image }) => (
+    <WarMetric>
+        {Number(metric).toLocaleString(locale)}
+        {image}
+    </WarMetric>
+)
+
 const PlayerWarResultCell = ({ war }) => {
-    if (!war)
-        return <WarResult />;
+    if (!war) {
+        return <WarResult/>;
+    }
 
-    let result = [];
-    for (let i = 0; i < war.final_battles_wins; i++)
-        result = [...result, <img alt="Final battle won" src={ images.static('warWon') } key={ 'win' + i }/>];
-    for (let i = 0; i < war.final_battles_done - war.final_battles_wins; i++)
-        result = [...result, <img alt="Final battle lost" src={ images.static('warLost') } key={ 'lose' + i }/>];
-    for (let i = 0; i < war.final_battles_misses; i++)
-        result = [...result, <img alt="Final battle missed" src={ images.static('warYet') } key={ 'yet' + i }/>];
-
-    return <WarResult>{ result }</WarResult>
+    return (
+        <WarResult>
+            <Metric
+                metric={war.fame}
+                image={<img alt="Fame" src={images.static('cw-fame')} height={20}/>}
+            />
+            <Metric
+                metric={war.repair_points}
+                image={<img alt="Repair points" src={images.static('cw-repair')} height={20}/>}
+            />
+        </WarResult>
+    )
 };
 
 PlayerWarResultCell.propTypes = {

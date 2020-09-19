@@ -7,7 +7,8 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=coach_royale
+      POSTGRES_USER: "coach_royale"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
     expose:
       - "5432"
     restart: on-failure

@@ -31,19 +31,13 @@ def player_activity(request, tag):
 
         stats = ps.values('current_trophies', 'total_games', 'total_donations', 'timestamp', 'wins', 'losses', 'draws')[:30]
         wars = PlayerClanWar.objects\
-            .filter(player=player)\
-            .annotate(date=F('clan_war__date_end')) \
+            .filter(player=player, clan_war__is_river_race=True)\
+            .annotate(date=F('clan_war__date_start')) \
             .order_by('-date')
-        war_stats = wars.aggregate(
-            wins=Sum('final_battles_wins'),
-            availables=Sum(Greatest(F('final_battles_done'), Value(1))),
-            battles=Sum('final_battles_done')
-        )
 
         result = {
             "stats": stats,
             "wars": PlayerClanWarSerializer(wars, many=True).data,
-            "war_stats": war_stats,
         }
         return Response(result)
 

@@ -12,9 +12,9 @@ export const Grid = styled.div`
             return `grid-template-columns: repeat(${ columns[keys[0]] }, 1fr);`;
         return keys.map((key) => {
             return `
-                    @media (${ theme.breakpoints[key] }) {
-                        grid-template-columns: repeat(${ columns[key] }, 1fr);
-                    }
+                @media (${ theme.breakpoints[key] }) {
+                    grid-template-columns: repeat(${ columns[key] }, 1fr);
+                }
             `;
         })
     } }

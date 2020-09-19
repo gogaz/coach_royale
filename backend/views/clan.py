@@ -64,7 +64,7 @@ def clan_wars(request, tag):
     except Clan.DoesNotExist:
         return not_found_error("clan", tag)
 
-    wars = ClanWar.objects.filter(clan=clan).order_by('-date_start')[:10]
+    wars = ClanWar.objects.filter(clan=clan, is_river_race=True).order_by('-date_start')[:10]
     players = clan.get_players()
 
     wars_json = ClanWarSerializer(wars, many=True)

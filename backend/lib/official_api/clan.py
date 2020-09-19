@@ -45,8 +45,8 @@ class APIConsumer(BaseConsumer):
         self._log("Refreshing clan %s" % db_clan.tag)
         self.read_clan_stats(db_clan, clan)
         self.read_clan_members(db_clan, clan, clan_created=created)
-        self._log("Refreshing ended wars for clan %s" % db_clan.tag)
-        self.read_war_log(db_clan)
+        self._log("Refreshing river race status for clan #%s" % db_clan.tag)
+        self.read_river_race_log(db_clan)
 
     def read_clan_stats(self, db_clan, clan=None):
         """
@@ -72,6 +72,7 @@ class APIConsumer(BaseConsumer):
             score=clan.clan_score,
             trophies=clan.clan_war_trophies,
             required_trophies=clan.required_trophies,
+            clan_war_trophies=clan.clan_war_trophies,
             type=clan.type,
             description=clan.description,
             member_count=clan.members,
@@ -158,55 +159,48 @@ class APIConsumer(BaseConsumer):
                     player = Player.create_clan_history(tag, db_clan, clan_created, now=now)
                     self._log("Player #%s joined clan" % player.tag)
 
-    def read_war_log(self, db_clan):
+    def read_river_race_log(self, db_clan):
         """
         Read clan war log
         :param Clan db_clan: The clan to read war log from
         :return: None
         """
-        wars = self.client.get_clan_war_log(db_clan.tag)
+        wars = self.client.get_clan_river_race_log(db_clan.tag)
         for war in wars:
-            time = timezone.make_aware(
-                self.client.get_datetime(war.created_date, unix=False),
-                timezone=timezone.timezone.utc
-            )
+            created_time = self.get_datetime(war.created_date)
 
             db_war, created = ClanWar.objects.get_or_create(
                 clan=db_clan,
-                date_end__range=(time - timezone.timedelta(hours=12), time + timezone.timedelta(hours=12)),
-                defaults=dict(date_end=time)
+                date_start=created_time,
+                defaults=dict(date_start=created_time)
             )
 
-            # We want to process the war if it hasn't already be processed, which means it was just created, or we don't
-            #   have a start date (which is quite the same expectation) or if no players are associated with the war
-            if created or db_war.date_start is None or PlayerClanWar.objects.filter(clan_war=db_war).count() == 0:
-                db_war.participants = len(war.participants)
-                for p in war.participants:
-                    db_p, _ = Player.objects.get_or_create(tag=p.tag[1:], defaults={'name': p.name})
-                    pcw, cpcw = PlayerClanWar.objects.get_or_create(clan_war=db_war, player=db_p)
-                    if cpcw:
-                        pcw.final_battles = p.number_of_battles
-                        pcw.final_battles_done = p.battles_played
-                        pcw.final_battles_wins = p.wins
-                        pcw.final_battles_misses = p.number_of_battles - p.battles_played
-                        pcw.collections_cards_earned = p.cards_earned
-                        pcw.collections_battles_done = p.collection_day_battles_played
-                        pcw.save()
+            if not created and db_war.date_end is not None:
+                break
 
-                position = 0
-                while war.standings[position].clan.tag[1:] != db_clan.tag:
-                    position += 1
-                war_results = war.standings[position].clan
+            position = 0
+            while war.standings[position].clan.tag[1:] != db_clan.tag:
+                position += 1
+            war_infos = war.standings[position]
+            war_results = war_infos.clan
+            for p in war_results.participants:
+                db_p, _ = Player.objects.get_or_create(tag=p.tag[1:], defaults={'name': p.name})
+                pcw, cpcw = PlayerClanWar.objects.get_or_create(clan_war=db_war, player=db_p)
+                if cpcw:
+                    pcw.fame = p.fame
+                    pcw.repair_points = p.repair_points
+                    pcw.save()
 
-                db_war.final_position = position + 1
-                db_war.total_trophies = war_results.clan_score
-                db_war.crowns = war_results.crowns
-                db_war.wins = war_results.wins
-                db_war.final_battles = war_results.battles_played
-                db_war.losses = war_results.battles_played - war_results.wins
-                db_war.season = war.season_id
-                db_war.date_start = db_war.date_end - timezone.timedelta(days=2)
-                db_war.save()
+            db_war.is_river_race = True
+
+            db_war.final_position = position + 1
+            db_war.total_trophies = war_results.clan_score
+            db_war.season = war.season_id
+            db_war.date_end = self.get_datetime(war_results.finish_time)
+            db_war.fame = war_results.fame
+            db_war.repair_points = war_results.repair_points
+            db_war.participants = len(war_results.participants)
+            db_war.save()
 
     def read_score_clan_ranks(self, db_clan, clan_stats=None):
         """

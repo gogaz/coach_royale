@@ -4,7 +4,6 @@ import { useFilters, usePagination, useTable, useSortBy } from 'react-table'
 import styled, { withTheme } from 'styled-components'
 
 import FontAwesomeIcon from 'components/ui/FontAwesome'
-import { winRateFilterMethod } from './filters'
 import Pagination from './Pagination'
 
 const StyledTable = styled.table`
@@ -179,9 +178,11 @@ Table.propTypes = {
 }
 
 Table.defaultProps = {
+    /*
     filterTypes: {
-        winRate: winRateFilterMethod,
+        fame: fameFilterMethod,
     },
+    */
     showPagination: false,
     disableFilters: false,
     pageSize: 10,

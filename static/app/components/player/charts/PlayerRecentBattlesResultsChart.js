@@ -5,11 +5,9 @@ import { Bar } from 'react-chartjs-2'
 
 import { Card, Header as CardHeader, Body as CardBody } from '../../ui/Card'
 
-const PlayerRecentBattlesResultsChart = ({ theme, data, height, datasets, title, cardHeader }) => {
+const PlayerRecentBattlesResultsChart = ({ data, height, datasets, title, cardHeader }) => {
     const width = window.innerWidth;
-    let mobile = false;
-    if (width <= 768)
-        mobile = true;
+    let mobile = width <= 768;
 
     const labels = data.reduce((result, elem, i) => {
         if (i > 0) result.push(moment(elem.timestamp).short());
@@ -17,7 +15,7 @@ const PlayerRecentBattlesResultsChart = ({ theme, data, height, datasets, title,
     }, []);
 
     const chartData = (field) => {
-        data.reduce((result, elem, i, data) => {
+        data.reduce((result, elem, i) => {
             if (i > 0) {
                 if (isNaN(elem[field])) {
                     result.push(elem[field]);
@@ -34,7 +32,7 @@ const PlayerRecentBattlesResultsChart = ({ theme, data, height, datasets, title,
         <Card>
             { cardHeader && <CardHeader>{ cardHeader }</CardHeader> }
             <CardBody>
-                <Bar height={ height + (mobile ? 80 : 0) }
+                <Bar height={ height + (mobile ? height * (2 / 3) : 0) }
                      data={ {
                          datasets: datasets.map(e => {
                              return { ...e, data: chartData(e.id) }

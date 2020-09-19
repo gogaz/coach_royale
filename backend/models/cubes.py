@@ -11,7 +11,9 @@ class PlayerCube(models.Model):
                 SUM(final_battles_wins) AS final_battles_won,
                 SUM(final_battles_done) - SUM(final_battles_wins) AS final_battles_lost,
                 SUM(final_battles_done) AS final_battles_done,
-                SUM(final_battles_misses) + SUM(final_battles_done) AS total_final_battles_available
+                SUM(final_battles_misses) + SUM(final_battles_done) AS total_final_battles_available,
+                SUM(fame) AS total_fame,
+                SUM(repair_points) AS total_repair_points
             FROM backend_playerclanwar
             -- We are interested in all recorded wars from the player because this app is supposed to manage one clan or
             --   a family of clans and not to continue tracking a player that exited a tracked clan
@@ -54,7 +56,9 @@ class PlayerCube(models.Model):
             COALESCE(player_war_metrics.final_battles_won, 0) AS final_battles_won,
             COALESCE(final_battles_missed::FLOAT * 100 / total_final_battles_available, 0) AS missed_ratio,
             COALESCE(final_battles_won::FLOAT * 100 / total_final_battles_available, 0) AS won_ratio,
-            COALESCE(final_battles_lost::FLOAT * 100 / total_final_battles_available, 0) AS lost_ratio
+            COALESCE(final_battles_lost::FLOAT * 100 / total_final_battles_available, 0) AS lost_ratio,
+            COALESCE(total_fame, 0) as total_fame,
+            COALESCE(total_repair_points, 0) as total_repair_points
         FROM backend_player
         INNER JOIN (
             SELECT player_id, MAX(id) AS max_id
@@ -160,3 +164,5 @@ class PlayerCube(models.Model):
     missed_ratio = models.FloatField()
     won_ratio = models.FloatField()
     lost_ratio = models.FloatField()
+    total_fame = models.IntegerField()
+    total_repair_points = models.IntegerField

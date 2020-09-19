@@ -1,18 +1,19 @@
-import React  from 'react';
+import React from 'react';
 import moment from 'moment'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
-import { images } from 'helpers/assets'
-import { CLAN_ROLES } from 'helpers/constants'
-import { locale } from 'helpers/browser'
-import { useAutoFetch } from 'hooks/useAxios'
+import {images} from 'helpers/assets'
+import {CLAN_ROLES} from 'helpers/constants'
+import {locale} from 'helpers/browser'
+import {useAutoFetch} from 'hooks/useAxios'
 
 import Loading from 'components/ui/Loading'
 import Table from 'components/ui/table/Table'
-import { SelectColumnFilter, WinRateColumnFilter } from 'components/ui/table/filters'
+import {SelectColumnFilter, FameColumnFilter} from 'components/ui/table/filters'
 import PlayerWarResultCell from 'components/clan/cells/PlayerWarResultCell'
 import TrophiesCell from 'components/clan/cells/TrophiesCell'
+import FontAwesomeIcon from "../../ui/FontAwesome";
 
 const Indicator = styled.div`
     position: absolute;
@@ -20,28 +21,57 @@ const Indicator = styled.div`
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: ${ ({ color }) => (!!color ?
-        `rgba(${ color.r }, ${ color.g }, ${ color.b }, 1)`
+    background-color: ${({color}) => (!!color ?
+        `rgba(${color.r}, ${color.g}, ${color.b}, 1)`
         : 'transparent'
-    ) };
+)};
     text-align: right;
-    padding: 10px 5px 10px 5px;
+    padding: 10px 5px;
     font-size: .9rem;
 `;
 
 const EmptyIndicator = styled(Indicator)`
     background-color: rgb(242, 246, 249);
-    box-shadow: inset 0 0 10px ${ ({ theme }) => theme.colors.lightGray };
+    box-shadow: inset 0 0 10px ${({theme}) => theme.colors.lightGray};
 `;
+
+const WarHeaderCell = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
+const WarHeader = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+`
+
+const getIndicatorColor = (percentage) => {
+    if (percentage < 50) {
+        return {
+            r: 230 + percentage / 5,
+            g: 100 + 2.5 * percentage,
+            b: 105 + 2.5 * percentage
+        };
+    }
+    if (percentage > 50) {
+        return {
+            r: 250 - 2.5 * (percentage - 50),
+            g: 230 + (100 - percentage) / 3,
+            b: 255 - 2.5 * (percentage - 50)
+        };
+    }
+    return {r: 255, g: 255, b: 255};
+}
 
 const BASE_COLUMNS = [
     {
-        Header: <img alt="Trophies" src={ images.static('trophy') } height={ 20 }/>,
+        Header: <img alt="Trophies" src={images.static('trophy')} height={20}/>,
         id: 'trophies',
         accessor: (data) => data.details.trophies.toLocaleString(),
         width: 80,
-        Cell: ({ row }) => (
-            <TrophiesCell trophies={ row.original.details.trophies } arena={ row.original.details.arena }/>
+        Cell: ({row}) => (
+            <TrophiesCell trophies={row.original.details.trophies} arena={row.original.details.arena}/>
         ),
         filterable: false,
     },
@@ -49,96 +79,114 @@ const BASE_COLUMNS = [
         Header: 'Name',
         id: 'name',
         accessor: 'name',
-        Cell: ({ row }) => {
-            return <Link to={ "/player/" + row.original.tag }>{ row.values.name }</Link>
+        Cell: ({row}) => {
+            return <Link to={"/player/" + row.original.tag}>{row.values.name}</Link>
         }
     },
     {
         Header: 'Role',
         id: 'role',
         accessor: (data) => data.details.clan_role,
-        Cell: ({ row }) => {
+        Cell: ({row}) => {
             return CLAN_ROLES[row.values.role]
         },
         width: 85,
         Filter: SelectColumnFilter
     },
     {
-        Header: 'Win %',
-        id: 'winrate',
+        Header: <img alt="Fame" src={images.static('cw-fame')} height={20}/>,
+        id: 'fame',
         width: 90,
         accessor: (data) => {
-            const wins = data.wars.reduce((acc, elem) => acc + elem.final_battles_wins, 0);
-            const battles = data.wars.reduce((acc, elem) => acc + elem.final_battles_done, 0);
-            return battles > 0 ? (wins / battles) * 100 : -1;
+            return data.wars.reduce((acc, elem) => acc + elem.fame, 0);
         },
-        Cell: ({ row }) => {
-            if (row.values.winrate < 0) {
-                return <EmptyIndicator/>;
-            }
-            let color = { r: 255, g: 255, b: 255 };
-            if (row.values.winrate < 50 && row.values.winrate !== null)
-                color = {
-                    r: 230 + row.values.winrate / 5,
-                    g: 100 + 2.5 * row.values.winrate,
-                    b: 105 + 2.5 * row.values.winrate
-                };
-            if (row.values.winrate > 50)
-                color = {
-                    r: 250 - 2.5 * (row.values.winrate - 50),
-                    g: 230 + (100 - row.values.winrate) / 3,
-                    b: 255 - 2.5 * (row.values.winrate - 50)
-                };
+        Cell: ({row, rows}) => {
+            const maxFame = rows.reduce((acc, e) => e.values.fame > acc ? e.values.fame : acc, 0)
+            const fameRate = maxFame > 0 ? row.values.fame / maxFame * 100 : 0
             return (
-                <Indicator color={ color }>
-                    { row.values.winrate !== null &&
-                    Number(row.values.winrate).toLocaleString(locale, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    })
-                    + '%'
-                    }
+                <Indicator color={getIndicatorColor(fameRate)}>
+                    {row.values.fame.toLocaleString(locale)}
                 </Indicator>
             )
         },
-        filter: 'winRate',
-        Filter: WinRateColumnFilter
+        filterable: false,
     },
     {
-        Header: <img alt="Battles" src={ images.static('battle') } height={ 20 }/>,
-        id: 'count',
+        Header: <img alt="Repair points" src={images.static('cw-repair')} height={20}/>,
+        id: 'repair_points',
         width: 40,
         filterable: false,
-        accessor: (data) => data.wars.reduce((acc, elem) => acc + elem.final_battles_done, 0),
+        accessor: (data) => data.wars.reduce((acc, elem) => acc + elem.repair_points, 0),
+        Cell: ({row, rows}) => {
+            const maxRepairPts = rows.reduce((acc, e) => e.values.repair_points > acc ? e.values.repair_points : acc, 0)
+            const repairRate = maxRepairPts > 0 ? row.values.repair_points / maxRepairPts * 100 : 0
+            return (
+                <Indicator color={getIndicatorColor(repairRate)}>
+                    {row.values.repair_points.toLocaleString(locale)}
+                </Indicator>
+            )
+        },
     },
     {
-        Header: <img alt="Battles missed" src={ images.static('warYet') } height={ 20 }/>,
-        id: 'count_missing',
+        Header: "Total",
+        id: 'total_contribution',
         width: 40,
         filterable: false,
-        accessor: (data) => data.wars.reduce((acc, elem) => acc + elem.final_battles_misses, 0),
+        accessor: (data) => data.wars.reduce((acc, e) => acc + e.fame + e.repair_points, 0),
+        Cell: ({row, rows}) => {
+            const maxTotalPoints = rows.reduce((acc, e) => e.values.total_contribution > acc ? e.values.total_contribution : acc, 0)
+            const totalPointsRatio = maxTotalPoints > 0 ? row.values.total_contribution / maxTotalPoints * 100 : 0
+            return (
+                <Indicator color={getIndicatorColor(totalPointsRatio)}>
+                    {row.values.total_contribution.toLocaleString(locale)}
+                </Indicator>
+            )
+        },
     }
 ];
 
-const ClanWarMembers = ({ endpoint }) => {
-    const { response: data, loading } = useAutoFetch(endpoint + '/wars', {});
-    const { wars, members } = data;
+const ClanWarMembers = ({endpoint}) => {
+    const {response: data, loading} = useAutoFetch(endpoint + '/wars', {});
+    const {wars, members} = data;
     const columns = React.useMemo(() => {
         if (!wars)
             return [];
         return [...BASE_COLUMNS, ...wars.map(e => {
-            const date = moment(e.date_start).format('DD/MM');
+            const dateStart = moment(e.date_start).short();
+            const dateEnd = moment(e.date_end).short();
+            let th = 'th';
+            if (e.final_position === 1) th = 'st';
+            if (e.final_position === 2) th = 'nd';
+            if (e.final_position === 3) th = 'rd';
             return {
-                Header: date,
+                Header: () => (
+                    <WarHeaderCell>
+                        <WarHeader>
+                            <b>{dateStart}</b>
+                            <FontAwesomeIcon icon="arrow-left" size="14px"/>
+                            <b>{dateEnd}</b>
+                        </WarHeader>
+                        <WarHeader>
+                            <small className="text-muted">
+                                {e.final_position}
+                                <span style={{verticalAlign: 'super'}}>{th}</span>
+                            </small>
+                        </WarHeader>
+                    </WarHeaderCell>
+                ),
                 id: 'war' + e.id,
                 width: 65,
                 accessor: (data) => {
-                    return data.wars.find(value => value.clan_war_id === e.id);
+                    const war = data.wars.find(value => value.clan_war_id === e.id);
+                    return war ? war.fame + war.repair_points : null;
                 },
-                Cell: ({ row }) => (
-                    <PlayerWarResultCell war={ row.values['war' + e.id] }/>
-                ),
-                disableSortBy: true,
+                Cell: ({row}) => {
+                    const war = row.original.wars.find(value => value.clan_war_id === e.id);
+                    if (!war) return <EmptyIndicator />
+                    return (
+                        <PlayerWarResultCell war={war} />
+                    )
+                },
                 filterable: false,
             };
         })]
@@ -150,14 +198,12 @@ const ClanWarMembers = ({ endpoint }) => {
     if (!wars || !wars.length)
         return null;
 
-    const endDate = wars.reduce((acc, e) => e.date_start, 0);
-
     return (
         <Table
-            data={ members }
-            columns={ columns }
-            sortBy={ [{ id: 'trophies', desc: true }] }
-            showPagination={ false }
+            data={members}
+            columns={columns}
+            sortBy={[{id: 'trophies', desc: true}]}
+            showPagination={false}
         />
     );
 };
