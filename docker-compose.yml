@@ -36,7 +36,7 @@ services:
     restart: always
   celery:
     image: coach_royale_base
-    command: celery -A coach_royale worker -l info
+    command: celery -A coach_royale worker -l INFO
     user: nobody
     volumes:
       - .:/code
@@ -46,7 +46,7 @@ services:
   celery-beat:
     image: coach_royale_base
     command: >
-      sh -c "rm -f /code/celerybeat.pid && celery -A coach_royale beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+      sh -c "rm -f /code/celerybeat.pid && celery -A coach_royale beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     volumes:
       - .:/code
     depends_on:

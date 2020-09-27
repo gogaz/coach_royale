@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import moment from 'moment'
 
 import { Link } from 'react-router-dom'
@@ -46,7 +46,6 @@ const getBaseColumns = (theme) => [
         Header: "Player",
         id: 'name',
         accessor: "name",
-        width: null,
         Cell: ({ row }) => <Link to={ "/player/" + row.original.tag }>{ row.values.name }</Link>
     },
     {

@@ -10,7 +10,7 @@ import {useAutoFetch} from 'hooks/useAxios'
 
 import Loading from 'components/ui/Loading'
 import Table from 'components/ui/table/Table'
-import {SelectColumnFilter, FameColumnFilter} from 'components/ui/table/filters'
+import { SelectColumnFilter } from 'components/ui/table/filters'
 import PlayerWarResultCell from 'components/clan/cells/PlayerWarResultCell'
 import TrophiesCell from 'components/clan/cells/TrophiesCell'
 import FontAwesomeIcon from "../../ui/FontAwesome";
@@ -96,7 +96,7 @@ const BASE_COLUMNS = [
     {
         Header: <img alt="Fame" src={images.static('cw-fame')} height={20}/>,
         id: 'fame',
-        width: 90,
+        width: 40,
         accessor: (data) => {
             return data.wars.reduce((acc, elem) => acc + elem.fame, 0);
         },
@@ -105,7 +105,7 @@ const BASE_COLUMNS = [
             const fameRate = maxFame > 0 ? row.values.fame / maxFame * 100 : 0
             return (
                 <Indicator color={getIndicatorColor(fameRate)}>
-                    {row.values.fame.toLocaleString(locale)}
+                    {Number(row.values.fame).toLocaleString(locale)}
                 </Indicator>
             )
         },

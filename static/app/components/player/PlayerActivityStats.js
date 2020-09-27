@@ -17,16 +17,12 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
             Header: "War",
             id: "war",
             accessor: e => moment(e.clan_war.date_start),
-            Cell: ({ row }) => {
-                const currentDate = moment();
-                if (currentDate.format('YYYY') !== row.values.war.format('YYYY'))
-                    return row.values.war.format('L');
-                return row.values.war.format('DD/MM');
-            }
+            Cell: ({ row }) => `${moment(row.original.clan_war.date_end).short()} to ${row.values.war.short()}`,
         },
         {
-            Header: "Fame",
+            Header: "Participation",
             id: "result",
+            accessor: (data) => data.fame + data.repair_points,
             Cell: ({ row }) => <PlayerWarResultCell war={row.original}/>,
         }
     ], [])

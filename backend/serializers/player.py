@@ -18,7 +18,8 @@ class PlayerStatsSerializer(HyperlinkedModelSerializer):
     highest_arena = SerializerMethodField()
 
     def get_highest_arena(self, obj: PlayerStatsHistory):
-        return Arena.from_trophies(obj.highest_trophies).arena
+        arena = Arena.from_trophies(obj.highest_trophies)
+        return None if arena is None else arena.arena
 
     class Meta:
         model = PlayerStatsHistory
@@ -125,4 +126,6 @@ class PlayerClanWarSerializer(HyperlinkedModelSerializer):
             'collections_battles',
             'collections_battles_done',
             'collections_battles_wins',
+            'fame',
+            'repair_points',
         )
