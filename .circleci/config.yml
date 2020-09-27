@@ -22,7 +22,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-            mv coach_royale/settings.example.py coach_royale/settings.py
+            mv coach_royale/settings.circleci.py coach_royale/settings.py
             yarn install
       - save_cache:
           key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
