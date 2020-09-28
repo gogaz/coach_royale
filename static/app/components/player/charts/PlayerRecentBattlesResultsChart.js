@@ -5,6 +5,10 @@ import { Bar } from 'react-chartjs-2'
 
 import { Card, Header as CardHeader, Body as CardBody } from '../../ui/Card'
 
+// For a given dataset, we make the diff of each data point with the previous value to get the number of battles done
+//   during the 2 snapshots.
+// The data is a list of player histories (PlayerStatsHistory or whichever) returned by the backend. The datasets
+//   are a list of objects that must at least contain an id an a label and the id must be an attribute of the given model values.
 const PlayerRecentBattlesResultsChart = ({ data, height, datasets, title, cardHeader }) => {
     const width = window.innerWidth;
     let mobile = width <= 768;
@@ -14,19 +18,19 @@ const PlayerRecentBattlesResultsChart = ({ data, height, datasets, title, cardHe
         return result;
     }, []);
 
-    const chartData = (field) => {
-        data.reduce((result, elem, i) => {
+    const chartData = (field) => (
+        data.reduce((result, elem, i, data) => {
             if (i > 0) {
                 if (isNaN(elem[field])) {
-                    result.push(elem[field]);
+                    return result;
                 } else {
                     const diff = Number(elem[field]) - Number(data[i - 1][field]);
                     result.push(diff)
                 }
             }
             return result;
-        }, []);
-    };
+        }, [])
+    );
 
     return (
         <Card>

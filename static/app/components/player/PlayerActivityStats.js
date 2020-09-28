@@ -34,7 +34,7 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
     if (!data)
         return null;
 
-    const { stats, wars, war_stats: warStats } = data;
+    const { stats, wars } = data;
     const WarsTable = () => (
         <Table
             data={wars}
