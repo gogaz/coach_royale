@@ -103,7 +103,7 @@ class APIConsumer(BaseConsumer):
         Read all clan members and their stats
         :param Clan db_clan: the clan to read members from
         :param Box clan: data to be read
-        :param clan_created: wether the clan was just created or not
+        :param clan_created: whether the clan was just created or not
         :return: None
         """
         if clan is None:
@@ -119,7 +119,10 @@ class APIConsumer(BaseConsumer):
                 db_player.save()
 
             read_players.append(db_player.tag)
-            last_seen = timezone.make_aware(self.client.get_datetime(player.last_seen, unix=False), timezone=timezone.utc)
+            last_seen = timezone.make_aware(
+                self.client.get_datetime(player.last_seen, unix=False),
+                timezone=timezone.utc
+            )
             history_args = {
                 "clan": db_clan,
                 "player": db_player,
@@ -183,6 +186,7 @@ class APIConsumer(BaseConsumer):
                 position += 1
             war_infos = war.standings[position]
             war_results = war_infos.clan
+
             for p in war_results.participants:
                 db_p, _ = Player.objects.get_or_create(tag=p.tag[1:], defaults={'name': p.name})
                 pcw, cpcw = PlayerClanWar.objects.get_or_create(clan_war=db_war, player=db_p)
@@ -200,6 +204,7 @@ class APIConsumer(BaseConsumer):
             db_war.fame = war_results.fame
             db_war.repair_points = war_results.repair_points
             db_war.participants = len(war_results.participants)
+            db_war.competitors_count = len(war.standings)
             db_war.save()
 
     def read_score_clan_ranks(self, db_clan, clan_stats=None):

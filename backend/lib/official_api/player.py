@@ -208,6 +208,7 @@ class APIConsumer(BaseConsumer):
                 mode = BattleMode.objects.get(name="War%s" % b.game_mode.name)
             except BattleMode.DoesNotExist:
                 mode = BattleMode(name="War%s" % b.game_mode.name)
+                mode.type = b.type
                 mode.collection_day = True
                 mode.card_levels = "Tournament"
                 mode.same_deck = False

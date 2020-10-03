@@ -35,7 +35,6 @@ const StyledTable = styled.table`
             
             & > td {
                 padding: 5px 7px;
-                vertical-align: middle;
             }
         }
     }    
@@ -66,7 +65,8 @@ const Table = ({
     pageSize,
     sortBy,
     showPagination,
-    filterTypes
+    filterTypes,
+    rowStyle,
 }) => {
     const {
         getTableProps,
@@ -129,7 +129,7 @@ const Table = ({
                 {page.map(row => {
                     prepareRow(row);
                     return (
-                        <tr {...row.getRowProps()}>
+                        <tr {...row.getRowProps()} style={rowStyle}>
                             {row.cells.map(cell => {
                                 let cellProps = { ...cell.getCellProps() };
                                 if (cell.column.cellProps)
@@ -174,7 +174,8 @@ Table.propTypes = {
     sortBy: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         desc: PropTypes.bool,
-    }))
+    })),
+    rowStyle: PropTypes.object,
 }
 
 Table.defaultProps = {
@@ -187,6 +188,7 @@ Table.defaultProps = {
     disableFilters: false,
     pageSize: 10,
     sortBy: [],
+    rowStyle: {}
 }
 
 export default withTheme(Table);

@@ -244,6 +244,10 @@ class Player(BaseModel):
             return None
 
     @classmethod
+    def find(cls, tag):
+        return cls.objects.get(tag=tag)
+
+    @classmethod
     def create_clan_history(cls, tag, new_clan, clan_created, now=None):
         if now is None:
             now = timezone.now()
@@ -296,9 +300,13 @@ class Clan(BaseModel):
             return self.get_current_players()
 
         return Player.objects.filter(
+            # Player left after given date OR
             Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__gte=date) |
+            # Player never joined (i.e. before the clan was tracked) and never left OR
             Q(playerclanhistory__joined_clan__isnull=True, playerclanhistory__left_clan__isnull=True) |
+            # Player arrived before given date and left after OR
             Q(playerclanhistory__joined_clan__lt=date, playerclanhistory__left_clan__gte=date) |
+            # Player arrived before given date and did not left
             Q(playerclanhistory__joined_clan__lt=date, playerclanhistory__left_clan__isnull=True),
             playerclanhistory__clan=self
         )
@@ -389,6 +397,7 @@ class ClanHistory(HistoryModel):
 
 class BattleMode(BaseModel):
     name = models.CharField(max_length=64)
+    type = models.CharField(max_length=128, null=True)
     card_levels = models.CharField(max_length=64)
     overtime = models.IntegerField(null=True)
     same_deck = models.BooleanField(default=False)
@@ -423,7 +432,7 @@ class Battle(BaseModel):
         # if a war was given and is valid for our time, let's just return it
         if war and war.is_battle_during_collection_day(self):
             return war
-        # search for matching war within last 24 hours
+
         try:
             return ClanWar.objects.get(
                 clan=clan,
@@ -468,6 +477,7 @@ class ClanWar(BaseModel):
     repair_points = models.IntegerField(default=0)
     finish_time = models.IntegerField(null=True)
     is_river_race = models.BooleanField(default=False)
+    competitors_count = models.IntegerField(default=5)
 
     def __str__(self):
         return "Clan {} started war on {} (#{})".format(self.clan, self.date_start.strftime("%Y-%m-%d"), self.final_position)

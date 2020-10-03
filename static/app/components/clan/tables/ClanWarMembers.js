@@ -127,22 +127,6 @@ const BASE_COLUMNS = [
             )
         },
     },
-    {
-        Header: "Total",
-        id: 'total_contribution',
-        width: 40,
-        filterable: false,
-        accessor: (data) => data.wars.reduce((acc, e) => acc + e.fame + e.repair_points, 0),
-        Cell: ({row, rows}) => {
-            const maxTotalPoints = rows.reduce((acc, e) => e.values.total_contribution > acc ? e.values.total_contribution : acc, 0)
-            const totalPointsRatio = maxTotalPoints > 0 ? row.values.total_contribution / maxTotalPoints * 100 : 0
-            return (
-                <Indicator color={getIndicatorColor(totalPointsRatio)}>
-                    {row.values.total_contribution.toLocaleString(locale)}
-                </Indicator>
-            )
-        },
-    }
 ];
 
 const ClanWarMembers = ({endpoint}) => {
@@ -178,7 +162,7 @@ const ClanWarMembers = ({endpoint}) => {
                 width: 65,
                 accessor: (data) => {
                     const war = data.wars.find(value => value.clan_war_id === e.id);
-                    return war ? war.fame + war.repair_points : null;
+                    return war ? war.fame : null;
                 },
                 Cell: ({row}) => {
                     const war = row.original.wars.find(value => value.clan_war_id === e.id);
@@ -204,6 +188,7 @@ const ClanWarMembers = ({endpoint}) => {
             columns={columns}
             sortBy={[{id: 'trophies', desc: true}]}
             showPagination={false}
+            rowStyle={{ height: '50px' }}
         />
     );
 };
