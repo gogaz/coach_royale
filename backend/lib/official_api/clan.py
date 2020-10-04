@@ -201,6 +201,7 @@ class APIConsumer(BaseConsumer):
             db_war.total_trophies = war_results.clan_score
             db_war.season = war.season_id
             db_war.date_end = self.get_datetime(war_results.finish_time)
+            db_war.finish_time = created_time + timezone.timedelta(days=7)
             db_war.fame = war_results.fame
             db_war.repair_points = war_results.repair_points
             db_war.participants = len(war_results.participants)

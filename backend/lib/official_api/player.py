@@ -1,5 +1,3 @@
-from django.utils import timezone
-
 from backend.models import (
     Player,
     Clan,
@@ -178,30 +176,26 @@ class APIConsumer(BaseConsumer):
     def _get_ordered_battles(self, db_player):
         return sorted(self.client.get_player_battles(db_player.tag), key=lambda x: x.battle_time)
 
-    def _get_battle_time(self, battle):
-        return timezone.make_aware(self.client.get_datetime(battle.battle_time, unix=False), timezone=timezone.utc)
-
     def read_player_war_battles(self, db_player):
         """
         Read war battles for a given player - other battles are ignored
         :param Player db_player:
         :return: None
         """
-        battles = self.client.get_player_battles(db_player.tag)
         latest_battle = self._get_last_from_database(Battle, False, team__id__exact=db_player.id)
 
         war_battles = []
-        for b in sorted(battles, key=lambda x: x.battle_time):
-            time = self._get_battle_time(b)
+        for b in self._get_ordered_battles(db_player):
+            time = self.get_datetime(b.battle_time)
+            # Skip all battles already in database
             if latest_battle and time <= latest_battle.time:
                 break
-            else:
-                # We only care about war battles, not all battles
-                if b.type.startswith("clanWar"):
-                    war_battles.append(b)
+            # We only care about war battles, not all battles
+            if b.type.startswith("clanWar"):
+                war_battles.append(b)
 
         for b in war_battles:
-            time = self._get_battle_time(b)
+            time = self.get_datetime(b.battle_time)
             db_battle = Battle(time=time)
 
             try:
@@ -209,9 +203,8 @@ class APIConsumer(BaseConsumer):
             except BattleMode.DoesNotExist:
                 mode = BattleMode(name="War%s" % b.game_mode.name)
                 mode.type = b.type
-                mode.collection_day = True
-                mode.card_levels = "Tournament"
-                mode.same_deck = False
+                mode.war_day = True
+                mode.card_levels = b.deck_selection
                 mode.save()
 
             db_battle.mode = mode
@@ -223,19 +216,4 @@ class APIConsumer(BaseConsumer):
             win = db_battle.team_crowns > db_battle.opponent_crowns
             db_battle.win = win
             db_battle.save()
-
-            if mode.war_day:
-                team_decks = store_battle_players(db_player, db_battle.team, b.team)
-                for card in team_decks[0]:
-                    db_battle.player_deck.add(card)
-                for card in team_decks[1]:
-                    db_battle.team_deck.add(card)
-
-                opponent_decks = store_battle_players(db_player, db_battle.team, b.opponent)
-                for card in opponent_decks[0]:
-                    db_battle.opponent_deck.add(card)
-                for card in opponent_decks[1]:
-                    db_battle.opponent_team_deck.add(card)
-            else:
-                store_battle_players(db_player, db_battle.team, b.team, False)
-                store_battle_players(db_player, db_battle.opponent, b.opponent, False)
+            db_battle.team.add(db_player)

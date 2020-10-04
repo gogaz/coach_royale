@@ -330,37 +330,13 @@ class Clan(BaseModel):
         )
 
     def associate_war_battles(self):
-        war_col_battles = self.get_players_battles().filter(war__isnull=True, mode__collection_day=True).order_by('time')
-        # We keep the war we find for each battle to try to associate it to the next battle, if it does not match,
-        #   we will hopefully get another war and continue onwards
-        war = None
-        for battle in war_col_battles:
-            war = battle.get_war_for_collection_day(war)
-            if war is None:
-                continue
-            battle.war = war
-            battle.save()
-
-        war_final_battles = self.get_players_battles().filter(war__isnull=True, mode__war_day=True).order_by('time')
-        war = None
-        for battle in war_final_battles:
-            war = battle.get_war_for_final_day(self, war)
-            if war is None:
-                continue
-            battle.war = war
-            battle.save()
-
-        orphan_battles = Battle.objects.filter(war__isnull=True).order_by('time')
-        for b in orphan_battles.select_related('mode'):
-            for p in b.team.all():
-                clan = p.get_clan(b.time)
-                if clan:
-                    war = b.get_war_for_collection_day(clan)
-                    if war is None:
-                        continue
-                    b.war = war
-                    b.save()
-                    break
+        """
+        Tries to associates all player battles with a war
+        :return:
+        """
+        orphan_battles = self.get_players_battles().filter(war__isnull=True, mode__war_day=True, war_processing_status='pending')
+        for battle in orphan_battles:
+            battle.process_war(self)
 
 
 class ClanHistory(HistoryModel):
@@ -409,6 +385,12 @@ class BattleMode(BaseModel):
 
 
 class Battle(BaseModel):
+    WAR_PROCESSING_STATUS_CHOICES = [
+        ('pending', 'pending'),
+        ('processed', 'processed'),
+        ('failure', 'failure')
+    ]
+
     mode = models.ForeignKey(BattleMode, related_name='mode', on_delete=models.CASCADE)
     arena = models.CharField(max_length=64)
     time = models.DateTimeField(null=True)
@@ -427,10 +409,17 @@ class Battle(BaseModel):
     opponent_team_deck_link = models.CharField(max_length=128, null=True)
     war = models.ForeignKey('ClanWar', null=True, on_delete=models.SET_NULL)
     win = models.BooleanField(default=False)
+    war_processing_status = models.CharField(max_length=64, choices=WAR_PROCESSING_STATUS_CHOICES, default='pending')
 
-    def get_war_for_collection_day(self, clan, war=None):
-        # if a war was given and is valid for our time, let's just return it
-        if war and war.is_battle_during_collection_day(self):
+    def get_matching_war(self, clan, war=None):
+        """
+        Resolves a war matching battle dates and given clan, None otherwise
+        :param Clan clan: to discriminate wars
+        :param ClanWar war: an optional war for caching and avoid un-necessary requests
+        :return:
+        """
+
+        if war and war.date_start <= self.time <= war.date_end:
             return war
 
         try:
@@ -444,18 +433,17 @@ class Battle(BaseModel):
         except ClanWar.MultipleObjectsReturned:
             return None
 
-    def get_war_for_final_day(self, clan, war=None):
-        if war and war.is_battle_during_collection_day(self):
-            return war
-        # search for matching war within last 48 hours
-        try:
-            return ClanWar.objects.get(
-                clan=clan,
-                date_start__lte=self.time,
-                date_end__gte=self.time
-            )
-        except ClanWar.DoesNotExist:
-            return None
+    def process_war(self, clan=None):
+        war = self.get_matching_war(clan)
+        if war is None:
+            if timezone.now() - self.time > timezone.timedelta(days=8):
+                self.war_processing_status = 'failure'
+                self.save()
+                return
+
+        self.war = war
+        self.war_processing_status = 'processed'
+        self.save()
 
 
 class ClanWar(BaseModel):
