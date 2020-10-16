@@ -9,10 +9,10 @@ import {
     getByAltText,
     getAllByRole,
     queryByText,
-} from '../test-utils'
+} from './test-utils'
 import "@testing-library/jest-dom/extend-expect"
 
-import { CLAN_ROLES } from 'helpers/constants'
+import { CLAN_ROLES } from 'static/app/helpers/constants'
 
 const clanMembers = [
     {

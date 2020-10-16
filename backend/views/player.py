@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from backend.models import Player, PlayerStatsHistory, PlayerClanWar
-from backend.serializers.player import PlayerSerializer, PlayerClanWarSerializer
+from backend.serializers.player import PlayerSerializer, PlayerClanWarSerializer, PlayerStatsHistorySerializer
 
 
 @api_view(['GET'])
@@ -42,3 +42,21 @@ def player_activity(request, tag):
 
     if request.method == "POST":
         pass  # TODO: handle custom periods
+
+
+@api_view(['GET'])
+def player_stats_per_day(request, tag):
+    stat_ids = PlayerStatsHistory.objects.raw("""
+        SELECT DISTINCT ON (timestamp::DATE)
+            backend_playerstatshistory.id
+        FROM backend_playerstatshistory
+        INNER JOIN backend_player ON backend_playerstatshistory.player_id = backend_player.id
+        WHERE backend_player.tag = '{0}'
+        ORDER BY timestamp::DATE, timestamp
+        LIMIT 15
+    """.format(tag))
+
+    return Response(PlayerStatsHistorySerializer(
+        PlayerStatsHistory.objects.filter(id__in=[x.id for x in stat_ids]),
+        many=True
+    ).data)

@@ -61,25 +61,8 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
             <WarsTable/>
 
             <PlayerRecentBattlesResultsChart
-                data={stats}
+                endpoint={endpoint}
                 title="Player battles"
-                datasets={[
-                    {
-                        label: "Draws + 2v2",
-                        id: "draws",
-                        backgroundColor: theme.colors.blue,
-                    },
-                    {
-                        label: "Losses",
-                        id: "losses",
-                        backgroundColor: theme.colors.orange,
-                    },
-                    {
-                        label: "Wins",
-                        id: "wins",
-                        backgroundColor: theme.colors.green,
-                    },
-                ]}
             />
         </Grid>
     );

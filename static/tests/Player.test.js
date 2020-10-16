@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getByText, render, waitFor } from '../test-utils'
+import { getByText, render, waitFor } from './test-utils'
 import "@testing-library/jest-dom/extend-expect"
 
 const playerWars = [

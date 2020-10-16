@@ -463,7 +463,7 @@ class ClanWar(BaseModel):
     season = models.IntegerField(null=True)
     fame = models.IntegerField(default=0)
     repair_points = models.IntegerField(default=0)
-    finish_time = models.IntegerField(null=True)
+    finish_time = models.DateTimeField(null=True)
     is_river_race = models.BooleanField(default=False)
     competitors_count = models.IntegerField(default=5)
 
