@@ -41,7 +41,9 @@ const PlayerRecentBattlesResultsChart = ({ endpoint, height, theme }) => {
     let mobile = width <= 768;
 
     const labels = data.reduce((result, elem, i) => {
-        if (i > 0) result.push(moment(elem.timestamp).short());
+        if (i > 0) {
+            result.push(moment(elem.timestamp).isSame(new Date(), 'day') ? 'today' : moment(elem.timestamp).startOf('day').short());
+        }
         return result;
     }, []);
 

@@ -52,11 +52,12 @@ def player_stats_per_day(request, tag):
         FROM backend_playerstatshistory
         INNER JOIN backend_player ON backend_playerstatshistory.player_id = backend_player.id
         WHERE backend_player.tag = '{0}'
-        ORDER BY timestamp::DATE, timestamp
+        ORDER BY timestamp::DATE DESC
         LIMIT 15
     """.format(tag))
 
     return Response(PlayerStatsHistorySerializer(
-        PlayerStatsHistory.objects.filter(id__in=[x.id for x in stat_ids]),
+        PlayerStatsHistory.objects.filter(id__in=[x.id for x in stat_ids]).order_by('timestamp'),
         many=True
     ).data)
+
