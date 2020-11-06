@@ -46,13 +46,19 @@ def player_activity(request, tag):
 
 @api_view(['GET'])
 def player_stats_per_day(request, tag):
+    try:
+        Player.objects.get(tag=tag)
+    except Player.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
     stat_ids = PlayerStatsHistory.objects.raw("""
-        SELECT DISTINCT ON (timestamp::DATE)
+        SELECT DISTINCT ON (backend_playerstatshistory.last_refresh::DATE)
             backend_playerstatshistory.id
         FROM backend_playerstatshistory
         INNER JOIN backend_player ON backend_playerstatshistory.player_id = backend_player.id
         WHERE backend_player.tag = '{0}'
-        ORDER BY timestamp::DATE DESC
+        ORDER BY backend_playerstatshistory.last_refresh::DATE DESC,
+                 backend_playerstatshistory.last_refresh DESC
         LIMIT 15
     """.format(tag))
 
@@ -60,4 +66,3 @@ def player_stats_per_day(request, tag):
         PlayerStatsHistory.objects.filter(id__in=[x.id for x in stat_ids]).order_by('timestamp'),
         many=True
     ).data)
-

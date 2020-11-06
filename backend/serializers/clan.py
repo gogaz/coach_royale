@@ -56,12 +56,6 @@ class ClanWarSerializer(HyperlinkedModelSerializer):
             'date_start',
             'date_end',
             'participants',
-            'final_battles',
-            'collections_battles',
-            'collections_cards',
-            'wins',
-            'losses',
-            'crowns',
             'final_position',
             'trophies',
             'total_trophies',
@@ -77,15 +71,6 @@ class PlayerClanWarSerializer(HyperlinkedModelSerializer):
         model = PlayerClanWar
         fields = (
             'clan_war_id',
-            'final_battles',
-            'final_battles_done',
-            'final_battles_wins',
-            'final_battles_misses',
-            'crowns',
-            'collections_cards_earned',
-            'collections_battles',
-            'collections_battles_done',
-            'collections_battles_wins',
             'fame',
             'repair_points',
         )

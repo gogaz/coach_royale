@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'helpers/moment'
 import { withTheme } from 'styled-components'
 import { Bar } from 'react-chartjs-2'
 
@@ -17,7 +17,7 @@ const PlayerRecentBattlesResultsChart = ({ endpoint, height, theme }) => {
 
     const datasets = [
         {
-            label: "Draws + 2v2",
+            label: "2v2",
             id: "draws",
             backgroundColor: theme.colors.blue,
         },
@@ -35,7 +35,6 @@ const PlayerRecentBattlesResultsChart = ({ endpoint, height, theme }) => {
 
     if (loading)
         return <Card><Loading /></Card>
-    console.log(data)
 
     const width = window.innerWidth;
     let mobile = width <= 768;

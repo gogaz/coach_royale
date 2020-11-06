@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import moment from 'moment'
+import moment from 'helpers/moment'
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import axios from 'axios'
@@ -44,9 +44,9 @@ const LastRefreshInfo = ({ theme, refreshable, time, url, allowRefreshAfter, han
 
     return (
         <small className="last-refresh-info">
-                <span className="text-muted text-uppercase" data-tip data-for="lastRefreshed">
-                    Last refresh <TimeFromNow time={ lastRefresh }/>
-                </span>
+            <span className="text-muted text-uppercase" data-tip data-for="lastRefreshed">
+                Last refresh <TimeFromNow time={ lastRefresh }/>
+            </span>
             <ReactTooltip place="bottom" type="dark" effect="solid" id="lastRefreshed">
                 { lastRefresh.format('L') } { lastRefresh.format('LTS') }
             </ReactTooltip>

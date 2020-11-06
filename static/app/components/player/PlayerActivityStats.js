@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment'
+import moment from 'helpers/moment'
 import { withTheme } from 'styled-components'
 
 import { useAutoFetch } from 'hooks/useAxios'

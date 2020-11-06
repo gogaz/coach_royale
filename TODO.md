@@ -1,3 +1,4 @@
+
 ## Todo
 - [ ] Charts for clan stats
 - [ ] Add API status with information on last successful sync
@@ -11,14 +12,14 @@
 - [x] Migrate all CSS to styled components
 - [ ] define donation reset time as a setting (should be every Monday at 00:00 UTC)
 - [ ] Decouple from Bootstrap
-- [ ] Add a 'Report' tab to ClanPage to contain information about who should be kicked, promoted, demoted (-> app settings or db record for configuration)
+- [x] Add a 'Report' tab to ClanPage to contain information about who should be kicked, promoted, demoted (-> app settings or db record for configuration)
 - [ ] Change the "Players" counter on clan page to include recently joined/left members, show details in a tooltip
-- [ ] Add war outcome to ClanMembersTable
+- [x] Add war outcome to ClanMembersTable
 
 - [ ] Authentication
 
-#### Authentication
+#### Link db users with game users (safely)
 Possible solution:
-> Play a Ladder battle with the following deck : \*randomly generated deck\*
+> Play a Ladder battle with the following deck : \*randomly generated deck OR player's main deck\*
 - [ ] Random deck generator (based on player's best cards?)
-- [ ] OAuth2 for transactions with the backend
+- [ ] deck serializer / deserializer with card ids (need to store the deck "challenge")

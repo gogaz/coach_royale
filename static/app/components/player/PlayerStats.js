@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import moment from 'helpers/moment'
 import styled from 'styled-components'
 import ReactTooltip from 'react-tooltip'
 

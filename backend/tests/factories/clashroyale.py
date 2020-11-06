@@ -20,11 +20,10 @@ class ClanFactory(Factory):
     @classmethod
     def create(cls, with_history=False, **kwargs):
         tag = kwargs.pop('tag', cls.random_tag())
-        clan = Clan(
+        clan = Clan.objects.create(
             name=kwargs.pop('name', 'Clan ' + tag),
             tag=tag
         )
-        clan.save()
         if with_history:
             ClanHistoryFactory.create(clan=clan, **kwargs)
 
@@ -38,7 +37,7 @@ class ClanHistoryFactory(Factory):
     def create(cls, **kwargs):
         clan = kwargs.get('clan', ClanFactory.create(**kwargs))
         description = kwargs.pop('description', 'A clan of ' + random.choice(cls.NAMES))
-        history = ClanHistory(
+        return ClanHistory.objects.create(
             clan=clan,
             score=kwargs.pop('score', 50000),
             highest_score=kwargs.pop('highest_score', 55000),
@@ -60,19 +59,16 @@ class ClanHistoryFactory(Factory):
             prev_global_war_rank=kwargs.pop('prev_global_war_rank', 999),
             global_war_rank=kwargs.pop('global_war_rank', 999),
         )
-        history.save()
-        return history
 
 
 class PlayerFactory(Factory):
     @classmethod
     def create(cls, with_history=False, **kwargs):
         tag = kwargs.pop('tag', cls.random_tag())
-        player = Player(
+        player = Player.objects.create(
             name=kwargs.pop('name', 'Player ' + tag),
             tag=tag
         )
-        player.save()
 
         if with_history:
             PlayerHistoryFactory.create(player=player, **kwargs)
@@ -89,8 +85,8 @@ class PlayerHistoryFactory(Factory):
         pcw = None
         clan = kwargs.pop('clan', ClanFactory.create(**kwargs))
         if with_clan:
+            trophies = kwargs.pop('current_trophies', psh.current_trophies)
             pch = PlayerClanHistoryFactory.create(clan=clan, **kwargs)
-            trophies = kwargs.pop('trophies', psh.current_trophies)
             pcsh = PlayerClanStatsHistoryFactory.create(
                 clan=clan,
                 trophies=trophies,
@@ -108,7 +104,8 @@ class PlayerStatsHistoryFactory(Factory):
     def create(cls, **kwargs):
         level = kwargs.get('level', 13)
         trophies = kwargs.get('current_trophies', level * random.randint(300, 500))
-        psh = PlayerStatsHistory(
+        timestamp = kwargs.pop('timestamp', timezone.now())
+        return PlayerStatsHistory.objects.create(
             player=kwargs.get('player', PlayerFactory.create(**kwargs)),
             level=level,
             total_donations=kwargs.pop('total_donations', level * 8000),
@@ -126,30 +123,28 @@ class PlayerStatsHistoryFactory(Factory):
             draws=kwargs.pop('draws', level * 200),
             win_3_crowns=kwargs.pop('win_3_crowns', level * 50),
             clan_cards_collected=kwargs.pop('clan_cards_collected', level * 1000),
-            war_day_wins=kwargs.pop('war_day_wins', (level + 3) * 10)
+            war_day_wins=kwargs.pop('war_day_wins', (level + 3) * 10),
+            timestamp=timestamp,
+            last_refresh=kwargs.pop('last_refresh', timestamp)
         )
-        psh.save()
-        return psh
 
 
 class PlayerClanHistoryFactory(Factory):
     @classmethod
     def create(cls, **kwargs):
-        pch = PlayerClanHistory(
+        return PlayerClanHistory.objects.create(
             clan=kwargs.get('clan', ClanFactory.create(**kwargs)),
             player=kwargs.get('player', PlayerFactory.create(**kwargs)),
             joined_clan=kwargs.pop('joined_clan', None),
             left_clan=kwargs.pop('left_clan', None)
         )
-        pch.save()
-        return pch
 
 
 class PlayerClanStatsHistoryFactory(Factory):
     @classmethod
     def create(cls, **kwargs):
         level = kwargs.pop('level', random.randint(9, 13))
-        pcsh = PlayerClanStatsHistory(
+        return PlayerClanStatsHistory.objects.create(
             clan=kwargs.get('clan', ClanFactory.create(**kwargs)),
             player=kwargs.get('player', PlayerFactory.create(**kwargs, level=level)),
             clan_role=kwargs.pop('clan_role', 'member'),
@@ -162,36 +157,28 @@ class PlayerClanStatsHistoryFactory(Factory):
             trophies=kwargs.pop('trophies', level * 400),
             arena=kwargs.pop('arena', level * 3),
         )
-        pcsh.save()
-        return pcsh
 
 
 class PlayerClanWarFactory(Factory):
     @classmethod
     def create(cls, **kwargs):
-        pcw = PlayerClanWar(
+        return PlayerClanWar.objects.create(
             clan_war=kwargs.pop('clan_war', ClanWarFactory.create(**kwargs)),
             player=kwargs.get('player', PlayerFactory.create(**kwargs)),
-            final_battles_wins=kwargs.pop('final_battles_wins', 1),
-            final_battles_misses=kwargs.pop('final_battles_misses', 0),
-            crowns=kwargs.pop('crowns', 3),
-            collections_cards_earned=kwargs.pop('collections_cards_earned', 1000),
-            collections_battles=kwargs.pop('collections_battles', 3),
-            collections_battles_done=kwargs.pop('collections_battles_done', 3),
-            collections_battles_wins=kwargs.pop('collections_battles_wins', 0),
+            fame=kwargs.pop('fame', 1000),
+            repair_points=kwargs.pop('repair_points', 208),
         )
-        pcw.save()
-        return pcw
 
 
 class ClanWarFactory(Factory):
     @classmethod
     def create(cls, **kwargs):
         participants = kwargs.pop('participants', random.randint(25, 40))
-        war = ClanWar(
+        date_start = kwargs.pop('date_start', timezone.now())
+        return ClanWar.objects.create(
             clan=kwargs.get('clan', ClanFactory.create(**kwargs)),
-            date_start=kwargs.pop('date_start', timezone.now()),
-            date_end=kwargs.pop('date_end', timezone.now()),
+            date_start=date_start,
+            date_end=kwargs.pop('date_end', date_start + timezone.timedelta(days=2)),
             participants=kwargs.pop('participants', participants),
             final_battles=kwargs.pop('final_battles', participants - int(participants / 10)),
             collections_battles=kwargs.pop('collections_battles', int(participants * 2.5)),
@@ -203,6 +190,9 @@ class ClanWarFactory(Factory):
             total_trophies=kwargs.pop('total_trophies', participants * 200),
             trophies=kwargs.pop('trophies', int(participants / 2) + 50),
             season=kwargs.pop('season', 1),
+            fame=kwargs.pop('fame', 1000),
+            repair_points=kwargs.pop('repair_points', 208),
+            finish_time=kwargs.pop('finish_time', date_start + timezone.timedelta(weeks=1)),
+            is_river_race=True,
+            competitors_count=kwargs.pop('competitors_count', 5)
         )
-        war.save()
-        return war

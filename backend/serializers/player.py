@@ -118,15 +118,6 @@ class PlayerClanWarSerializer(HyperlinkedModelSerializer):
         model = PlayerClanWar
         fields = (
             'clan_war',
-            'final_battles',
-            'final_battles_done',
-            'final_battles_wins',
-            'final_battles_misses',
-            'crowns',
-            'collections_cards_earned',
-            'collections_battles',
-            'collections_battles_done',
-            'collections_battles_wins',
             'fame',
             'repair_points',
         )

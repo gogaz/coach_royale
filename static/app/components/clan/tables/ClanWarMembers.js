@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment'
+import moment from 'helpers/moment'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 
@@ -143,7 +143,7 @@ const ClanWarMembers = ({endpoint}) => {
             if (e.final_position === 2) th = 'nd';
             if (e.final_position === 3) th = 'rd';
             return {
-                Header: () => (
+                Header: ({ ...props }) => (
                     <WarHeaderCell>
                         <WarHeader>
                             <b>{dateStart}</b>

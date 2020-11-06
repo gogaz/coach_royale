@@ -6,25 +6,27 @@ class PlayerCube(models.Model):
         WITH player_war_metrics AS (
             SELECT
                 player_id,
-                COUNT(id) AS wars_participated,
-                SUM(final_battles_misses) AS final_battles_missed,
-                SUM(final_battles_wins) AS final_battles_won,
-                SUM(final_battles_done) - SUM(final_battles_wins) AS final_battles_lost,
-                SUM(final_battles_done) AS final_battles_done,
-                SUM(final_battles_misses) + SUM(final_battles_done) AS total_final_battles_available,
-                SUM(fame) AS total_fame,
-                SUM(repair_points) AS total_repair_points
-            FROM backend_playerclanwar
+                SUM(last_3_wars.fame) AS last_3_wars_fame,
+                SUM(last_3_wars.repair_points) AS last_3_wars_repair_points,
+                SUM(last_3_wars.fame) + SUM(last_3_wars.repair_points) AS last_3_wars_participation
+            FROM (
+                SELECT * FROM (
+                    SELECT *, ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY id DESC) as rownum
+                    FROM backend_playerclanwar
+                ) player_war_with_rownum WHERE rownum <= 3
+            ) last_3_wars
+            INNER JOIN backend_clanwar ON backend_clanwar.id = clan_war_id
             -- We are interested in all recorded wars from the player because this app is supposed to manage one clan or
             --   a family of clans and not to continue tracking a player that exited a tracked clan
             -- Otherwise, it's easy to JOIN backend_clan from here, select and group on its id, then join on it in
             --    main query
-            GROUP BY backend_playerclanwar.player_id
+            GROUP BY last_3_wars.player_id
         )
         SELECT
             backend_player.id,
             backend_player.id AS player_id,
             backend_player.name,
+            backend_player.tag,
             backend_clan.id AS clan_id,
             backend_clan.name AS clan_name,
             backend_playerclanhistory.joined_clan,
@@ -48,17 +50,10 @@ class PlayerCube(models.Model):
             backend_playerclanstatshistory.previous_clan_rank,
             backend_playerclanstatshistory.donations AS donations_this_week,
             backend_playerclanstatshistory.donations_received AS donations_received_this_week,
-            COALESCE(player_war_metrics.wars_participated, 0) AS wars_participated,
-            COALESCE(player_war_metrics.total_final_battles_available, 0) AS total_final_battles_available,
-            COALESCE(player_war_metrics.final_battles_done, 0) AS final_battles_done,
-            COALESCE(player_war_metrics.final_battles_missed, 0) AS final_battles_missed,
-            COALESCE(player_war_metrics.final_battles_lost, 0) AS final_battles_lost,
-            COALESCE(player_war_metrics.final_battles_won, 0) AS final_battles_won,
-            COALESCE(final_battles_missed::FLOAT * 100 / total_final_battles_available, 0) AS missed_ratio,
-            COALESCE(final_battles_won::FLOAT * 100 / total_final_battles_available, 0) AS won_ratio,
-            COALESCE(final_battles_lost::FLOAT * 100 / total_final_battles_available, 0) AS lost_ratio,
-            COALESCE(total_fame, 0) as total_fame,
-            COALESCE(total_repair_points, 0) as total_repair_points
+            backend_playerclanstatshistory.last_seen,
+            COALESCE(last_3_wars_fame, 0) AS last_3_wars_fame,
+            COALESCE(last_3_wars_repair_points, 0) as last_3_wars_repair_points,
+            COALESCE(last_3_wars_participation, 0) as last_3_wars_participation
         FROM backend_player
         INNER JOIN (
             SELECT player_id, MAX(id) AS max_id
@@ -132,6 +127,7 @@ class PlayerCube(models.Model):
 
     player = models.ForeignKey('Player', on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=255)
+    tag = models.CharField(max_length=64)
     clan = models.ForeignKey('Clan', on_delete=models.DO_NOTHING)
     clan_role = models.CharField(max_length=32)
     clan_name = models.CharField(max_length=255)
@@ -155,14 +151,7 @@ class PlayerCube(models.Model):
     previous_clan_rank = models.IntegerField()
     donations_this_week = models.IntegerField()
     donations_received_this_week = models.IntegerField()
-    wars_participated = models.IntegerField()
-    total_final_battles_available = models.IntegerField()
-    final_battles_done = models.IntegerField()
-    final_battles_missed = models.IntegerField()
-    final_battles_lost = models.IntegerField()
-    final_battles_won = models.IntegerField()
-    missed_ratio = models.FloatField()
-    won_ratio = models.FloatField()
-    lost_ratio = models.FloatField()
-    total_fame = models.IntegerField()
-    total_repair_points = models.IntegerField
+    last_seen = models.DateTimeField()
+    last_3_wars_fame = models.IntegerField()
+    last_3_wars_repair_points = models.IntegerField()
+    last_3_wars_participation = models.IntegerField()

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'helpers/moment'
 import { Line } from 'react-chartjs-2'
 import { Body, Card, Header } from '../../ui/Card'
 

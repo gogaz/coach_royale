@@ -150,6 +150,7 @@ const subject = async (mockedData = {}) => {
         {
             '/api/player/1/': { code: 200, response: playerInfos },
             '/api/player/1/activity': { code: 200, response: playerActivity },
+            'api/player/1/stats_per_day': { code: 200, response: playerActivity.stats},
             ...mockedData
         },
     );
@@ -170,19 +171,13 @@ describe('Player page', () => {
         rendered.getByRole('table');
         const [header, ...rows] = rendered.getAllByRole('row');
         getByText(header, 'War');
-        getByText(header, 'Result');
+        getByText(header, 'Participation');
         expect(rows.length).toBe(2);
-    });
-    test('it show a doughnut chart of war battles', async () => {
-        const rendered = await subject();
-        const charts = rendered.getAllByRole('chart');
-        getByText(charts[0], 'Player wars')
     });
     test('it show a charts with player activity', async () => {
         const rendered = await subject();
         const charts = rendered.getAllByRole('chart');
-        getByText(charts[0], 'Player wars');
-        getByText(charts[1], 'Trophies');
-        getByText(charts[2], 'Player battles');
+        getByText(charts[0], 'Trophies');
+        getByText(charts[1], 'Player battles');
     })
 })

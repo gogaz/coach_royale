@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import moment from 'moment'
+import moment from 'helpers/moment'
 
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'

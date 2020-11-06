@@ -10,6 +10,7 @@ import ClanDetails from './ClanDetails'
 import ClanWarMembers from './tables/ClanWarMembers'
 import ClanMembersTable from './tables/ClanMembersTable'
 import ClanSeasons from './ClanSeasons'
+import ClanRuleMatcher from "./ClanRuleMatcher";
 
 const ClanPage = ({ match }) => {
     const endPoint = `/api/clan/${ match.params.tag }`;
@@ -30,6 +31,9 @@ const ClanPage = ({ match }) => {
                     <Tab>
                         <TabLink to={ `${ match.url }/seasons` }>Seasons</TabLink>
                     </Tab>
+                    <Tab>
+                        <TabLink to={ `${ match.url }/reports` }>Reports</TabLink>
+                    </Tab>
                 </TabsContainer>
             </ErrorBoundary>
             <Separator />
@@ -42,6 +46,7 @@ const ClanPage = ({ match }) => {
                     />
                     <Route path={ `${ match.url }/wars` } render={ (props) => <ClanWarMembers { ...props } endpoint={ endPoint }/> }/>
                     <Route path={ `${ match.url }/seasons` } render={ (props) => <ClanSeasons { ...props } endpoint={ endPoint }/> }/>
+                    <Route path={ `${ match.url }/reports` } render={ (props) => <ClanRuleMatcher { ...props } endpoint={endPoint} /> }/>
                 </Switch>
             </ErrorBoundary>
         </Card>

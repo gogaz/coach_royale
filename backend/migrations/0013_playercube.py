@@ -53,5 +53,4 @@ class Migration(migrations.Migration):
                 'managed': False,
             },
         ),
-        PlayerCube.migrate(),
     ]
