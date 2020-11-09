@@ -49,6 +49,7 @@ const CenteredHeader = styled.span`
   width: 100%;
   display: flex;
   justify-content: center;
+  white-space: normal;
 `
 
 const StyledBodyCell = styled.td`
@@ -117,7 +118,7 @@ const Table = ({
                                     </CenteredHeader>
 
                                     {hasFilter &&
-                                    <div role="filter">{column.render('Filter')}</div>
+                                        <div role="filter">{column.render('Filter')}</div>
                                     }
                                 </StyledHeaderCell>
                             );
