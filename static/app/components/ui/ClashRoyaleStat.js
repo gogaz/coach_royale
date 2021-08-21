@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { withTheme } from 'styled-components'
 
-import { locale } from 'helpers/browser'
+import { locale } from 'utils/browser'
 import FontAwesomeIcon from './FontAwesome'
 
 const CardContent = styled.div`

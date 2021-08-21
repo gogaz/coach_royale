@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import App from 'components/App'
 import { defaultTheme } from 'style/theme'
 import { BrowserRouter as Router } from 'react-router-dom'
-import initSentry from 'helpers/sentry'
+import initSentry from 'utils/sentry'
 
 initSentry();
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 import { withTheme } from 'styled-components'
 
 import { useAutoFetch } from 'hooks/useAxios'
@@ -17,7 +17,12 @@ const PlayerActivityStats = ({ endpoint, theme }) => {
             Header: "War",
             id: "war",
             accessor: e => moment(e.clan_war.date_start),
-            Cell: ({ row }) => `${moment(row.original.clan_war.date_end).short()} to ${row.values.war.short()}`,
+            Cell: ({ row }) => {
+                const startDate = row.values.war.short()
+                const endDate = row.original.clan_war.date_end
+                if (!endDate) return `Ongoing (started ${startDate})`
+                return`${moment(endDate).short()} to ${startDate}`
+            },
         },
         {
             Header: "Participation",

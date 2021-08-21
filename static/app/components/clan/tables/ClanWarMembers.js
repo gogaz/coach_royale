@@ -1,11 +1,11 @@
 import React from 'react';
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 
-import {images} from 'helpers/assets'
-import {CLAN_ROLES} from 'helpers/constants'
-import {locale} from 'helpers/browser'
+import {images} from 'utils/assets'
+import {CLAN_ROLES} from 'utils/constants'
+import {locale} from 'utils/browser'
 import {useAutoFetch} from 'hooks/useAxios'
 
 import Loading from 'components/ui/Loading'

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components'
 
-import { images } from 'helpers/assets'
+import { images } from 'utils/assets'
 import FontAwesomeIcon from 'components/ui/FontAwesome'
 
 const Image = styled.img`

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 import styled from 'styled-components'
 
 import ErrorBoundary from 'components/errors/ErrorBoundary'

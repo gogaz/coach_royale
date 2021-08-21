@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react'
 import axios from "axios";
-import { handleErrors } from "../helpers/api";
+import { handleErrors } from "../utils/api";
 
 const useAxios = (
     defaultData = null,
-    onFetch = () => {
-    },
+    onFetch = () => {},
     initiallyLoading = false,
-    onCatch = () => {
-    }
+    onCatch = () => {}
 ) => {
     const [response, setResponse] = useState(defaultData)
     const [error, setError] = useState(null)
@@ -16,20 +14,18 @@ const useAxios = (
 
     const sendRequest = (axiosOptions) => {
         setLoading(true);
-        (async () => {
-            axios(axiosOptions)
-                .then((res) => {
-                    const result = handleErrors(res)
-                    onFetch(result)
-                    setResponse(result)
-                    setLoading(false)
-                })
-                .catch((e) => {
-                    setError(e)
-                    onCatch(e)
-                    setLoading(false)
-                })
-        })()
+        axios(axiosOptions)
+            .then((res) => {
+                const result = handleErrors(res)
+                onFetch(result)
+                setResponse(result)
+                setLoading(false)
+            })
+            .catch((e) => {
+                setError(e)
+                onCatch(e)
+                setLoading(false)
+            })
     }
 
     return { response, error, loading, sendRequest }

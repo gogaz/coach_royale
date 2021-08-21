@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled, { withTheme } from 'styled-components'
 
-import { images } from 'helpers/assets'
+import { images } from 'utils/assets'
 import { useAutoFetch } from 'hooks/useAxios'
-import { CLAN_ROLES } from 'helpers/constants'
+import { CLAN_ROLES } from 'utils/constants'
 
 import Loading from 'components/ui/Loading'
 import TimeFromNow from 'components/ui/TimeFromNow'

@@ -1,10 +1,10 @@
 import React from 'react';
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 import styled from 'styled-components'
 import ReactTooltip from 'react-tooltip'
 
-import { images } from 'helpers/assets'
-import { setTitle } from 'helpers/browser'
+import { images } from 'utils/assets'
+import { setTitle } from 'utils/browser'
 import { useAutoFetch } from 'hooks/useAxios'
 import ClashRoyaleStat from 'components/ui/ClashRoyaleStat'
 import Loading from 'components/ui/Loading'

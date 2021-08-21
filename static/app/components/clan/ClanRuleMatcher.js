@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactTooltip from "react-tooltip";
 
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 import {useAutoFetch} from "hooks/useAxios";
 import Loading from "components/ui/Loading";
 import {Card, Header as CardHeader} from "components/ui/Card";
@@ -9,7 +9,7 @@ import FontAwesomeIcon from "components/ui/FontAwesome";
 import Table from "components/ui/table/Table";
 import {Grid} from "components/ui/Disposition";
 import {Link} from "react-router-dom";
-import {CLAN_ROLES} from "../../helpers/constants";
+import {CLAN_ROLES} from "../../utils/constants";
 import CriticalError from "../errors/CriticalError";
 
 const getRowValue = (row, column) => column.accessor(row.original)

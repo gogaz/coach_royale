@@ -12,7 +12,7 @@ import {
 } from './test-utils'
 import "@testing-library/jest-dom/extend-expect"
 
-import {CLAN_ROLES} from 'helpers/constants'
+import {CLAN_ROLES} from 'utils/constants'
 
 const clanMembers = [
     {

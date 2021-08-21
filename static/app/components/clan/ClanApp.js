@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import { setTitle } from 'helpers/browser';
+import { setTitle } from 'utils/browser';
 import { useAutoFetch } from 'hooks/useAxios'
 import Loading from 'components/ui/Loading'
 import { Card } from 'components/ui/Card'

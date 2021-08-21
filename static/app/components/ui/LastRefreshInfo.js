@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
 import axios from 'axios'
 import { withTheme } from 'styled-components'
 
-import { handleErrors } from 'helpers/api'
+import { handleErrors } from 'utils/api'
 
 import FontAwesomeIcon from './FontAwesome';
 import TimeFromNow from './TimeFromNow'

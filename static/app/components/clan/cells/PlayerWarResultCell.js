@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import { images } from 'helpers/assets';
-import { locale } from 'helpers/browser';
+import { images } from 'utils/assets';
+import { locale } from 'utils/browser';
 
 const WarResult = styled.div`
     display: flex;

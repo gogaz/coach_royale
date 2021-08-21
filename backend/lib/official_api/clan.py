@@ -172,11 +172,7 @@ class APIConsumer(BaseConsumer):
         for war in wars:
             created_time = self.get_datetime(war.created_date)
 
-            db_war, created = ClanWar.objects.get_or_create(
-                clan=db_clan,
-                date_start=created_time,
-                defaults=dict(date_start=created_time)
-            )
+            db_war, created = ClanWar.objects.get_or_create(clan=db_clan, date_start=created_time)
 
             if not created and db_war.date_end is not None:
                 break
@@ -197,10 +193,13 @@ class APIConsumer(BaseConsumer):
 
             db_war.is_river_race = True
 
+            date_end = self.get_datetime(war_results.finish_time)
+            date_end = date_end if date_end > created_time else None
+
             db_war.final_position = position + 1
             db_war.total_trophies = war_results.clan_score
             db_war.season = war.season_id
-            db_war.date_end = self.get_datetime(war_results.finish_time)
+            db_war.date_end = date_end
             db_war.finish_time = created_time + timezone.timedelta(days=7)
             db_war.fame = war_results.fame
             db_war.repair_points = war_results.repair_points

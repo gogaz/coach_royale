@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 import { withTheme } from 'styled-components'
 import { Bar } from 'react-chartjs-2'
 

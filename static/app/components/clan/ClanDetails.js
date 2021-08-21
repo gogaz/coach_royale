@@ -1,9 +1,9 @@
 import React from 'react'
 import styled, { withTheme } from 'styled-components'
 
-import { setTitle } from 'helpers/browser'
+import { setTitle } from 'utils/browser'
 import { useAutoFetch } from 'hooks/useAxios'
-import { images } from 'helpers/assets'
+import { images } from 'utils/assets'
 
 import { Flex, FlexWrapper, Grid } from 'components/ui/Disposition'
 import Loading from 'components/ui/Loading'

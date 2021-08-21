@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'helpers/moment'
+import moment from 'utils/moment'
 import { Link } from 'react-router-dom'
 import styled, { withTheme } from 'styled-components'
 
