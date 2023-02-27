@@ -20,9 +20,9 @@ class APIConsumer(BaseConsumer):
             cards = json.loads(response.read())
 
         for data in cards:
-            card, created = Card.objects.get_or_create(key=data['key'])
+            card, created = Card.objects.get_or_create(card_id=data['key'])
 
-            card.card_id = data['id']
+            card.key = data['key']
             card.name = data['name']
             card.elixir = data['elixir']
             card.type = data['type']
