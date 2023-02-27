@@ -38,7 +38,7 @@ const getBaseColumns = (theme) => [
     {
         Header: "Rank",
         id: "rank",
-        accessor: "details.current_clan_rank",
+        accessor: d => Number(d.details.current_clan_rank),
         width: 60,
         filterable: false,
     },
@@ -51,9 +51,9 @@ const getBaseColumns = (theme) => [
     {
         Header: "Trophies",
         id: "trophies",
-        accessor: (data) => data.details.trophies.toLocaleString(),
+        accessor: (data) => Number(data.details.trophies),
         width: 90,
-        Cell: ({ row }) => <TrophiesCell trophies={row.original.details.trophies} arena={row.original.details.arena} />,
+        Cell: ({ row }) => <TrophiesCell trophies={row.original.details.trophies.toLocaleString()} arena={row.original.details.arena} />,
     },
     {
         Header: "Last seen",
@@ -64,7 +64,7 @@ const getBaseColumns = (theme) => [
     },
     {
         Header: "Level",
-        accessor: "details.level",
+        accessor: d => Number(d.details.level),
         id: 'level',
         width: 45,
         Cell: ({ row }) => (
@@ -82,8 +82,8 @@ const getBaseColumns = (theme) => [
     {
         Header: "Received",
         id: "received",
-        accessor: "details.donations_received",
         width: 80,
+        accessor: d => Number(d.details.donations_received),
         Cell: ({ row }) => (
             <DonationCell color={ theme.colors.orange } column='received' row={ row.values } icon='arrow-down'/>
         )
@@ -91,7 +91,7 @@ const getBaseColumns = (theme) => [
     {
         Header: "Donated",
         id: "given",
-        accessor: "details.donations",
+        accessor: d => Number(d.details.donations),
         width: 80,
         Cell: ({ row }) => (
             <DonationCell color={ theme.colors.green } column='given' row={ row.values } icon='arrow-up'/>
@@ -108,7 +108,7 @@ const getBaseColumns = (theme) => [
     {
         id: 'ending',
         Header: "Trophies",
-        accessor: "details.ending",
+        accessor: d => Number(d.details.ending),
         width: 90,
         Cell: ({ row }) => (
             <TrophiesCell trophies={ row.values.ending } arena={ row.original.details.ending_arena }/>
@@ -117,8 +117,8 @@ const getBaseColumns = (theme) => [
     {
         id: 'highest',
         Header: "Highest",
-        accessor: "details.highest",
         width: 90,
+        accessor: d  => Number(d.details.highest),
         Cell: ({ row }) => <TrophiesCell trophies={ row.values.highest } arena={row.values.highest_arena}/>
     },
 ];
