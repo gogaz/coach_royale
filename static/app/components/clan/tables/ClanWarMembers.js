@@ -13,7 +13,6 @@ import Table from 'components/ui/table/Table'
 import { SelectColumnFilter } from 'components/ui/table/filters'
 import PlayerWarResultCell from 'components/clan/cells/PlayerWarResultCell'
 import TrophiesCell from 'components/clan/cells/TrophiesCell'
-import FontAwesomeIcon from "../../ui/FontAwesome";
 
 const Indicator = styled.div`
     position: absolute;
@@ -136,19 +135,16 @@ const ClanWarMembers = ({endpoint}) => {
         if (!wars)
             return [];
         return [...BASE_COLUMNS, ...wars.map(e => {
-            const dateStart = moment(e.date_start).short();
-            const dateEnd = moment(e.date_end).short();
+            const finishTime = moment(e.finish_time).short();
             let th = 'th';
             if (e.final_position === 1) th = 'st';
             if (e.final_position === 2) th = 'nd';
             if (e.final_position === 3) th = 'rd';
             return {
-                Header: ({ ...props }) => (
+                Header: () => (
                     <WarHeaderCell>
                         <WarHeader>
-                            <b>{dateStart}</b>
-                            <FontAwesomeIcon icon="arrow-left" size="14px"/>
-                            <b>{dateEnd}</b>
+                            <b>{finishTime}</b>
                         </WarHeader>
                         <WarHeader>
                             <small className="text-muted">

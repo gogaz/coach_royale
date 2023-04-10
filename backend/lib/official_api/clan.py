@@ -192,14 +192,12 @@ class APIConsumer(BaseConsumer):
                     pcw.save()
 
             db_war.is_river_race = True
-
             date_end = self.get_datetime(war_results.finish_time)
-            date_end = date_end if date_end > created_time else None
 
             db_war.final_position = position + 1
             db_war.total_trophies = war_results.clan_score
             db_war.season = war.season_id
-            db_war.date_end = date_end
+            db_war.date_end = date_end if date_end > created_time else None
             db_war.finish_time = created_time + timezone.timedelta(days=7)
             db_war.fame = war_results.fame
             db_war.repair_points = war_results.repair_points
